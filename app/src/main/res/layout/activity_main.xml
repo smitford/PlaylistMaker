@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue1"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:padding="@dimen/padding_of_all_items">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/panel_header"
         android:orientation="horizontal">
 
         <FrameLayout
@@ -28,7 +27,7 @@
                 android:text="@string/app_name"
                 android:textColor="@color/white" />
             <Button
-                android:layout_width="48dp"
+                android:layout_width="@dimen/button_size"
                 android:layout_height="match_parent"
                 android:visibility="invisible"/>
 
@@ -57,7 +56,7 @@
         android:textAllCaps="false"
         app:icon = "@drawable/search"
         app:iconGravity="textStart"
-        app:iconPadding="10.66dp"
+        app:iconPadding="@dimen/icon_padding_mm"
         app:iconTint="@color/black1"
         app:cornerRadius="@dimen/corner_of_button"/>
 
@@ -76,7 +75,7 @@
         android:textSize="@dimen/text_of_button"
         app:icon = "@drawable/library"
         app:iconGravity="textStart"
-        app:iconPadding="10.66dp"
+        app:iconPadding="@dimen/icon_padding_mm"
         app:iconTint="@color/black1"
         app:cornerRadius="@dimen/corner_of_button"/>
     <Button
@@ -95,7 +94,7 @@
         android:textAllCaps="false"
         app:icon = "@drawable/vector"
         app:iconGravity="textStart"
-        app:iconPadding="10.66dp"
+        app:iconPadding="@dimen/icon_padding_mm"
         app:iconTint="@color/black1"
         app:cornerRadius="@dimen/corner_of_button"/>
 
