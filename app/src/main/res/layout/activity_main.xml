@@ -43,6 +43,7 @@
 
     </LinearLayout>
     <Button
+        android:id="@+id/search_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -62,6 +63,7 @@
         app:cornerRadius="@dimen/corner_of_button"/>
 
     <Button
+        android:id="@+id/media_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/start_button_pending"
@@ -80,6 +82,7 @@
         app:iconTint="@color/black1"
         app:cornerRadius="@dimen/corner_of_button"/>
     <Button
+        android:id="@+id/settings_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
