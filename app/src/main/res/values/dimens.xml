@@ -12,4 +12,7 @@
     <dimen name="high_of_sup_menu">61dp</dimen>
     <dimen name="size_menu_text">16sp</dimen>
     <dimen name="wright_padding_icons">20dp</dimen>
+    <dimen name="text_start">12dp</dimen>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="top_step">24dp</dimen>
 </resources>

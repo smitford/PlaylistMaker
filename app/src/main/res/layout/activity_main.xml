@@ -14,58 +14,60 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:layout_weight="304">
+            android:layout_weight="6">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="@dimen/text_start"
                 android:gravity="center"
                 android:text="@string/app_name"
                 android:textColor="@color/white" />
+
             <Button
                 android:layout_width="@dimen/button_size"
                 android:layout_height="match_parent"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
         </FrameLayout>
 
         <Button
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_weight="48"
-            android:visibility="invisible"/>
+            android:layout_weight="1"
+            android:visibility="invisible" />
 
     </LinearLayout>
+
     <Button
         android:id="@+id/search_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/zero"
+        android:layout_marginStart="@dimen/start_button_pending"
+        android:layout_marginTop="@dimen/top_step"
+        android:layout_marginEnd="@dimen/end_button_pending"
         android:layout_weight="1"
         android:backgroundTint="@color/white"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="@dimen/start_button_pending"
-        android:layout_marginEnd="@dimen/end_button_pending"
         android:gravity="center"
         android:text="@string/search"
+        android:textAllCaps="false"
         android:textColor="@color/black1"
         android:textSize="@dimen/text_of_button"
-        android:textAllCaps="false"
-        app:icon = "@drawable/search"
+        app:cornerRadius="@dimen/corner_of_button"
+        app:icon="@drawable/search"
         app:iconGravity="textStart"
         app:iconPadding="@dimen/icon_padding_mm"
-        app:iconTint="@color/black1"
-        app:cornerRadius="@dimen/corner_of_button"/>
+        app:iconTint="@color/black1" />
 
     <Button
         android:id="@+id/media_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/zero"
         android:layout_marginStart="@dimen/start_button_pending"
         android:layout_marginTop="@dimen/between_button_pending"
         android:layout_marginEnd="@dimen/end_button_pending"
@@ -76,30 +78,31 @@
         android:textAllCaps="false"
         android:textColor="@color/black1"
         android:textSize="@dimen/text_of_button"
-        app:icon = "@drawable/library"
+        app:cornerRadius="@dimen/corner_of_button"
+        app:icon="@drawable/library"
         app:iconGravity="textStart"
         app:iconPadding="@dimen/icon_padding_mm"
-        app:iconTint="@color/black1"
-        app:cornerRadius="@dimen/corner_of_button"/>
+        app:iconTint="@color/black1" />
+
     <Button
         android:id="@+id/settings_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:layout_marginTop="@dimen/between_button_pending"
+        android:layout_height="@dimen/zero"
         android:layout_marginStart="@dimen/start_button_pending"
+        android:layout_marginTop="@dimen/between_button_pending"
         android:layout_marginEnd="@dimen/end_button_pending"
         android:layout_marginBottom="28dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
         android:gravity="center"
         android:text="@string/settings"
+        android:textAllCaps="false"
         android:textColor="@color/black1"
         android:textSize="@dimen/text_of_button"
-        android:textAllCaps="false"
-        app:icon = "@drawable/vector"
+        app:cornerRadius="@dimen/corner_of_button"
+        app:icon="@drawable/vector"
         app:iconGravity="textStart"
         app:iconPadding="@dimen/icon_padding_mm"
-        app:iconTint="@color/black1"
-        app:cornerRadius="@dimen/corner_of_button"/>
+        app:iconTint="@color/black1" />
 
 </LinearLayout>
