@@ -1,9 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    android:backgroundTint="?attr/colorPrimary"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_of_all_items">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/panel_header"
+        android:layout_gravity="start"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/back_button_search_act"
+            style="@style/Button_basic"
+            android:layout_width="@dimen/button_size"
+            app:icon="@drawable/arrow_back"
+            app:iconTint="?attr/colorOnSecondary"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            style="@style/Text_1"
+            android:text="@string/search"
+            android:textColor="?attr/colorOnSecondary" />
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_text_search"
+        android:layout_marginStart="@dimen/between_button_pending"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/between_button_pending"
+        android:background="@drawable/rounding_of_edittext"
+        >
+
+        <EditText
+            style="@style/Edit_text_basic"
+            android:id="@+id/search_bar"
+            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:drawableLeft="@drawable/search2"
+            android:hint="@string/search"
+            android:maxLength="25"
+            android:paddingStart="36dp"
+            tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck"
+             />
+
+
+        <Button
+            android:layout_gravity="end"
+            android:id="@+id/clear_text_search"
+            style="@style/Button_basic"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            app:icon="@drawable/cross"
+            app:iconTint="?attr/colorSecondaryVariant"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
+
+
+</LinearLayout>
