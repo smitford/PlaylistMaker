@@ -31,7 +31,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/high_of_sup_menu"
+        android:layout_height="@dimen/high_of_basic_stripe"
         android:layout_marginTop="@dimen/top_step"
         android:orientation="horizontal">
 
@@ -50,7 +50,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/high_of_sup_menu"
+        android:layout_height="@dimen/high_of_basic_stripe"
         android:orientation="horizontal">
 
         <TextView
@@ -66,7 +66,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/high_of_sup_menu"
+        android:layout_height="@dimen/high_of_basic_stripe"
         android:orientation="horizontal">
 
         <TextView
@@ -82,7 +82,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/high_of_sup_menu"
+        android:layout_height="@dimen/high_of_basic_stripe"
         android:orientation="horizontal">
 
         <TextView

@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
        <!-- Customize your theme here. -->
+        <item name="iconTint">@color/grey1</item>
+        <item name="android:textColor">@color/black</item>
 
 
     </style>
