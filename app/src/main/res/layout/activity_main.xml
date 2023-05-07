@@ -22,7 +22,7 @@
     <Button
         android:id="@+id/search_button"
         style="@style/Button_Main_act"
-        android:layout_marginTop="@dimen/top_step"
+        android:layout_marginTop="@dimen/big_step"
         android:text="@string/search"
         app:icon="@drawable/search" />
 

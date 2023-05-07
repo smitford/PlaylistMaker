@@ -1,6 +1,6 @@
 package com.example.playlistmaker.trackRecycleView
 
-class Track(
+data class Track(
     val trackName: String,
     val artistName: String,
     val trackTime: String,
