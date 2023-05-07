@@ -52,8 +52,6 @@
             android:imeOptions="actionDone"
             android:singleLine="true"
             tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
-        <!--android:imeOptions="actionDone"
-                    android:singleLine="true"-->
 
         <Button
             android:id="@+id/clear_text_search"
