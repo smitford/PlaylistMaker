@@ -22,11 +22,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 
 class SearchActivity : AppCompatActivity() {
+
+    companion object {
+        const val textOfSearch = "TEXT_OF_SEARCH"
+    }
 
     private lateinit var inputEditText: EditText
     private lateinit var textSearch: String
@@ -45,15 +47,6 @@ class SearchActivity : AppCompatActivity() {
 
     private val iTunesAPIService = retrofitITunes.create(ITunesAPI::class.java)
 
-    interface ITunesAPI {
-        @GET("/search?entity=song")
-        fun searchTrack(@Query("term") text: String): Call<ITunesResponse>
-    }
-
-    companion object {
-        const val textOfSearch = "TEXT_OF_SEARCH"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -62,7 +55,7 @@ class SearchActivity : AppCompatActivity() {
         recyclerViewSongs.layoutManager = LinearLayoutManager(this)
         recyclerViewSongs.adapter = CustomRecyclerAdapter(listOfSongs)
 
-        downloadFailButton= findViewById(R.id.button_download_fail)
+        downloadFailButton = findViewById(R.id.button_download_fail)
 
         val buttonBack = findViewById<Button>(R.id.back_button_search_act)
         buttonBack.setOnClickListener {
@@ -84,6 +77,9 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText("")
             listOfSongs.clear()
             recyclerViewSongs.adapter?.notifyDataSetChanged()
+            errorVisibility(
+                searchActItemsVisib.SUCCESS
+            )
         }
 
         val searchActivityTextWatcher = object : TextWatcher {
@@ -131,27 +127,27 @@ class SearchActivity : AppCompatActivity() {
                                 listOfSongs.addAll(response.body()?.results!!)
                                 recyclerViewSongs.adapter?.notifyDataSetChanged()
                                 errorVisibility(
-                                    recycle = 0,
-                                    liner = 8,
-                                    button = 8
+                                    searchActItemsVisib.SUCCESS
                                 ) //запрос выполнен успешно
 
                             } else {
                                 errorVisibility(
-                                    recycle = 8,
-                                    liner = 0,
-                                    button = 8
+                                    searchActItemsVisib.EMPTY_SEARCH
                                 ) // получен ответ от сервера, но передано 0 элементов
                             }
                         }
                         else -> {
-                            errorVisibility(recycle = 8, liner = 0, button = 0) // прочие ошибки
+                            errorVisibility(
+                                searchActItemsVisib.CONNECTION_ERROR
+                            ) // прочие ошибки
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
-                    errorVisibility(recycle = 8, liner = 0, button = 0) // прочие ошибки
+                    errorVisibility(
+                        searchActItemsVisib.CONNECTION_ERROR
+                    ) // прочие ошибки
                 }
             })
     }
@@ -165,22 +161,34 @@ class SearchActivity : AppCompatActivity() {
      * Загрузка не удалась. Проверьте подключение к интернету".
      */
 
-    private fun errorVisibility(recycle: Int, liner: Int, button: Int) {
+    private fun errorVisibility(result: searchActItemsVisib) {
         val linearLayoutDownloadFail: LinearLayout = findViewById(R.id.linearlayout_download_fail)
         val downloadFailTextView: TextView = findViewById(R.id.textview_download_fail)
         val downloadFailImageView: ImageView = findViewById(R.id.imageview_download_fail)
 
+        when (result) {
+            searchActItemsVisib.SUCCESS -> {
+                recyclerViewSongs.visibility = View.VISIBLE
+                linearLayoutDownloadFail.visibility = View.GONE
+                downloadFailButton.visibility = View.GONE
+            }
 
-        if (button == 0) {
-            downloadFailImageView.setImageResource(R.drawable.no_internet_connection)
-            downloadFailTextView.setText(R.string.internet_lost_connection)
-        } else {
-            downloadFailImageView.setImageResource(R.drawable.serch_zero)
-            downloadFailTextView.setText(R.string.search_fail)
+            searchActItemsVisib.EMPTY_SEARCH -> {
+                recyclerViewSongs.visibility = View.GONE
+                linearLayoutDownloadFail.visibility = View.VISIBLE
+                downloadFailButton.visibility = View.GONE
+                downloadFailImageView.setImageResource(R.drawable.serch_zero)
+                downloadFailTextView.setText(R.string.search_fail)
+
+            }
+            searchActItemsVisib.CONNECTION_ERROR -> {
+                recyclerViewSongs.visibility = View.GONE
+                linearLayoutDownloadFail.visibility = View.VISIBLE
+                downloadFailButton.visibility = View.VISIBLE
+                downloadFailImageView.setImageResource(R.drawable.no_internet_connection)
+                downloadFailTextView.setText(R.string.internet_lost_connection)
+            }
         }
-        recyclerViewSongs.visibility = recycle
-        linearLayoutDownloadFail.visibility = liner
-        downloadFailButton.visibility = button
 
     }
 
