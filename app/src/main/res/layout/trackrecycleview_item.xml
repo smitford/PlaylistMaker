@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/high_of_basic_stripe"
+    android:backgroundTint="?attr/colorOnPrimary"
+    android:orientation="horizontal"
+    android:padding="@dimen/music_padding_srch">
+
+    <ImageView
+        android:id="@+id/album_image"
+        android:layout_width="@dimen/album_image"
+        android:layout_height="@dimen/album_image"
+        android:layout_marginStart="13dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside" />
+
+    <LinearLayout
+        android:layout_width="@dimen/zero"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/song_name"
+            style="@style/Text_songs"
+            android:layout_marginStart="@dimen/music_padding_srch" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/music_padding_srch"
+            android:layout_marginTop="1dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/artist_name"
+                style="@style/Text_songs"
+                android:textColor="@color/grey1"
+                android:textSize="@dimen/song_inf_extr_text" />
+
+            <ImageView
+                android:layout_width="3dp"
+                android:layout_height="3dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/ellipse_1" />
+
+            <TextView
+                android:id="@+id/song_length"
+                style="@style/Text_songs"
+                android:layout_gravity="end"
+                android:textColor="@color/grey1"
+                android:textSize="@dimen/song_inf_extr_text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/arrow_forward_listen_song"
+        style="@style/Images_settings"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/arrow_forward" />
+
+
+</LinearLayout>
