@@ -20,7 +20,7 @@ class CustomRecyclerAdapter(private val tracks: List<Track>) :
 
         fun bind(track: Track) {
             trackName.text = track.trackName
-            trackTime.text = track.trackTime
+            trackTime.text = track.trackTimeMillis
             artistName.text = track.artistName
             Glide.with(albumImg)
                 .load(track.artworkUrl100)

@@ -22,6 +22,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class SearchActivity : AppCompatActivity() {
@@ -125,6 +127,7 @@ class SearchActivity : AppCompatActivity() {
                             if (response.body()?.resultCount!! > 0) {
                                 listOfSongs.clear()
                                 listOfSongs.addAll(response.body()?.results!!)
+                                listOfSongs.forEach{it.changeFormat()}
                                 recyclerViewSongs.adapter?.notifyDataSetChanged()
                                 errorVisibility(
                                     searchActItemsVisib.SUCCESS
