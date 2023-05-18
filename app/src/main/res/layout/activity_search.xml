@@ -47,9 +47,9 @@
             android:layout_gravity="start"
             android:drawableLeft="@drawable/search2"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:maxLength="25"
             android:paddingStart="36dp"
-            android:imeOptions="actionDone"
             android:singleLine="true"
             tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
 
@@ -60,21 +60,35 @@
             android:backgroundTint="?attr/colorPrimaryVariant"
             android:outlineSpotShadowColor="?attr/colorPrimaryVariant"
             android:visibility="gone"
-            tools:visibility="visible"
             app:icon="@drawable/cross"
-            app:iconTint="?attr/colorSecondaryVariant" />
+            app:iconTint="?attr/colorSecondaryVariant"
+            tools:visibility="visible" />
 
     </FrameLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/big_step" />
+
+    <TextView
+        android:id="@+id/text_view_search_history"
+        style="@style/All_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/high_of_basic_stripe"
+        android:gravity="center"
+        android:text="@string/search_history"
+        android:textSize="19sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_songs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -110,10 +124,20 @@
                 android:id="@+id/button_download_fail"
                 style="@style/FAB"
                 android:layout_gravity="center"
-                android:visibility="gone"
                 android:text="@string/update"
+                android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>
     </FrameLayout>
+
+    <Button
+        android:id="@+id/button_clear_search_history"
+        style="@style/FAB"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/big_step"
+        android:text="@string/clear_history"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 
 </LinearLayout>
