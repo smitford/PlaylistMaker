@@ -24,6 +24,7 @@
         <TextView
             android:id="@+id/song_name"
             style="@style/Text_songs"
+            android:singleLine="true"
             android:layout_marginStart="@dimen/music_padding_srch" />
 
         <LinearLayout

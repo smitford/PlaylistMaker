@@ -21,6 +21,7 @@ class ViewHolderOfSongs(itemView: View) : RecyclerView.ViewHolder(itemView) {
         trackName.text = track.trackName
         trackTime.text = track.trackTimeMillis
         artistName.text = track.artistName
+
         Glide.with(albumImg)
             .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder)
