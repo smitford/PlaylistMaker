@@ -89,5 +89,9 @@
         <item name="android:textSize">@dimen/size_menu_text</item>
     </style>
 
+    <style name="SwitchCompatTheme" >
+        <item name="colorControlActivated">@color/grey1</item>
+    </style>
+
 
 </resources>

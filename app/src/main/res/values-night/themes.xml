@@ -14,6 +14,8 @@
         <!-- Customize your theme here. -->
         <item name="iconTint">@color/white</item>
         <item name="android:textColor">@color/white</item>
+        <item name="thumbTint">@color/blue1</item>
+        <item name="trackTint">@color/blue1</item>
 
     </style>
 </resources>
