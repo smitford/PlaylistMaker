@@ -55,7 +55,7 @@
         android:layout_width="@dimen/zero"
         android:layout_height="@dimen/zero"
         android:layout_marginTop="@dimen/padding_large"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/back_button_player_act"
