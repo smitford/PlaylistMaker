@@ -15,7 +15,7 @@ class ViewHolderOfSongs(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val albumImg: ImageView = itemView.findViewById(R.id.album_image)
     private val artistName: TextView = itemView.findViewById(R.id.artist_name)
     private val trackName: TextView = itemView.findViewById(R.id.song_name)
-    private val trackTime: TextView = itemView.findViewById(R.id.song_length)
+    private val trackTime: TextView = itemView.findViewById(R.id.length)
 
     fun bind(track: Track) {
         trackName.text = track.trackName

@@ -1,12 +1,17 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.trackRecycleView
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.trackRecycleView.Track
-import com.example.playlistmaker.trackRecycleView.ViewHolderOfSongs
+import com.example.playlistmaker.MediaActivity
+import com.example.playlistmaker.PlayerActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
 
-class AdapterSearch (private val tracks: List<Track>) :
+class AdapterSearch(private val tracks: List<Track>) :
     RecyclerView.Adapter<ViewHolderOfSongs>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderOfSongs {
@@ -19,9 +24,11 @@ class AdapterSearch (private val tracks: List<Track>) :
 
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
-
             SearchHistory.saveHistory(tracks[position])
 
+            val displayPlayer = Intent(it.context, PlayerActivity::class.java)
+            displayPlayer.putExtra("track", tracks[position])
+            it.context.startActivity(displayPlayer)
         }
 
     }

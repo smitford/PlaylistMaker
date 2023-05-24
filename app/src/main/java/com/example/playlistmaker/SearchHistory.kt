@@ -5,7 +5,7 @@ import com.example.playlistmaker.trackRecycleView.Track
 import com.google.gson.Gson
 
 object SearchHistory {
-    lateinit var sharedPreferencesHistory: SharedPreferences
+    lateinit var sharedPreferences: SharedPreferences
 
     private val gson = Gson()
 
@@ -23,12 +23,12 @@ object SearchHistory {
             .toMutableList()
 
     fun clearHistory () {
-        sharedPreferencesHistory.edit().remove(SEARCH_HISTORY).apply()
+        sharedPreferences.edit().remove(SEARCH_HISTORY).apply()
         historyList.clear()
     }
 
     fun refreshHistory () {
-        history = sharedPreferencesHistory.getString(SEARCH_HISTORY, "")
+        history = sharedPreferences.getString(SEARCH_HISTORY, "")
         historyList = if(history!="") getTracksFromHistory() else mutableListOf()
     }
 
@@ -73,7 +73,7 @@ object SearchHistory {
     fun saveHistory(track: Track) {
 
         addToSearchHistory(track)
-        sharedPreferencesHistory.edit().putString(SEARCH_HISTORY, getJSON()).apply()
+        sharedPreferences.edit().putString(SEARCH_HISTORY, getJSON()).apply()
 
     }
 

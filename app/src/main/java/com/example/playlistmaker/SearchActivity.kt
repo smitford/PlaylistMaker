@@ -15,9 +15,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.trackRecycleView.ITunesResponse
-import com.example.playlistmaker.trackRecycleView.Track
-import com.example.playlistmaker.trackRecycleView.Visibility
+import com.example.playlistmaker.trackRecycleView.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var downloadFailButton: Button
 
-    private lateinit var sharedPreferencesHistory: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
 
     var listOfSongs = mutableListOf<Track>()
 
@@ -63,10 +61,12 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        sharedPreferencesHistory = sharedPreferencesInit(this.applicationContext)
+        sharedPreferences = sharedPreferencesInit(this.applicationContext)
 
-        SearchHistory.sharedPreferencesHistory = sharedPreferencesHistory
+        textSearch=""
 
+        SearchHistory.sharedPreferences = sharedPreferences
+        SearchHistory.refreshHistory()
         recyclerViewSongs = findViewById(R.id.recyclerView_songs)
         recyclerViewSongs.layoutManager = LinearLayoutManager(this)
         recyclerViewSongs.adapter = AdapterSearch(listOfSongs)
@@ -133,6 +133,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
+                textSearch = searchField.text.toString()
             }
 
             fun clearButtonVisibility(s: CharSequence?): Int {

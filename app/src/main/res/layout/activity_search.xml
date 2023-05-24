@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorOnPrimary"
     android:orientation="vertical"
-    android:padding="@dimen/padding_of_all_items">
+    android:padding="@dimen/padding_small">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -16,12 +16,8 @@
 
         <Button
             android:id="@+id/back_button_search_act"
-            style="@style/Button_basic"
-            android:layout_width="@dimen/button_size"
-            android:backgroundTintMode="src_over"
+            style="@style/ButtonBack"
             android:outlineSpotShadowColor="?attr/colorOnPrimary"
-            app:icon="@drawable/arrow_back"
-            app:iconTint="?attr/colorOnSecondary"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
@@ -35,14 +31,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_search"
-        android:layout_marginStart="@dimen/between_button_pending"
+        android:layout_marginStart="@dimen/pending_medium2"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="@dimen/between_button_pending"
+        android:layout_marginEnd="@dimen/pending_medium2"
         android:background="@drawable/rounding_of_edittext">
 
         <EditText
             android:id="@+id/search_bar"
-            style="@style/Edit_text_basic"
+            style="@style/EditTextBasic"
             android:layout_width="match_parent"
             android:layout_gravity="start"
             android:drawableLeft="@drawable/search2"
@@ -55,7 +51,7 @@
 
         <Button
             android:id="@+id/clear_text_search"
-            style="@style/Button_basic"
+            style="@style/ButtonBasic"
             android:layout_gravity="end"
             android:backgroundTint="?attr/colorPrimaryVariant"
             android:outlineSpotShadowColor="?attr/colorPrimaryVariant"
@@ -68,11 +64,11 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/big_step" />
+        android:layout_height="@dimen/padding_large" />
 
     <TextView
         android:id="@+id/text_view_search_history"
-        style="@style/All_text"
+        style="@style/AllText"
         android:layout_width="match_parent"
         android:layout_height="@dimen/high_of_basic_stripe"
         android:gravity="center"
@@ -113,9 +109,9 @@
 
             <TextView
                 android:id="@+id/textview_download_fail"
-                style="@style/All_text"
-                android:layout_marginStart="@dimen/big_step"
-                android:layout_marginEnd="@dimen/big_step"
+                style="@style/AllText"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
                 android:gravity="center"
                 android:textSize="19sp"
                 tools:text="@string/internet_lost_connection" />
@@ -134,7 +130,7 @@
         android:id="@+id/button_clear_search_history"
         style="@style/FAB"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/big_step"
+        android:layout_marginTop="@dimen/padding_large"
         android:text="@string/clear_history"
         android:visibility="gone"
         tools:visibility="visible" />
