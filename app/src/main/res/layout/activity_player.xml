@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.45"/>
+        app:layout_constraintGuide_percent="0.45" />
 
     <ImageView
         android:id="@+id/album_image"
@@ -56,10 +56,10 @@
         android:layout_height="@dimen/zero"
         android:layout_marginTop="@dimen/padding_large"
         android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/horizontal_line"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/back_button_player_act"
-        app:layout_constraintBottom_toBottomOf="@id/horizontal_line"
         tools:src="@drawable/album" />
 
     <TextView
@@ -88,17 +88,14 @@
 
     <ImageButton
         android:id="@+id/player_button_add"
-        android:layout_width="51dp"
-        android:layout_height="51dp"
-        android:background="@drawable/round_button"
+        style="@style/PlayerSmallButton"
         android:src="@drawable/add"
-        app:layout_constraintTop_toTopOf="@id/player_button_play"
         app:layout_constraintBottom_toBottomOf="@id/player_button_play"
-        app:layout_constraintTop_toBottomOf="@id/player_button_play"
         app:layout_constraintEnd_toStartOf="@id/player_button_play"
-        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
-        />
+        app:layout_constraintTop_toBottomOf="@id/player_button_play"
+        app:layout_constraintTop_toTopOf="@id/player_button_play" />
 
     <ImageButton
         android:id="@+id/player_button_play"
@@ -114,15 +111,13 @@
 
     <ImageButton
         android:id="@+id/player_button_like"
-        android:layout_width="51dp"
-        android:layout_height="51dp"
-        android:background="@drawable/round_button"
+        style="@style/PlayerSmallButton"
         android:src="@drawable/like"
-        app:layout_constraintTop_toTopOf="@id/player_button_play"
         app:layout_constraintBottom_toBottomOf="@id/player_button_play"
-        app:layout_constraintTop_toBottomOf="@id/player_button_play"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/player_button_play" />
+        app:layout_constraintStart_toEndOf="@id/player_button_play"
+        app:layout_constraintTop_toBottomOf="@id/player_button_play"
+        app:layout_constraintTop_toTopOf="@id/player_button_play" />
 
     <TextView
         android:id="@+id/song_play_time"
@@ -145,103 +140,99 @@
 
     <TextView
         android:id="@+id/length"
-        style="@style/SongInformation"
+        style="@style/SongInformationTag"
         android:text="@string/length"
-        app:layout_constraintBottom_toTopOf="@id/album"
-        app:layout_constraintStart_toStartOf="@id/leftBorderSmall"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_song_length"
         app:layout_constraintTag="length"
-        app:layout_constraintTop_toBottomOf="@id/song_play_time"
-        app:layout_constraintVertical_chainStyle="spread" />
+        app:layout_constraintVertical_weight="1" />
 
     <TextView
         android:id="@+id/text_song_length"
         style="@style/SongInformation"
+        android:layout_marginTop="30dp"
         android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintBaseline_toBaselineOf="@id/length"
-        app:layout_constraintBottom_toBottomOf="@id/length"
         app:layout_constraintEnd_toEndOf="@id/rightBorderSmall"
-        app:layout_constraintStart_toEndOf="@id/text_barrier"
-        tools:text="@string/test" />
+        app:layout_constraintStart_toStartOf="@id/text_barrier"
+        app:layout_constraintTop_toBottomOf="@id/song_play_time"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        app:layout_constraintVertical_weight="1"
+        tools:text="2:15" />
 
     <!--    Название альбома     -->
 
     <TextView
         android:id="@+id/album"
-        style="@style/SongInformation"
+        style="@style/SongInformationTag"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_song_album"
         android:text="@string/album"
-        app:layout_constraintBottom_toTopOf="@id/year"
-        app:layout_constraintStart_toStartOf="@id/leftBorderSmall"
-        app:layout_constraintTag="album"
-        app:layout_constraintTop_toBottomOf="@id/length" />
+        app:layout_constraintTag="album" />
 
     <TextView
         android:id="@+id/text_song_album"
         style="@style/SongInformation"
         android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintBaseline_toBaselineOf="@id/album"
-        app:layout_constraintBottom_toBottomOf="@id/album"
+        app:layout_constraintTop_toBottomOf="@id/text_song_length"
+        app:layout_constraintBottom_toTopOf="@id/text_song_year"
         app:layout_constraintEnd_toEndOf="@id/rightBorderSmall"
-        app:layout_constraintStart_toEndOf="@id/text_barrier"
+        app:layout_constraintStart_toStartOf="@id/text_barrier"
+        app:layout_constraintVertical_weight="3"
         tools:text="@string/test" />
 
     <!--    Год выпуска альбома     -->
 
     <TextView
         android:id="@+id/year"
-        style="@style/SongInformation"
-        android:text="@string/year"
-        app:layout_constraintBottom_toTopOf="@id/genre"
-        app:layout_constraintStart_toStartOf="@id/leftBorderSmall"
-        app:layout_constraintTop_toBottomOf="@id/album" />
+        style="@style/SongInformationTag"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_song_year"
+        android:text="@string/year" />
 
     <TextView
         android:id="@+id/text_song_year"
         style="@style/SongInformation"
         android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintBaseline_toBaselineOf="@id/year"
-        app:layout_constraintBottom_toBottomOf="@id/year"
+        app:layout_constraintTop_toBottomOf="@id/text_song_album"
         app:layout_constraintEnd_toEndOf="@id/rightBorderSmall"
-        app:layout_constraintStart_toEndOf="@id/text_barrier"
-        tools:text="@string/test" />
+        app:layout_constraintStart_toStartOf="@id/text_barrier"
+        app:layout_constraintBottom_toTopOf="@id/text_song_genre"
+        app:layout_constraintVertical_weight="1"
+        tools:text="2023" />
 
     <!--    Жанр музыки     -->
 
     <TextView
         android:id="@+id/genre"
-        style="@style/SongInformation"
-        android:text="@string/genre"
-        app:layout_constraintBottom_toTopOf="@id/country"
-        app:layout_constraintStart_toStartOf="@id/leftBorderSmall"
-        app:layout_constraintTop_toBottomOf="@id/year" />
+        style="@style/SongInformationTag"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_song_genre"
+        android:text="@string/genre" />
 
     <TextView
         android:id="@+id/text_song_genre"
         style="@style/SongInformation"
         android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintBaseline_toBaselineOf="@id/genre"
-        app:layout_constraintBottom_toBottomOf="@id/genre"
+        app:layout_constraintTop_toBottomOf="@id/text_song_year"
         app:layout_constraintEnd_toEndOf="@id/rightBorderSmall"
-        app:layout_constraintStart_toEndOf="@id/text_barrier"
-        tools:text="@string/test" />
+        app:layout_constraintStart_toStartOf="@id/text_barrier"
+        app:layout_constraintBottom_toTopOf="@id/text_song_country"
+        app:layout_constraintVertical_weight="1"
+        tools:text="rock" />
 
     <!--    Страна выпуска     -->
 
     <TextView
         android:id="@+id/country"
-        style="@style/SongInformation"
-        android:text="@string/country"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/leftBorderSmall"
-        app:layout_constraintTop_toBottomOf="@id/genre" />
+        style="@style/SongInformationTag"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_song_country"
+        android:text="@string/country" />
 
     <TextView
         android:id="@+id/text_song_country"
         style="@style/SongInformation"
-        android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintBaseline_toBaselineOf="@id/country"
-        app:layout_constraintBottom_toBottomOf="@id/country"
+        app:layout_constraintTop_toBottomOf="@id/text_song_genre"
         app:layout_constraintEnd_toEndOf="@id/rightBorderSmall"
-        app:layout_constraintStart_toEndOf="@id/text_barrier"
-        tools:text="@string/test" />
+        app:layout_constraintStart_toStartOf="@id/text_barrier"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_weight="1"
+        android:textColor="?attr/colorOnSecondary"
+        tools:text="USA" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

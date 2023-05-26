@@ -15,6 +15,7 @@
     <dimen name="edit_text_search">36dp</dimen>
     <dimen name="album_image">45dp</dimen>
     <dimen name="FAB_corner_radius">54dp</dimen>
+    <dimen name="player_small_button">51dp</dimen>
 
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
