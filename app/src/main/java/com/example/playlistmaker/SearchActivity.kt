@@ -1,51 +1,48 @@
 package com.example.playlistmaker
 
 
+import SEARCH_DEBOUNCE_DELAY
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.trackRecycleView.*
+import com.example.playlistmaker.trackRecycleView.AdapterSearch
+import com.example.playlistmaker.trackRecycleView.AdapterSearchHistory
+import com.example.playlistmaker.trackRecycleView.ITunesResponse
+import com.example.playlistmaker.trackRecycleView.Track
+import com.example.playlistmaker.trackRecycleView.Visibility
+import handler
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sharedPreferencesInit
+import textOfSearch
 
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object {
-        const val textOfSearch = "TEXT_OF_SEARCH"
-    }
-
-    private lateinit var textViewSearchHistory : TextView
-
+    private lateinit var textViewSearchHistory: TextView
     private lateinit var buttonClearSearchHistory: Button
-
     private lateinit var searchField: EditText
-
     private lateinit var textSearch: String
-
+    private lateinit var searchProgressBar: ProgressBar
     lateinit var recyclerViewSongs: RecyclerView
-
     private lateinit var downloadFailButton: Button
-
     private lateinit var sharedPreferences: SharedPreferences
-
     var listOfSongs = mutableListOf<Track>()
-
+    private val searchRequest = Runnable { search() }
     private val iTunesAPI = "https://itunes.apple.com"  //Base URL for iTunesAPI
 
     // Initialisation of retrofit component
@@ -63,10 +60,11 @@ class SearchActivity : AppCompatActivity() {
 
         sharedPreferences = sharedPreferencesInit(this.applicationContext)
 
-        textSearch=""
+        textSearch = ""
 
         SearchHistory.sharedPreferences = sharedPreferences
         SearchHistory.refreshHistory()
+
         recyclerViewSongs = findViewById(R.id.recyclerView_songs)
         recyclerViewSongs.layoutManager = LinearLayoutManager(this)
         recyclerViewSongs.adapter = AdapterSearch(listOfSongs)
@@ -82,6 +80,8 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<Button>(R.id.clear_text_search)
 
         searchField = findViewById(R.id.search_bar)
+
+        searchProgressBar = findViewById(R.id.search_progressBar)
 
         buttonBack.setOnClickListener {
             finish()
@@ -116,20 +116,17 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
-
-                if (searchField.hasFocus() && searchField.text.isEmpty()&&SearchHistory.notEmpty()) {
+                if (searchField.hasFocus() && searchField.text.isEmpty() && SearchHistory.notEmpty()) {
                     searchHistoryVisib(Visibility.VISIBLE)
                     SearchHistory.refreshHistory()
                     recyclerViewSongs.adapter = AdapterSearchHistory(SearchHistory.getHistory())
                     recyclerViewSongs.adapter?.notifyDataSetChanged()
-
                 } else {
                     searchHistoryVisib(Visibility.GONE)
                     recyclerViewSongs.adapter = AdapterSearch(listOfSongs)
                     recyclerViewSongs.adapter?.notifyDataSetChanged()
-
+                    searchDebounce()
                 }
-
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -147,9 +144,8 @@ class SearchActivity : AppCompatActivity() {
 
         searchField.setOnFocusChangeListener { _, hasFocus ->
 
-            if (hasFocus && searchField.text.isEmpty()&&SearchHistory.notEmpty()) {
+            if (hasFocus && searchField.text.isEmpty() && SearchHistory.notEmpty()) {
                 searchHistoryVisib(Visibility.VISIBLE)
-
                 SearchHistory.refreshHistory()
                 recyclerViewSongs.adapter = AdapterSearchHistory(SearchHistory.getHistory())
                 recyclerViewSongs.adapter?.notifyDataSetChanged()
@@ -158,17 +154,11 @@ class SearchActivity : AppCompatActivity() {
 
         }
 
-        searchField.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                listOfSongs.clear()
-                search()
-            }
-            false
-        }
         searchField.addTextChangedListener(searchActivityTextWatcher)
     }
 
     private fun search() {
+        searchProgressBar.visibility = View.VISIBLE
 
         iTunesAPIService.searchTrack(text = searchField.text.toString())
             .enqueue(object : Callback<ITunesResponse> {
@@ -179,7 +169,6 @@ class SearchActivity : AppCompatActivity() {
                     when (response.code()) {
                         200 -> {
                             if (response.body()?.resultCount!! > 0) {
-
                                 listOfSongs.clear()
                                 listOfSongs.addAll(response.body()?.results!!)
                                 listOfSongs.forEach { it.changeFormat() }
@@ -187,7 +176,6 @@ class SearchActivity : AppCompatActivity() {
                                 errorVisibility(
                                     searchActItemsVisib.SUCCESS
                                 ) //запрос выполнен успешно
-
                             } else {
                                 errorVisibility(
                                     searchActItemsVisib.EMPTY_SEARCH
@@ -210,15 +198,18 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
-fun searchHistoryVisib ( visibility: Visibility) {
-
-    when(visibility){
-        Visibility.VISIBLE ->textViewSearchHistory.visibility = View.VISIBLE
-        Visibility.GONE -> textViewSearchHistory.visibility = View.GONE
+    fun searchDebounce() {
+        handler.removeCallbacks(searchRequest)
+        handler.postDelayed(searchRequest, SEARCH_DEBOUNCE_DELAY)
     }
 
-    buttonClearSearchHistory.visibility = textViewSearchHistory.visibility
-}
+    fun searchHistoryVisib(visibility: Visibility) {
+        when (visibility) {
+            Visibility.VISIBLE -> textViewSearchHistory.visibility = View.VISIBLE
+            Visibility.GONE -> textViewSearchHistory.visibility = View.GONE
+        }
+        buttonClearSearchHistory.visibility = textViewSearchHistory.visibility
+    }
 
     /**
      * Функция позволяющая скрывать или показывать визуальные элементы, уведомляющие пользователя
@@ -236,6 +227,7 @@ fun searchHistoryVisib ( visibility: Visibility) {
                 recyclerViewSongs.visibility = View.VISIBLE
                 linearLayoutDownloadFail.visibility = View.GONE
                 downloadFailButton.visibility = View.GONE
+
             }
 
             searchActItemsVisib.EMPTY_SEARCH -> {
@@ -244,7 +236,6 @@ fun searchHistoryVisib ( visibility: Visibility) {
                 downloadFailButton.visibility = View.GONE
                 downloadFailImageView.setImageResource(R.drawable.serch_zero)
                 downloadFailTextView.setText(R.string.search_fail)
-
             }
             searchActItemsVisib.CONNECTION_ERROR -> {
                 recyclerViewSongs.visibility = View.GONE
@@ -254,13 +245,12 @@ fun searchHistoryVisib ( visibility: Visibility) {
                 downloadFailTextView.setText(R.string.internet_lost_connection)
             }
         }
-
+        searchProgressBar.visibility = View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(textOfSearch, textSearch)
-
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

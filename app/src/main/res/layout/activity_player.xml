@@ -123,7 +123,7 @@
         android:id="@+id/song_play_time"
         style="@style/AllText"
         android:layout_marginTop="@dimen/padding_medium"
-        android:text="0:30"
+        android:text="@string/play_time"
         android:textSize="@dimen/text_size_14"
         app:layout_constraintEnd_toEndOf="@id/player_button_play"
         app:layout_constraintStart_toStartOf="@id/player_button_play"

@@ -1,17 +1,16 @@
 package com.example.playlistmaker.trackRecycleView
 
-import android.content.Context
+
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.MediaActivity
+import clickDebounce
 import com.example.playlistmaker.PlayerActivity
 import com.example.playlistmaker.R
 
-class AdapterSearchHistory (private val tracks: List<Track>) :
-RecyclerView.Adapter<ViewHolderOfSongs>() {
+class AdapterSearchHistory(private val tracks: List<Track>) :
+    RecyclerView.Adapter<ViewHolderOfSongs>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderOfSongs {
         val itemView = LayoutInflater.from(parent.context)
@@ -20,16 +19,17 @@ RecyclerView.Adapter<ViewHolderOfSongs>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolderOfSongs, position: Int) {
-
         holder.bind(tracks[position])
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
+            if (clickDebounce()) {
 
-            val displayPlayer = Intent(it.context, PlayerActivity::class.java)
-            displayPlayer.putExtra("track", tracks[position])
-            it.context.startActivity(displayPlayer)
+                val displayPlayer = Intent(it.context, PlayerActivity::class.java)
+                displayPlayer.putExtra("track", tracks[position])
+                it.context.startActivity(displayPlayer)
+            }
         }
-
     }
 
     override fun getItemCount() = tracks.size
+
 }
