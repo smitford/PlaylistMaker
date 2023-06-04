@@ -3,7 +3,6 @@ package com.example.playlistmaker
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.trackRecycleView.Track
 import sharedPreferencesInit
 
 const val THEME_PREFERENCES_AND_HISTORY = "theme_preferences"
@@ -15,14 +14,14 @@ var darkTheme = false
 
 class App : Application() {
 
-    lateinit var sharedPreferencesThemeAndHistory: SharedPreferences
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
 
-        sharedPreferencesThemeAndHistory = sharedPreferencesInit(this.applicationContext)
+        sharedPreferences = sharedPreferencesInit(this.applicationContext)
 
-        darkTheme = sharedPreferencesThemeAndHistory.getBoolean(THEME_SETTINGS, false)
+        darkTheme = sharedPreferences.getBoolean(THEME_SETTINGS, false)
         switchTheme(darkTheme)
 
     }
@@ -36,7 +35,7 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        sharedPreferencesThemeAndHistory.edit().putBoolean(THEME_SETTINGS, darkTheme).apply()
+        sharedPreferences.edit().putBoolean(THEME_SETTINGS, darkTheme).apply()
 
     }
 }

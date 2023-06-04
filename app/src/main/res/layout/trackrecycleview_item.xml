@@ -23,7 +23,7 @@
 
         <TextView
             android:id="@+id/song_name"
-            style="@style/Text_songs"
+            style="@style/TextSongs"
             android:singleLine="true"
             android:layout_marginStart="@dimen/music_padding_srch" />
 
@@ -36,9 +36,9 @@
 
             <TextView
                 android:id="@+id/artist_name"
-                style="@style/Text_songs"
+                style="@style/TextSongs"
                 android:textColor="@color/grey1"
-                android:textSize="@dimen/song_inf_extr_text" />
+                android:textSize="@dimen/text_size_11" />
 
             <ImageView
                 android:layout_width="3dp"
@@ -47,11 +47,11 @@
                 android:src="@drawable/ellipse_1" />
 
             <TextView
-                android:id="@+id/song_length"
-                style="@style/Text_songs"
+                android:id="@+id/length"
+                style="@style/TextSongs"
                 android:layout_gravity="end"
                 android:textColor="@color/grey1"
-                android:textSize="@dimen/song_inf_extr_text" />
+                android:textSize="@dimen/text_size_11" />
 
         </LinearLayout>
 
@@ -59,7 +59,7 @@
 
     <ImageView
         android:id="@+id/arrow_forward_listen_song"
-        style="@style/Images_settings"
+        style="@style/ImagesSettings"
         android:layout_marginEnd="12dp"
         android:src="@drawable/arrow_forward" />
 

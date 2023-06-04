@@ -1,37 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="All_text">
+    <style name="AllText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textSize">@dimen/size_menu_text</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
         <item name="fontFamily">@font/ys_display_medium</item>
     </style>
 
-    <style name="Text_songs">
+    <style name="SongInformationTag">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/zero</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textSize">@dimen/size_text_13</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/grey1</item>
+    </style>
+
+    <style name="SongInformation" parent="SongInformationTag">
+        <item name="android:layout_width">@dimen/zero</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextSongs">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:textSize">@dimen/size_menu_text</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="color">@color/white</item>
     </style>
 
-    <style name="Text_1" parent="All_text">
-        <item name="android:layout_marginStart">@dimen/text_start</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_of_button</item>
+    <style name="PlayerSong" parent="TextSongs">
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Text_settings" parent="All_text">
+    <style name="Text_1" parent="AllText">
+        <item name="android:layout_marginStart">@dimen/padding_medium</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_22</item>
+    </style>
+
+    <style name="TextSettings" parent="AllText">
         <item name="android:layout_width">@dimen/zero</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="fontFamily">@font/ys_display_regular</item>
     </style>
 
-    <style name="Images_settings">
+    <style name="ImagesSettings">
         <item name="android:layout_width">@dimen/icon_size</item>
         <item name="android:layout_height">@dimen/icon_size</item>
         <item name="android:layout_gravity">center</item>
@@ -40,23 +59,38 @@
         <item name="android:scaleType">centerInside</item>
     </style>
 
-    <style name="Button_basic">
+    <style name="ButtonBasic">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_width">@dimen/button_size</item>
         <item name="android:backgroundTint">@color/black1</item>
     </style>
 
-    <style name="Button_Main_act" parent="Button_basic">
+    <style name="PlayerSmallButton">
+        <item name="android:layout_width">@dimen/player_small_button</item>
+        <item name="android:layout_height">@dimen/player_small_button</item>
+        <item name="android:background">@drawable/round_button</item>
+        <item name="backgroundTint">@color/grey_dark</item>
+    </style>
+
+    <style name="ButtonBack" parent="ButtonBasic">
+        <item name="android:layout_height">@dimen/button_size</item>
+        <item name="android:layout_width">@dimen/button_size</item>
+        <item name="android:backgroundTintMode">src_over</item>
+        <item name="icon">@drawable/arrow_back</item>
+        <item name="iconTint">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="ButtonMainAct" parent="ButtonBasic">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/zero</item>
-        <item name="android:layout_marginTop">@dimen/between_button_pending</item>
+        <item name="android:layout_marginTop">@dimen/pending_medium2</item>
         <item name="android:layout_marginStart">@dimen/start_button_pending</item>
         <item name="android:layout_marginEnd">@dimen/end_button_pending</item>
         <item name="android:layout_weight">1</item>
         <item name="textAllCaps">false</item>
         <item name="android:textColor">@color/black1</item>
-        <item name="android:textSize">@dimen/text_of_button</item>
+        <item name="android:textSize">@dimen/text_size_22</item>
         <item name="cornerRadius">@dimen/corner_of_button</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">@dimen/icon_padding_mm</item>
@@ -67,17 +101,17 @@
 
     </style>
 
-    <style name="FAB" parent="Button_basic">
+    <style name="FAB" parent="ButtonBasic">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorOnSecondary</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textAllCaps">false</item>
         <item name="fontFamily">@font/ys_display_medium</item>
-        <item name="android:textSize">@dimen/FAB_text</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
         <item name="cornerRadius">@dimen/FAB_corner_radius</item>
     </style>
 
-    <style name="Edit_text_basic">
+    <style name="EditTextBasic">
         <item name="android:background">@drawable/rounding_of_edittext</item>
         <item name="android:textColorHint">?attr/colorSecondaryVariant</item>
         <item name="drawableTint">?attr/colorSecondaryVariant</item>
@@ -87,7 +121,7 @@
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:inputType">text</item>
         <item name="android:lines">1</item>
-        <item name="android:textSize">@dimen/size_menu_text</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
     </style>
 
 </resources>
