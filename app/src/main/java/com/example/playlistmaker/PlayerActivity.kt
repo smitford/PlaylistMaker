@@ -25,7 +25,7 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val PLAY_DEBOUNCE_DELAY = 500L
+        private const val PLAY_DEBOUNCE_DELAY = 250L
     }
 
 
@@ -112,6 +112,7 @@ class PlayerActivity : AppCompatActivity() {
         }
         mediaPlayer.setOnCompletionListener {
             playButton.setImageResource(R.drawable.play)
+            songPlayTime.setText(R.string.play_time)
             playerState = STATE_PREPARED
         }
     }
@@ -119,7 +120,6 @@ class PlayerActivity : AppCompatActivity() {
     private fun startMediaPlayer() {
         mediaPlayer.start()
         playerState = STATE_PLAYING
-        songPlayTime.setText(R.string.play_time)
         playButton.setImageResource(R.drawable.pause)
         handler.post(playerTimeRefresher())
     }
@@ -147,7 +147,7 @@ class PlayerActivity : AppCompatActivity() {
                         SimpleDateFormat(
                             "mm:ss",
                             Locale.getDefault()
-                        ).format(30000-mediaPlayer.currentPosition)
+                        ).format(mediaPlayer.currentPosition)
                     handler.postDelayed(this, PLAY_DEBOUNCE_DELAY)
                 }
 
