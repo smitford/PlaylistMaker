@@ -1,4 +1,4 @@
-package com.example.playlistmaker.trackRecycleView
+package com.example.playlistmaker.trackrecycleview
 
 
 
@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import clickDebounce
-import com.example.playlistmaker.PlayerActivity
+import com.example.playlistmaker.activityclasses.PlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SearchHistory
 

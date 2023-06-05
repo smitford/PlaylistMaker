@@ -1,7 +1,6 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.activityclasses
 
 
-import SEARCH_DEBOUNCE_DELAY
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,11 +15,13 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.trackRecycleView.AdapterSearch
-import com.example.playlistmaker.trackRecycleView.AdapterSearchHistory
-import com.example.playlistmaker.trackRecycleView.ITunesResponse
-import com.example.playlistmaker.trackRecycleView.Track
-import com.example.playlistmaker.trackRecycleView.Visibility
+import com.example.playlistmaker.ITunesAPI
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.trackrecycleview.AdapterSearch
+import com.example.playlistmaker.trackrecycleview.AdapterSearchHistory
+import com.example.playlistmaker.api.ITunesResponse
+import com.example.playlistmaker.trackrecycleview.Track
 import handler
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,6 +30,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sharedPreferencesInit
 import textOfSearch
+import SEARCH_DEBOUNCE_DELAY as SEARCH_DEBOUNCE_DELAY1
 
 
 class SearchActivity : AppCompatActivity() {
@@ -93,7 +95,7 @@ class SearchActivity : AppCompatActivity() {
 
         buttonClearSearchHistory.setOnClickListener {
             SearchHistory.clearHistory()
-            searchHistoryVisib(Visibility.GONE)
+            searchHistoryVisib(SearchHistoryVisibility.GONE)
             recyclerViewSongs.adapter?.notifyDataSetChanged()
 
         }
@@ -105,7 +107,7 @@ class SearchActivity : AppCompatActivity() {
             listOfSongs.clear()
             recyclerViewSongs.adapter?.notifyDataSetChanged()
             errorVisibility(
-                searchActItemsVisib.SUCCESS
+                SearchActItemsVisib.SUCCESS
             )
         }
 
@@ -117,12 +119,12 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
                 if (searchField.hasFocus() && searchField.text.isEmpty() && SearchHistory.notEmpty()) {
-                    searchHistoryVisib(Visibility.VISIBLE)
+                    searchHistoryVisib(SearchHistoryVisibility.VISIBLE)
                     SearchHistory.refreshHistory()
                     recyclerViewSongs.adapter = AdapterSearchHistory(SearchHistory.getHistory())
                     recyclerViewSongs.adapter?.notifyDataSetChanged()
                 } else {
-                    searchHistoryVisib(Visibility.GONE)
+                    searchHistoryVisib(SearchHistoryVisibility.GONE)
                     recyclerViewSongs.adapter = AdapterSearch(listOfSongs)
                     recyclerViewSongs.adapter?.notifyDataSetChanged()
                     searchDebounce()
@@ -145,12 +147,12 @@ class SearchActivity : AppCompatActivity() {
         searchField.setOnFocusChangeListener { _, hasFocus ->
 
             if (hasFocus && searchField.text.isEmpty() && SearchHistory.notEmpty()) {
-                searchHistoryVisib(Visibility.VISIBLE)
+                searchHistoryVisib(SearchHistoryVisibility.VISIBLE)
                 SearchHistory.refreshHistory()
                 recyclerViewSongs.adapter = AdapterSearchHistory(SearchHistory.getHistory())
                 recyclerViewSongs.adapter?.notifyDataSetChanged()
 
-            } else searchHistoryVisib(Visibility.GONE)
+            } else searchHistoryVisib(SearchHistoryVisibility.GONE)
 
         }
 
@@ -174,17 +176,17 @@ class SearchActivity : AppCompatActivity() {
                                 listOfSongs.forEach { it.changeFormat() }
                                 recyclerViewSongs.adapter?.notifyDataSetChanged()
                                 errorVisibility(
-                                    searchActItemsVisib.SUCCESS
+                                    SearchActItemsVisib.SUCCESS
                                 ) //запрос выполнен успешно
                             } else {
                                 errorVisibility(
-                                    searchActItemsVisib.EMPTY_SEARCH
+                                    SearchActItemsVisib.EMPTY_SEARCH
                                 ) // получен ответ от сервера, но передано 0 элементов
                             }
                         }
                         else -> {
                             errorVisibility(
-                                searchActItemsVisib.CONNECTION_ERROR
+                                SearchActItemsVisib.CONNECTION_ERROR
                             ) // прочие ошибки
                         }
                     }
@@ -192,7 +194,7 @@ class SearchActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
                     errorVisibility(
-                        searchActItemsVisib.CONNECTION_ERROR
+                        SearchActItemsVisib.CONNECTION_ERROR
                     ) // прочие ошибки
                 }
             })
@@ -200,13 +202,13 @@ class SearchActivity : AppCompatActivity() {
 
     fun searchDebounce() {
         handler.removeCallbacks(searchRequest)
-        handler.postDelayed(searchRequest, SEARCH_DEBOUNCE_DELAY)
+        handler.postDelayed(searchRequest, SEARCH_DEBOUNCE_DELAY1)
     }
 
-    fun searchHistoryVisib(visibility: Visibility) {
+    fun searchHistoryVisib(visibility: SearchHistoryVisibility) {
         when (visibility) {
-            Visibility.VISIBLE -> textViewSearchHistory.visibility = View.VISIBLE
-            Visibility.GONE -> textViewSearchHistory.visibility = View.GONE
+            SearchHistoryVisibility.VISIBLE -> textViewSearchHistory.visibility = View.VISIBLE
+            SearchHistoryVisibility.GONE -> textViewSearchHistory.visibility = View.GONE
         }
         buttonClearSearchHistory.visibility = textViewSearchHistory.visibility
     }
@@ -217,27 +219,27 @@ class SearchActivity : AppCompatActivity() {
      * Переменные recycle, liner, button - соответствуют состояню параметра visibility соответствующих View
      */
 
-    private fun errorVisibility(result: searchActItemsVisib) {
+    private fun errorVisibility(result: SearchActItemsVisib) {
         val linearLayoutDownloadFail: LinearLayout = findViewById(R.id.linearlayout_download_fail)
         val downloadFailTextView: TextView = findViewById(R.id.textview_download_fail)
         val downloadFailImageView: ImageView = findViewById(R.id.imageview_download_fail)
 
         when (result) {
-            searchActItemsVisib.SUCCESS -> {
+            SearchActItemsVisib.SUCCESS -> {
                 recyclerViewSongs.visibility = View.VISIBLE
                 linearLayoutDownloadFail.visibility = View.GONE
                 downloadFailButton.visibility = View.GONE
 
             }
 
-            searchActItemsVisib.EMPTY_SEARCH -> {
+            SearchActItemsVisib.EMPTY_SEARCH -> {
                 recyclerViewSongs.visibility = View.GONE
                 linearLayoutDownloadFail.visibility = View.VISIBLE
                 downloadFailButton.visibility = View.GONE
                 downloadFailImageView.setImageResource(R.drawable.serch_zero)
                 downloadFailTextView.setText(R.string.search_fail)
             }
-            searchActItemsVisib.CONNECTION_ERROR -> {
+            SearchActItemsVisib.CONNECTION_ERROR -> {
                 recyclerViewSongs.visibility = View.GONE
                 linearLayoutDownloadFail.visibility = View.VISIBLE
                 downloadFailButton.visibility = View.VISIBLE
@@ -257,4 +259,16 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         textSearch = savedInstanceState.getString(textOfSearch, "")
     }
+}
+
+
+enum class SearchActItemsVisib {
+    CONNECTION_ERROR,
+    EMPTY_SEARCH,
+    SUCCESS
+}
+
+enum class SearchHistoryVisibility {
+    VISIBLE,
+    GONE
 }

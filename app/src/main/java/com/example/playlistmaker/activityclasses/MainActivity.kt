@@ -1,10 +1,11 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.activityclasses
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.playlistmaker.R
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")

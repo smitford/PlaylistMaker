@@ -1,4 +1,4 @@
-package com.example.playlistmaker.trackRecycleView
+package com.example.playlistmaker.trackrecycleview
 
 import android.os.Parcel
 import android.os.Parcelable

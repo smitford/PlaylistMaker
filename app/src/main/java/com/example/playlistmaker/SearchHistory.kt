@@ -1,7 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.trackRecycleView.Track
+import com.example.playlistmaker.trackrecycleview.Track
 import com.google.gson.Gson
 
 object SearchHistory {

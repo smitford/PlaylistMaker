@@ -1,8 +1,7 @@
-package com.example.playlistmaker.trackRecycleView
+package com.example.playlistmaker.trackrecycleview
 
 
 import android.view.View
-
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
