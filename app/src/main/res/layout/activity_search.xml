@@ -24,8 +24,6 @@
             style="@style/Text_1"
             android:text="@string/search"
             android:textColor="?attr/colorOnSecondary" />
-
-
     </LinearLayout>
 
     <FrameLayout
@@ -59,12 +57,20 @@
             app:icon="@drawable/cross"
             app:iconTint="?attr/colorSecondaryVariant"
             tools:visibility="visible" />
-
     </FrameLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/padding_large" />
+
+    <ProgressBar
+        android:id="@+id/search_progressBar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="124dp"
+        android:indeterminateTint="@color/blue1"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/text_view_search_history"
@@ -134,6 +140,4 @@
         android:text="@string/clear_history"
         android:visibility="gone"
         tools:visibility="visible" />
-
-
 </LinearLayout>
