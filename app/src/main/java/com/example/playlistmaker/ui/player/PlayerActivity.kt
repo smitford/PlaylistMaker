@@ -76,7 +76,7 @@ class PlayerActivity : AppCompatActivity() {
             textSongArtist.text = track.artistName
             textSongLength.text = track.trackTimeMillis
             textSongAlbum.text = track.collectionName
-            textSongYear.text = track.releaseDate.take(4)
+            textSongYear.text = track.releaseDate
             textSongGenre.text = track.primaryGenreName
             textSongCountry.text = track.country
         }

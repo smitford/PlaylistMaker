@@ -18,7 +18,7 @@ object adapterTrackDto {
                 artworkUrl100 = it.artworkUrl100,
                 trackId = it.trackId,
                 collectionName = it.collectionName,
-                releaseDate = it.releaseDate,
+                releaseDate = it.releaseDate.take(4) ,
                 primaryGenreName = it.primaryGenreName,
                 previewUrl = it.previewUrl,
                 country = it.country
