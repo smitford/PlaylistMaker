@@ -100,11 +100,13 @@ class SearchActivity : AppCompatActivity() {
                 if (searchField.hasFocus() && searchField.text.isEmpty() && checkHistory()
                 ) {
                     searchHistoryVisib(SearchHistoryVisibility.VISIBLE)
+                    errorVisibility(SearchActItemsVisib.SUCCESS)
                     recyclerViewSongs.adapter = adapterSearchHistory
                     refreshHistory()
                 } else {
                     searchHistoryVisib(SearchHistoryVisibility.GONE)
                     adapterSearchHistory.tracks.clear()
+                    adapterSearch.tracks.clear()
                     recyclerViewSongs.adapter?.notifyDataSetChanged()
                     searchDebounce()
                 }

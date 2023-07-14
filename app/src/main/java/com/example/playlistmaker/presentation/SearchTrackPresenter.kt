@@ -49,6 +49,7 @@ class SearchTrackPresenter(private val view: SearchActivity) {
             view.recyclerViewSongs.adapter =view.adapterSearch
             when(result){
                 is DataConsumer.Success -> {
+
                     view.adapterSearch.tracks = result.data.toMutableList()
                     view.recyclerViewSongs.adapter?.notifyDataSetChanged()
                     if (result.data.isNotEmpty()) {

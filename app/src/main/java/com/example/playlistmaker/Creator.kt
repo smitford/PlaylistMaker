@@ -1,8 +1,11 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import com.example.playlistmaker.data.player.PlayerRepositoryImp
 import com.example.playlistmaker.data.shares_pref.TrackSharedPreRepositoryImp
+import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.api.TrackSharedPrefRepository
+import com.example.playlistmaker.domain.use_cases.PlayerInteractor
 import com.example.playlistmaker.domain.use_cases.TrackClearHistoryUseCase
 import com.example.playlistmaker.domain.use_cases.TrackGetUseCase
 import com.example.playlistmaker.domain.use_cases.TrackSaveUseCase
@@ -20,4 +23,7 @@ object Creator {
 
     fun getTrackSaveUseCase(context: Context): TrackSaveUseCase =
         TrackSaveUseCase(getTrackSharedPrefRepo(context))
+
+    private fun getPlayerRepository(): PlayerRepository = PlayerRepositoryImp()
+    fun getPlayerInteractor() : PlayerInteractor = PlayerInteractor(getPlayerRepository())
 }

@@ -9,7 +9,7 @@ class TrackSearchUseCase(private val repository: TrackNetworkRepository) {
 
     private val executor = Executors.newCachedThreadPool()
 
-    @Synchronized fun searchTracks(term: String, consumer: Consumer<List<Track>>) {
+    fun searchTracks(term: String, consumer: Consumer<List<Track>>) {
         executor.execute {
             consumer.consume(repository.searchTracks(term = term))
         }

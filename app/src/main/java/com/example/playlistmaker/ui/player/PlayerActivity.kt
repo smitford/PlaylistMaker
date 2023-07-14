@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.player
 
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -11,10 +10,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Creator.getPlayerInteractor
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.player.PlayerRepositoryImp
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.use_cases.PlayerInteractor
 import handler
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,8 +20,7 @@ import java.util.*
 
 class PlayerActivity : AppCompatActivity() {
 
-    private val playerRepository by lazy { PlayerRepositoryImp() }
-    val playerInteractor by lazy { PlayerInteractor(playerRepository) }
+    val playerInteractor by lazy { getPlayerInteractor() }
 
     companion object {
         private const val STATE_DEFAULT = 0
@@ -35,7 +32,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private var playerState = STATE_DEFAULT
 
-    lateinit var playButton: ImageButton
+    private lateinit var playButton: ImageButton
 
     lateinit var songPlayTime: TextView
 
@@ -81,7 +78,7 @@ class PlayerActivity : AppCompatActivity() {
             textSongCountry.text = track.country
         }
 
-        var url = track?.previewUrl
+        val url = track?.previewUrl
 
         prepareMediaPlayer(url.toString())
 
@@ -133,10 +130,10 @@ class PlayerActivity : AppCompatActivity() {
         return object : Runnable {
             override fun run() {
                 if (playerState == STATE_PLAYING) {
-                    songPlayTime.text =SimpleDateFormat(
+                    songPlayTime.text = SimpleDateFormat(
                         "mm:ss",
                         Locale.getDefault()
-                    ).format( playerInteractor.getPosition())
+                    ).format(playerInteractor.getPosition())
                     handler.postDelayed(this, PLAY_DEBOUNCE_DELAY)
                 }
             }

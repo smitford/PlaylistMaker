@@ -16,11 +16,14 @@ class TrackSharedPreRepositoryImp(context: Context) : TrackSharedPrefRepository 
 
     override fun getTrackList(): List<Track> {
         val history: String? = sharePref.getString(SEARCH_HISTORY, "")
-        val trackList = gson.fromJson(
+        val trackList = try {gson.fromJson(
             history.toString(),
-            Array<TrackSharedPref>::class.java,
-        )
-            .toList()
+            Array<TrackSharedPref>::class.java,).toList()
+
+        }
+        catch (e: Exception) {
+            listOf()
+        }
 
         return adapterTrackSharedPref.trackSharedToTrack(trackList)
     }
@@ -28,11 +31,14 @@ class TrackSharedPreRepositoryImp(context: Context) : TrackSharedPrefRepository 
     override fun saveTrackList(track: Track) {
 
         val history: String? = sharePref.getString(SEARCH_HISTORY, "")
-        val historyList = gson.fromJson(
+        val historyList = try {gson.fromJson(
             history.toString(),
-            Array<TrackSharedPref>::class.java,
-        )
-            .toMutableList()
+            Array<TrackSharedPref>::class.java,).toMutableList()
+
+        }
+        catch (e: Exception) {
+            mutableListOf()
+        }
         val trackNew = adapterTrackSharedPref.trackToTrackShared(track)
 
         addToSearchHistory(historyList, trackNew)

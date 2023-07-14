@@ -10,7 +10,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.player.PlayerActivity
 
-class AdapterSearchHistory() :
+class AdapterSearchHistory :
     RecyclerView.Adapter<ViewHolderOfSongs>() {
 
     var tracks : MutableList<Track> = mutableListOf()
