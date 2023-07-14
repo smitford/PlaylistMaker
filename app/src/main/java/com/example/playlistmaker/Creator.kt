@@ -25,5 +25,5 @@ object Creator {
         TrackSaveUseCase(getTrackSharedPrefRepo(context))
 
     private fun getPlayerRepository(): PlayerRepository = PlayerRepositoryImp()
-    fun getPlayerInteractor() : PlayerInteractor = PlayerInteractor(getPlayerRepository())
+    fun getPlayerInteractor(): PlayerInteractor = PlayerInteractor(getPlayerRepository())
 }
