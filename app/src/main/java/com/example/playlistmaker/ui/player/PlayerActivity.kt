@@ -80,7 +80,10 @@ class PlayerActivity : AppCompatActivity() {
 
         val url = track?.previewUrl
 
-        prepareMediaPlayer(url.toString())
+        try {
+            prepareMediaPlayer(url.toString())
+        } catch (e: Exception){}
+
 
         playButton.setOnClickListener {
             playbackControl()
