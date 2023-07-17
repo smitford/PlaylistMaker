@@ -29,7 +29,8 @@ class SearchTrackPresenter(private val view: SearchActivity) {
         )
     }
 
-   fun searchTrack(term: String) {
+
+    fun searchTrack(term: String) {
 
         trackSearchUseCase.searchTracks(
             term = term,
@@ -43,15 +44,17 @@ class SearchTrackPresenter(private val view: SearchActivity) {
             })
     }
 
+
     private fun getSearchRunnable(result: DataConsumer<List<Track>>): Runnable {
 
         return Runnable {
-            view.recyclerViewSongs.adapter =view.adapterSearch
-            when(result){
+            view.recyclerViewSongs.adapter = view.adapterSearch
+            when (result) {
                 is DataConsumer.Success -> {
 
                     view.adapterSearch.tracks = result.data.toMutableList()
                     view.recyclerViewSongs.adapter?.notifyDataSetChanged()
+
                     if (result.data.isNotEmpty()) {
                         view.errorVisibility(SearchActItemsVisib.SUCCESS)
                     } else view.errorVisibility(SearchActItemsVisib.EMPTY_SEARCH)

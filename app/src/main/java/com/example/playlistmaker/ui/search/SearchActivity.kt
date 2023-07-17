@@ -25,6 +25,10 @@ import SEARCH_DEBOUNCE_DELAY as SEARCH_DEBOUNCE_DELAY1
 
 class SearchActivity : AppCompatActivity() {
 
+    companion object {
+        const val CLEAR_DEBOUNCE_DELAY = 500L
+    }
+
     private lateinit var textViewSearchHistory: TextView
     private lateinit var buttonClearSearchHistory: Button
     private lateinit var searchField: EditText
@@ -35,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var adapterSearchHistory: AdapterSearchHistory
     private lateinit var downloadFailButton: Button
     private val searchRequest = Runnable { search() }
+    private val clear = Runnable { clearSearchField() }
     private val searchTrackPresenter by lazy { SearchTrackPresenter(this) }
     private val trackClearHistoryUseCase by lazy { getTrackClearHistoryUseCase(this.applicationContext) }
     private val trackGetUseCase by lazy { getTrackGetUseCase(this.applicationContext) }
@@ -51,6 +56,7 @@ class SearchActivity : AppCompatActivity() {
         adapterSearch = AdapterSearch(trackSaveUseCase)
         adapterSearchHistory = AdapterSearchHistory()
         recyclerViewSongs.adapter = adapterSearch
+
 
         downloadFailButton = findViewById(R.id.button_download_fail)
 
@@ -84,8 +90,8 @@ class SearchActivity : AppCompatActivity() {
         downloadFailButton.setOnClickListener { search() }
 
         clearButton.setOnClickListener {
-            searchField.setText("")
-            adapterSearch.tracks.clear()
+            handler.removeCallbacks(searchRequest)
+            clearDebounce()
             errorVisibility(
                 SearchActItemsVisib.SUCCESS
             )
@@ -138,6 +144,20 @@ class SearchActivity : AppCompatActivity() {
     private fun search() {
         searchProgressBar.visibility = View.VISIBLE
         searchTrackPresenter.searchTrack(searchField.text.toString())
+    }
+
+    private fun clearSearchField() {
+        searchField.setText("")
+        recyclerViewSongs.adapter = adapterSearchHistory
+        adapterSearch.tracks.clear()
+        errorVisibility(
+            SearchActItemsVisib.SUCCESS
+        )
+    }
+
+    private fun clearDebounce() {
+        handler.removeCallbacks(clear)
+        handler.postDelayed(clear, CLEAR_DEBOUNCE_DELAY)
     }
 
     fun searchDebounce() {
