@@ -35,7 +35,7 @@ object adapterTrackSharedPref {
             artworkUrl100 = track.artworkUrl100,
             trackId = track.trackId,
             collectionName = track.collectionName,
-            releaseDate = track.releaseDate.take(4),
+            releaseDate = track.releaseDate,
             primaryGenreName = track.primaryGenreName,
             previewUrl = track.previewUrl,
             country = track.country

@@ -37,6 +37,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var recyclerViewSongs: RecyclerView
     lateinit var adapterSearch: AdapterSearch
     lateinit var adapterSearchHistory: AdapterSearchHistory
+    lateinit var clearButton : Button
     private lateinit var downloadFailButton: Button
     private val searchRequest = Runnable { search() }
     private val clear = Runnable { clearSearchField() }
@@ -66,7 +67,7 @@ class SearchActivity : AppCompatActivity() {
 
         buttonClearSearchHistory = findViewById(R.id.button_clear_search_history)
 
-        val clearButton = findViewById<Button>(R.id.clear_text_search)
+         clearButton = findViewById<Button>(R.id.clear_text_search)
 
         searchField = findViewById(R.id.search_bar)
 

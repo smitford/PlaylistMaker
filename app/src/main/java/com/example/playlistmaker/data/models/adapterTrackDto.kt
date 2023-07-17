@@ -11,16 +11,16 @@ object adapterTrackDto {
             Track(
                 trackName = it.trackName,
                 artistName = it.artistName,
-                trackTimeMillis = SimpleDateFormat(
+                trackTimeMillis = if (it.trackTimeMillis ==null){"-"} else SimpleDateFormat(
                     "mm:ss",
                     Locale.getDefault()
-                ).format(it.trackTimeMillis.toLong()),
+                ).format(it.trackTimeMillis?.toLong()),
                 artworkUrl100 = it.artworkUrl100,
                 trackId = it.trackId,
                 collectionName = it.collectionName,
-                releaseDate = it.releaseDate.take(4) ,
+                releaseDate = if (it.releaseDate== null){"-"} else it.releaseDate.take(4),
                 primaryGenreName = it.primaryGenreName,
-                previewUrl = it.previewUrl,
+                previewUrl = it.previewUrl ?: "-",
                 country = it.country
             )
 

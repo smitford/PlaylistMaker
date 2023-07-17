@@ -42,6 +42,7 @@ class SearchTrackPresenter(private val view: SearchActivity) {
                     handler.post(consumeRunnable)
                 }
             })
+
     }
 
 

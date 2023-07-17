@@ -33,10 +33,6 @@ data class Track(
         val resultCode = 0
     }
 
-    fun changeFormat() {
-        this.trackTimeMillis =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
-    }
 
     override fun equals(other: Any?): Boolean =
         (other is Track) && this.trackId == other.trackId && other.trackId == this.trackId
