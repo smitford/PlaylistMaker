@@ -1,4 +1,4 @@
-package com.example.playlistmaker.trackrecycleview
+package com.example.playlistmaker.domain.models
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -17,6 +17,7 @@ data class Track(
     val country: String,
     val previewUrl: String
 ) : Parcelable {
+
     constructor(parcel: Parcel) : this(
         trackName = parcel.readString().toString(),
         artistName = parcel.readString().toString(),
@@ -29,12 +30,9 @@ data class Track(
         country = parcel.readString().toString(),
         previewUrl = parcel.readString().toString(),
         ) {
+        val resultCode = 0
     }
 
-    fun changeFormat() {
-        this.trackTimeMillis =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
-    }
 
     override fun equals(other: Any?): Boolean =
         (other is Track) && this.trackId == other.trackId && other.trackId == this.trackId

@@ -9,7 +9,7 @@
     <dimen name="icon_padding_mm">10.66dp</dimen>
     <dimen name="panel_header">56dp</dimen>
     <dimen name="button_size">48dp</dimen>
-    <dimen name="high_of_basic_stripe">61dp</dimen>
+    <dimen name="high_of_basic_stripe">60dp</dimen>
     <dimen name="zero">0dp</dimen>
     <dimen name="icon_size">24dp</dimen>
     <dimen name="edit_text_search">36dp</dimen>

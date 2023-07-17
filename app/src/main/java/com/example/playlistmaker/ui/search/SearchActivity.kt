@@ -1,7 +1,5 @@
-package com.example.playlistmaker.activityclasses
+package com.example.playlistmaker.ui.search
 
-
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -15,25 +13,21 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.ITunesAPI
+import com.example.playlistmaker.Creator.getTrackClearHistoryUseCase
+import com.example.playlistmaker.Creator.getTrackGetUseCase
+import com.example.playlistmaker.Creator.getTrackSaveUseCase
 import com.example.playlistmaker.R
-import com.example.playlistmaker.SearchHistory
-import com.example.playlistmaker.trackrecycleview.AdapterSearch
-import com.example.playlistmaker.trackrecycleview.AdapterSearchHistory
-import com.example.playlistmaker.api.ITunesResponse
-import com.example.playlistmaker.trackrecycleview.Track
+import com.example.playlistmaker.presentation.SearchTrackPresenter
 import handler
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import sharedPreferencesInit
 import textOfSearch
 import SEARCH_DEBOUNCE_DELAY as SEARCH_DEBOUNCE_DELAY1
 
 
 class SearchActivity : AppCompatActivity() {
+
+    companion object {
+        const val CLEAR_DEBOUNCE_DELAY = 500L
+    }
 
     private lateinit var textViewSearchHistory: TextView
     private lateinit var buttonClearSearchHistory: Button
@@ -41,35 +35,29 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var textSearch: String
     private lateinit var searchProgressBar: ProgressBar
     lateinit var recyclerViewSongs: RecyclerView
+    lateinit var adapterSearch: AdapterSearch
+    lateinit var adapterSearchHistory: AdapterSearchHistory
+    lateinit var clearButton : Button
     private lateinit var downloadFailButton: Button
-    private lateinit var sharedPreferences: SharedPreferences
-    var listOfSongs = mutableListOf<Track>()
     private val searchRequest = Runnable { search() }
-    private val iTunesAPI = "https://itunes.apple.com"  //Base URL for iTunesAPI
+    private val clear = Runnable { clearSearchField() }
+    private val searchTrackPresenter by lazy { SearchTrackPresenter(this) }
+    private val trackClearHistoryUseCase by lazy { getTrackClearHistoryUseCase(this.applicationContext) }
+    private val trackGetUseCase by lazy { getTrackGetUseCase(this.applicationContext) }
+    private val trackSaveUseCase by lazy { getTrackSaveUseCase(this.applicationContext) }
 
-    // Initialisation of retrofit component
-    private val retrofitITunes =
-        Retrofit.Builder()
-            .baseUrl(iTunesAPI)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-    private val iTunesAPIService = retrofitITunes.create(ITunesAPI::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        sharedPreferences = sharedPreferencesInit(this.applicationContext)
-
         textSearch = ""
-
-        SearchHistory.sharedPreferences = sharedPreferences
-        SearchHistory.refreshHistory()
 
         recyclerViewSongs = findViewById(R.id.recyclerView_songs)
         recyclerViewSongs.layoutManager = LinearLayoutManager(this)
-        recyclerViewSongs.adapter = AdapterSearch(listOfSongs)
+        adapterSearch = AdapterSearch(trackSaveUseCase)
+        adapterSearchHistory = AdapterSearchHistory()
+        recyclerViewSongs.adapter = adapterSearch
+
 
         downloadFailButton = findViewById(R.id.button_download_fail)
 
@@ -79,7 +67,7 @@ class SearchActivity : AppCompatActivity() {
 
         buttonClearSearchHistory = findViewById(R.id.button_clear_search_history)
 
-        val clearButton = findViewById<Button>(R.id.clear_text_search)
+         clearButton = findViewById<Button>(R.id.clear_text_search)
 
         searchField = findViewById(R.id.search_bar)
 
@@ -94,18 +82,17 @@ class SearchActivity : AppCompatActivity() {
         }
 
         buttonClearSearchHistory.setOnClickListener {
-            SearchHistory.clearHistory()
+            trackClearHistoryUseCase.execute()
+            adapterSearchHistory.tracks.clear()
             searchHistoryVisib(SearchHistoryVisibility.GONE)
             recyclerViewSongs.adapter?.notifyDataSetChanged()
-
         }
 
         downloadFailButton.setOnClickListener { search() }
 
         clearButton.setOnClickListener {
-            searchField.setText("")
-            listOfSongs.clear()
-            recyclerViewSongs.adapter?.notifyDataSetChanged()
+            handler.removeCallbacks(searchRequest)
+            clearDebounce()
             errorVisibility(
                 SearchActItemsVisib.SUCCESS
             )
@@ -113,19 +100,20 @@ class SearchActivity : AppCompatActivity() {
 
         val searchActivityTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                recyclerViewSongs.adapter?.notifyDataSetChanged()
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
-                if (searchField.hasFocus() && searchField.text.isEmpty() && SearchHistory.notEmpty()) {
+                if (searchField.hasFocus() && searchField.text.isEmpty() && checkHistory()
+                ) {
                     searchHistoryVisib(SearchHistoryVisibility.VISIBLE)
-                    SearchHistory.refreshHistory()
-                    recyclerViewSongs.adapter = AdapterSearchHistory(SearchHistory.getHistory())
-                    recyclerViewSongs.adapter?.notifyDataSetChanged()
+                    errorVisibility(SearchActItemsVisib.SUCCESS)
+                    recyclerViewSongs.adapter = adapterSearchHistory
+                    refreshHistory()
                 } else {
                     searchHistoryVisib(SearchHistoryVisibility.GONE)
-                    recyclerViewSongs.adapter = AdapterSearch(listOfSongs)
+                    adapterSearchHistory.tracks.clear()
+                    adapterSearch.tracks.clear()
                     recyclerViewSongs.adapter?.notifyDataSetChanged()
                     searchDebounce()
                 }
@@ -145,59 +133,32 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchField.setOnFocusChangeListener { _, hasFocus ->
-
-            if (hasFocus && searchField.text.isEmpty() && SearchHistory.notEmpty()) {
+            if (hasFocus && searchField.text.isEmpty() && checkHistory()) {
                 searchHistoryVisib(SearchHistoryVisibility.VISIBLE)
-                SearchHistory.refreshHistory()
-                recyclerViewSongs.adapter = AdapterSearchHistory(SearchHistory.getHistory())
-                recyclerViewSongs.adapter?.notifyDataSetChanged()
-
+                recyclerViewSongs.adapter = adapterSearchHistory
+                refreshHistory()
             } else searchHistoryVisib(SearchHistoryVisibility.GONE)
-
         }
-
         searchField.addTextChangedListener(searchActivityTextWatcher)
     }
 
     private fun search() {
         searchProgressBar.visibility = View.VISIBLE
+        searchTrackPresenter.searchTrack(searchField.text.toString())
+    }
 
-        iTunesAPIService.searchTrack(text = searchField.text.toString())
-            .enqueue(object : Callback<ITunesResponse> {
-                override fun onResponse(
-                    call: Call<ITunesResponse>,
-                    response: Response<ITunesResponse>
-                ) {
-                    when (response.code()) {
-                        200 -> {
-                            if (response.body()?.resultCount!! > 0) {
-                                listOfSongs.clear()
-                                listOfSongs.addAll(response.body()?.results!!)
-                                listOfSongs.forEach { it.changeFormat() }
-                                recyclerViewSongs.adapter?.notifyDataSetChanged()
-                                errorVisibility(
-                                    SearchActItemsVisib.SUCCESS
-                                ) //запрос выполнен успешно
-                            } else {
-                                errorVisibility(
-                                    SearchActItemsVisib.EMPTY_SEARCH
-                                ) // получен ответ от сервера, но передано 0 элементов
-                            }
-                        }
-                        else -> {
-                            errorVisibility(
-                                SearchActItemsVisib.CONNECTION_ERROR
-                            ) // прочие ошибки
-                        }
-                    }
-                }
+    private fun clearSearchField() {
+        searchField.setText("")
+        recyclerViewSongs.adapter = adapterSearchHistory
+        adapterSearch.tracks.clear()
+        errorVisibility(
+            SearchActItemsVisib.SUCCESS
+        )
+    }
 
-                override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
-                    errorVisibility(
-                        SearchActItemsVisib.CONNECTION_ERROR
-                    ) // прочие ошибки
-                }
-            })
+    private fun clearDebounce() {
+        handler.removeCallbacks(clear)
+        handler.postDelayed(clear, CLEAR_DEBOUNCE_DELAY)
     }
 
     fun searchDebounce() {
@@ -213,13 +174,13 @@ class SearchActivity : AppCompatActivity() {
         buttonClearSearchHistory.visibility = textViewSearchHistory.visibility
     }
 
-    /**
-     * Функция позволяющая скрывать или показывать визуальные элементы, уведомляющие пользователя
-     * о наличии ошибки при выполнении поискового запроса.
-     * Переменные recycle, liner, button - соответствуют состояню параметра visibility соответствующих View
-     */
+    fun checkHistory(): Boolean = trackGetUseCase.execute().isNotEmpty()
+    fun refreshHistory() {
+        adapterSearchHistory.tracks = trackGetUseCase.execute().toMutableList()
+        recyclerViewSongs.adapter?.notifyDataSetChanged()
+    }
 
-    private fun errorVisibility(result: SearchActItemsVisib) {
+    fun errorVisibility(result: SearchActItemsVisib) {
         val linearLayoutDownloadFail: LinearLayout = findViewById(R.id.linearlayout_download_fail)
         val downloadFailTextView: TextView = findViewById(R.id.textview_download_fail)
         val downloadFailImageView: ImageView = findViewById(R.id.imageview_download_fail)
@@ -229,9 +190,7 @@ class SearchActivity : AppCompatActivity() {
                 recyclerViewSongs.visibility = View.VISIBLE
                 linearLayoutDownloadFail.visibility = View.GONE
                 downloadFailButton.visibility = View.GONE
-
             }
-
             SearchActItemsVisib.EMPTY_SEARCH -> {
                 recyclerViewSongs.visibility = View.GONE
                 linearLayoutDownloadFail.visibility = View.VISIBLE
@@ -260,7 +219,6 @@ class SearchActivity : AppCompatActivity() {
         textSearch = savedInstanceState.getString(textOfSearch, "")
     }
 }
-
 
 enum class SearchActItemsVisib {
     CONNECTION_ERROR,

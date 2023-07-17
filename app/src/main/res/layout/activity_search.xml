@@ -85,13 +85,15 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_songs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_gravity="top"
+            app:layout_constraintBottom_toTopOf="@id/clear_search_history_ll"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -132,12 +134,21 @@
         </LinearLayout>
     </FrameLayout>
 
-    <Button
-        android:id="@+id/button_clear_search_history"
-        style="@style/FAB"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/padding_large"
-        android:text="@string/clear_history"
-        android:visibility="gone"
-        tools:visibility="visible" />
+    <FrameLayout
+        android:id="@+id/clear_search_history_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/padding_large">
+
+        <Button
+            android:id="@+id/button_clear_search_history"
+            style="@style/FAB"
+            android:layout_gravity="center"
+            android:text="@string/clear_history"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+
 </LinearLayout>

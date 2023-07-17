@@ -1,4 +1,4 @@
-package com.example.playlistmaker.activityclasses
+package com.example.playlistmaker.ui.settings
 
 import android.annotation.SuppressLint
 import android.app.SearchManager
@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.App
 import com.example.playlistmaker.R
-import com.example.playlistmaker.darkTheme
+import com.example.playlistmaker.ui.App
+import com.example.playlistmaker.ui.darkTheme
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 

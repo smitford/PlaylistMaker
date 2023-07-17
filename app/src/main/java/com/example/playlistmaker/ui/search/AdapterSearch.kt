@@ -1,4 +1,4 @@
-package com.example.playlistmaker.trackrecycleview
+package com.example.playlistmaker.ui.search
 
 
 
@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import clickDebounce
-import com.example.playlistmaker.activityclasses.PlayerActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.use_cases.TrackSaveUseCase
+import com.example.playlistmaker.ui.player.PlayerActivity
 
-class AdapterSearch(private val tracks: List<Track>) :
+class AdapterSearch(private val trackSaveUseCase: TrackSaveUseCase) :
     RecyclerView.Adapter<ViewHolderOfSongs>() {
+
+    var tracks : MutableList<Track> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderOfSongs {
         val itemView = LayoutInflater.from(parent.context)
@@ -24,7 +27,9 @@ class AdapterSearch(private val tracks: List<Track>) :
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
-                SearchHistory.saveHistory(tracks[position])
+
+                trackSaveUseCase.execute(tracks[position])
+
                 val displayPlayer = Intent(it.context, PlayerActivity::class.java)
                 displayPlayer.putExtra("track", tracks[position])
                 it.context.startActivity(displayPlayer)
