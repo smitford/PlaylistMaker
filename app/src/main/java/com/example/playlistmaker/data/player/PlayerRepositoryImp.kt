@@ -6,38 +6,35 @@ import com.example.playlistmaker.domain.api.PlayerRepository
 
 
 class PlayerRepositoryImp : PlayerRepository {
-    companion object {
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-    }
 
     private var player = MediaPlayer()
-
-
-    override fun prepareMediaPlayer(url: String) :Int{
+    private var completion = true
+    override fun prepareMediaPlayer(url: String) {
         player.setDataSource(url)
         player.prepareAsync()
         player.setOnPreparedListener {
+            completion = true
         }
         player.setOnCompletionListener {
+            completion = false
         }
-        return STATE_PREPARED
     }
 
-    override fun startMediaPlayer() : Int {
+    override fun startMediaPlayer() {
+        completion = true
         player.start()
-        return STATE_PLAYING
     }
 
-    override fun pauseMediaPlayer() :Int {
+    override fun pauseMediaPlayer() {
         player.pause()
-        return STATE_PAUSED
     }
 
-    override fun releaseMediaPlayer(){
+    override fun releaseMediaPlayer() {
         player.release()
+
     }
 
     override fun getPosition(): Int = player.currentPosition
+
+    override fun isPlaying(): Boolean = completion
 }

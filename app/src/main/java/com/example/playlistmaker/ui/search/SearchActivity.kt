@@ -5,97 +5,107 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.Creator.getTrackClearHistoryUseCase
-import com.example.playlistmaker.Creator.getTrackGetUseCase
-import com.example.playlistmaker.Creator.getTrackSaveUseCase
 import com.example.playlistmaker.R
-import com.example.playlistmaker.presentation.SearchTrackPresenter
+import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.domain.models.Track
 import handler
 import textOfSearch
 import SEARCH_DEBOUNCE_DELAY as SEARCH_DEBOUNCE_DELAY1
 
 
 class SearchActivity : AppCompatActivity() {
-
     companion object {
         const val CLEAR_DEBOUNCE_DELAY = 500L
+        const val STATE_HISTORY_SHOW = "History"
     }
 
-    private lateinit var textViewSearchHistory: TextView
-    private lateinit var buttonClearSearchHistory: Button
-    private lateinit var searchField: EditText
+    private lateinit var binding: ActivitySearchBinding
+
     private lateinit var textSearch: String
-    private lateinit var searchProgressBar: ProgressBar
     lateinit var recyclerViewSongs: RecyclerView
     lateinit var adapterSearch: AdapterSearch
     lateinit var adapterSearchHistory: AdapterSearchHistory
-    lateinit var clearButton : Button
-    private lateinit var downloadFailButton: Button
     private val searchRequest = Runnable { search() }
     private val clear = Runnable { clearSearchField() }
-    private val searchTrackPresenter by lazy { SearchTrackPresenter(this) }
-    private val trackClearHistoryUseCase by lazy { getTrackClearHistoryUseCase(this.applicationContext) }
-    private val trackGetUseCase by lazy { getTrackGetUseCase(this.applicationContext) }
-    private val trackSaveUseCase by lazy { getTrackSaveUseCase(this.applicationContext) }
-
+    private lateinit var searchTrackViewModel: SearchTrackViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
-        textSearch = ""
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        val callBack = fun(track: Track) {
+            searchTrackViewModel.saveTrack(track = track)
+        }
+        searchTrackViewModel = ViewModelProvider(
+            this,
+            SearchViewModelFactory(this.applicationContext)
+        )[SearchTrackViewModel::class.java]
+
+        textSearch = ""
         recyclerViewSongs = findViewById(R.id.recyclerView_songs)
         recyclerViewSongs.layoutManager = LinearLayoutManager(this)
-        adapterSearch = AdapterSearch(trackSaveUseCase)
+        adapterSearch = AdapterSearch(callBack)
         adapterSearchHistory = AdapterSearchHistory()
         recyclerViewSongs.adapter = adapterSearch
 
-
-        downloadFailButton = findViewById(R.id.button_download_fail)
-
-        val buttonBack = findViewById<Button>(R.id.back_button_search_act)
-
-        textViewSearchHistory = findViewById(R.id.text_view_search_history)
-
-        buttonClearSearchHistory = findViewById(R.id.button_clear_search_history)
-
-         clearButton = findViewById<Button>(R.id.clear_text_search)
-
-        searchField = findViewById(R.id.search_bar)
-
-        searchProgressBar = findViewById(R.id.search_progressBar)
-
-        buttonBack.setOnClickListener {
+        binding.backButtonSearchAct.setOnClickListener {
             finish()
         }
 
         if (savedInstanceState != null) {
-            searchField.setText(textSearch)
+            binding.searchBar.setText(textSearch)
         }
 
-        buttonClearSearchHistory.setOnClickListener {
-            trackClearHistoryUseCase.execute()
-            adapterSearchHistory.tracks.clear()
-            searchHistoryVisib(SearchHistoryVisibility.GONE)
-            recyclerViewSongs.adapter?.notifyDataSetChanged()
+        binding.clearSearchHistoryLl.setOnClickListener {
+            searchTrackViewModel.clearHistory()
         }
 
-        downloadFailButton.setOnClickListener { search() }
+        binding.buttonDownloadFail.setOnClickListener { search() }
 
-        clearButton.setOnClickListener {
+        binding.clearTextSearch.setOnClickListener {
             handler.removeCallbacks(searchRequest)
             clearDebounce()
-            errorVisibility(
-                SearchActItemsVisib.SUCCESS
-            )
+        }
+
+        searchTrackViewModel.getSearchActivityState().observe(this) { searchActivityState ->
+            when (searchActivityState) {
+                is SearchActivityState.Start -> {
+                    elementsVisibility(SearchActItemsVis.START_VIEW)
+                }
+
+                is SearchActivityState.Loading -> {
+                    elementsVisibility(SearchActItemsVis.LOADING)
+                }
+
+                is SearchActivityState.ConnectionError -> {
+                    elementsVisibility(SearchActItemsVis.CONNECTION_ERROR)
+                }
+
+                is SearchActivityState.InvalidRequest -> {
+                    elementsVisibility(SearchActItemsVis.EMPTY_SEARCH)
+                }
+
+                is SearchActivityState.State -> {
+                    when (searchActivityState.state) {
+                        STATE_HISTORY_SHOW -> {
+                            elementsVisibility(SearchActItemsVis.SHOW_HISTORY)
+                            recyclerViewSongs.adapter = adapterSearchHistory
+                            adapterSearchHistory.tracks =
+                                searchActivityState.trackList.toMutableList()
+                        }
+
+                        else -> {
+                            elementsVisibility(SearchActItemsVis.SUCCESS)
+                            recyclerViewSongs.adapter = adapterSearch
+                            adapterSearch.tracks = searchActivityState.trackList.toMutableList()
+                        }
+                    }
+                }
+            }
         }
 
         val searchActivityTextWatcher = object : TextWatcher {
@@ -103,24 +113,16 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.visibility = clearButtonVisibility(s)
-                if (searchField.hasFocus() && searchField.text.isEmpty() && checkHistory()
-                ) {
-                    searchHistoryVisib(SearchHistoryVisibility.VISIBLE)
-                    errorVisibility(SearchActItemsVisib.SUCCESS)
-                    recyclerViewSongs.adapter = adapterSearchHistory
-                    refreshHistory()
+                binding.clearTextSearch.visibility = clearButtonVisibility(s)
+                if (binding.searchBar.hasFocus() && binding.searchBar.text.isEmpty()) {
+                    searchTrackViewModel.refreshHistory()
                 } else {
-                    searchHistoryVisib(SearchHistoryVisibility.GONE)
-                    adapterSearchHistory.tracks.clear()
-                    adapterSearch.tracks.clear()
-                    recyclerViewSongs.adapter?.notifyDataSetChanged()
                     searchDebounce()
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
-                textSearch = searchField.text.toString()
+                textSearch = binding.searchBar.text.toString()
             }
 
             fun clearButtonVisibility(s: CharSequence?): Int {
@@ -132,28 +134,20 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        searchField.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && searchField.text.isEmpty() && checkHistory()) {
-                searchHistoryVisib(SearchHistoryVisibility.VISIBLE)
-                recyclerViewSongs.adapter = adapterSearchHistory
-                refreshHistory()
-            } else searchHistoryVisib(SearchHistoryVisibility.GONE)
+        binding.searchBar.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && binding.searchBar.text.isEmpty()) {
+                searchTrackViewModel.refreshHistory()
+            }
         }
-        searchField.addTextChangedListener(searchActivityTextWatcher)
+        binding.searchBar.addTextChangedListener(searchActivityTextWatcher)
     }
 
-    private fun search() {
-        searchProgressBar.visibility = View.VISIBLE
-        searchTrackPresenter.searchTrack(searchField.text.toString())
-    }
+    private fun search() =
+        searchTrackViewModel.searchTrack(binding.searchBar.text.toString())
 
     private fun clearSearchField() {
-        searchField.setText("")
-        recyclerViewSongs.adapter = adapterSearchHistory
-        adapterSearch.tracks.clear()
-        errorVisibility(
-            SearchActItemsVisib.SUCCESS
-        )
+        binding.searchBar.setText("")
+        searchTrackViewModel.refreshHistory()
     }
 
     private fun clearDebounce() {
@@ -161,52 +155,60 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(clear, CLEAR_DEBOUNCE_DELAY)
     }
 
-    fun searchDebounce() {
-        handler.removeCallbacks(searchRequest)
-        handler.postDelayed(searchRequest, SEARCH_DEBOUNCE_DELAY1)
-    }
+    private fun elementsVisibility(result: SearchActItemsVis) {
 
-    fun searchHistoryVisib(visibility: SearchHistoryVisibility) {
-        when (visibility) {
-            SearchHistoryVisibility.VISIBLE -> textViewSearchHistory.visibility = View.VISIBLE
-            SearchHistoryVisibility.GONE -> textViewSearchHistory.visibility = View.GONE
-        }
-        buttonClearSearchHistory.visibility = textViewSearchHistory.visibility
-    }
-
-    fun checkHistory(): Boolean = trackGetUseCase.execute().isNotEmpty()
-    fun refreshHistory() {
-        adapterSearchHistory.tracks = trackGetUseCase.execute().toMutableList()
-        recyclerViewSongs.adapter?.notifyDataSetChanged()
-    }
-
-    fun errorVisibility(result: SearchActItemsVisib) {
-        val linearLayoutDownloadFail: LinearLayout = findViewById(R.id.linearlayout_download_fail)
-        val downloadFailTextView: TextView = findViewById(R.id.textview_download_fail)
-        val downloadFailImageView: ImageView = findViewById(R.id.imageview_download_fail)
 
         when (result) {
-            SearchActItemsVisib.SUCCESS -> {
+            SearchActItemsVis.SUCCESS -> {
                 recyclerViewSongs.visibility = View.VISIBLE
-                linearLayoutDownloadFail.visibility = View.GONE
-                downloadFailButton.visibility = View.GONE
+                binding.linearlayoutDownloadFail.visibility = View.GONE
+                binding.buttonDownloadFail.visibility = View.GONE
+                binding.searchProgressBar.visibility = View.GONE
             }
-            SearchActItemsVisib.EMPTY_SEARCH -> {
+
+            SearchActItemsVis.EMPTY_SEARCH -> {
                 recyclerViewSongs.visibility = View.GONE
-                linearLayoutDownloadFail.visibility = View.VISIBLE
-                downloadFailButton.visibility = View.GONE
-                downloadFailImageView.setImageResource(R.drawable.serch_zero)
-                downloadFailTextView.setText(R.string.search_fail)
+                binding.linearlayoutDownloadFail.visibility = View.VISIBLE
+                binding.buttonDownloadFail.visibility = View.GONE
+                binding.imageviewDownloadFail.setImageResource(R.drawable.serch_zero)
+                binding.textviewDownloadFail.setText(R.string.search_fail)
+                binding.searchProgressBar.visibility = View.GONE
             }
-            SearchActItemsVisib.CONNECTION_ERROR -> {
+
+            SearchActItemsVis.CONNECTION_ERROR -> {
                 recyclerViewSongs.visibility = View.GONE
-                linearLayoutDownloadFail.visibility = View.VISIBLE
-                downloadFailButton.visibility = View.VISIBLE
-                downloadFailImageView.setImageResource(R.drawable.no_internet_connection)
-                downloadFailTextView.setText(R.string.internet_lost_connection)
+                binding.linearlayoutDownloadFail.visibility = View.VISIBLE
+                binding.buttonDownloadFail.visibility = View.VISIBLE
+                binding.imageviewDownloadFail.setImageResource(R.drawable.no_internet_connection)
+                binding.textviewDownloadFail.setText(R.string.internet_lost_connection)
+                binding.searchProgressBar.visibility = View.GONE
+            }
+
+            SearchActItemsVis.SHOW_HISTORY -> {
+                recyclerViewSongs.visibility = View.VISIBLE
+                binding.linearlayoutDownloadFail.visibility = View.GONE
+                binding.buttonDownloadFail.visibility = View.GONE
+                binding.textViewSearchHistory.visibility = View.VISIBLE
+                binding.searchProgressBar.visibility = View.GONE
+            }
+
+            SearchActItemsVis.START_VIEW -> {
+                recyclerViewSongs.visibility = View.GONE
+                binding.linearlayoutDownloadFail.visibility = View.GONE
+                binding.buttonDownloadFail.visibility = View.GONE
+                binding.textViewSearchHistory.visibility = View.GONE
+                binding.searchProgressBar.visibility = View.GONE
+            }
+
+            SearchActItemsVis.LOADING -> {
+                recyclerViewSongs.visibility = View.GONE
+                binding.linearlayoutDownloadFail.visibility = View.GONE
+                binding.textViewSearchHistory.visibility = View.GONE
+                binding.buttonDownloadFail.visibility = View.GONE
+                binding.searchProgressBar.visibility = View.VISIBLE
             }
         }
-        searchProgressBar.visibility = View.GONE
+        binding.buttonClearSearchHistory.visibility = binding.textViewSearchHistory.visibility
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -218,15 +220,18 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         textSearch = savedInstanceState.getString(textOfSearch, "")
     }
+
+    fun searchDebounce() {
+        handler.removeCallbacks(searchRequest)
+        handler.postDelayed(searchRequest, SEARCH_DEBOUNCE_DELAY1)
+    }
 }
 
-enum class SearchActItemsVisib {
+enum class SearchActItemsVis {
     CONNECTION_ERROR,
     EMPTY_SEARCH,
-    SUCCESS
-}
-
-enum class SearchHistoryVisibility {
-    VISIBLE,
-    GONE
+    SUCCESS,
+    SHOW_HISTORY,
+    START_VIEW,
+    LOADING
 }

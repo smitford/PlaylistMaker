@@ -3,12 +3,10 @@ package com.example.playlistmaker.data.network
 
 import com.example.playlistmaker.data.models.TrackSearchRequest
 import com.example.playlistmaker.data.models.TrackSearchResponse
-import com.example.playlistmaker.data.models.adapterTrackDto
 import com.example.playlistmaker.domain.api.TrackNetworkRepository
 import com.example.playlistmaker.domain.consumer.DataConsumer
 import com.example.playlistmaker.domain.models.Track
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.internal.synchronized
+
 
 class TrackNetworkRepositoryImp(private val networkClient: NetworkClient) : TrackNetworkRepository {
 

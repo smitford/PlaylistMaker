@@ -7,18 +7,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import clickDebounce
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.TrackrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.player.PlayerActivity
 
 class AdapterSearchHistory :
     RecyclerView.Adapter<ViewHolderOfSongs>() {
 
-    var tracks : MutableList<Track> = mutableListOf()
+    var tracks: MutableList<Track> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderOfSongs {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.trackrecycleview_item, parent, false)
-        return ViewHolderOfSongs(itemView)
+        val layoutInspector = LayoutInflater.from(parent.context)
+        return ViewHolderOfSongs(
+            TrackrecycleviewItemBinding.inflate(
+                layoutInspector,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolderOfSongs, position: Int) {
