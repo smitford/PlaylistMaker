@@ -1,9 +1,5 @@
 package com.example.playlistmaker.ui.search
 
-
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.bumptech.glide.Glide

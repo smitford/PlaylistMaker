@@ -25,9 +25,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
     private lateinit var textSearch: String
-    lateinit var recyclerViewSongs: RecyclerView
-    lateinit var adapterSearch: AdapterSearch
-    lateinit var adapterSearchHistory: AdapterSearchHistory
+    private lateinit var recyclerViewSongs: RecyclerView
+    private lateinit var adapterSearch: AdapterSearch
+    private lateinit var adapterSearchHistory: AdapterSearchHistory
     private val searchRequest = Runnable { search() }
     private val clear = Runnable { clearSearchField() }
     private lateinit var searchTrackViewModel: SearchTrackViewModel

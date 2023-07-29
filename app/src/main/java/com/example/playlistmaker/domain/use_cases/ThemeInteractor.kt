@@ -7,5 +7,5 @@ class ThemeInteractor(private val repository: ThemeSharedPrefRepository) {
         repository.saveTheme(isDarkTheme = isDarkTheme)
     }
 
-    fun getTheme(): Boolean = repository.getTheme()
+    fun getTheme(): Boolean = repository.getTheme().isDark
 }

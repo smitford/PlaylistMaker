@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.playlistmaker.data.models.Response
 import com.example.playlistmaker.data.models.TrackSearchRequest
 import retrofit2.Retrofit

@@ -5,7 +5,7 @@ import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
-object adapterTrackDto {
+object AdapterTrackDto {
     fun trackDtoToTrack(track: List<TrackDto>): List<Track> {
 
         val result = track.map {

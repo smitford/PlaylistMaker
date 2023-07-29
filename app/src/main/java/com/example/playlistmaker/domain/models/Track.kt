@@ -27,9 +27,7 @@ data class Track(
         primaryGenreName = parcel.readString().toString(),
         country = parcel.readString().toString(),
         previewUrl = parcel.readString().toString(),
-        ) {
-        val resultCode = 0
-    }
+        )
 
 
     override fun equals(other: Any?): Boolean =

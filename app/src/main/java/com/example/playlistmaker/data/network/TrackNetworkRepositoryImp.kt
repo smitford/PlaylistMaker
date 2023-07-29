@@ -16,7 +16,7 @@ class TrackNetworkRepositoryImp(private val networkClient: NetworkClient) : Trac
 
         return if (response.resultCode == 200) {
             val track = (response as TrackSearchResponse).results
-            DataConsumer.Success(adapterTrackDto.trackDtoToTrack(track))
+            DataConsumer.Success(AdapterTrackDto.trackDtoToTrack(track))
         } else DataConsumer.Error(response.resultCode)
 
     }
