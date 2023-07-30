@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.use_cases.ThemeInteractor
 
 
+
 class SettingsViewModel(
     private val themeInteractor: ThemeInteractor
 ) : ViewModel() {
