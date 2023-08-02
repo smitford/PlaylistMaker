@@ -1,10 +1,11 @@
-package com.example.playlistmaker.data.models
+package com.example.playlistmaker.data.network
 
+import com.example.playlistmaker.data.models.TrackDto
 import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
-object adapterTrackDto {
+object AdapterTrackDto {
     fun trackDtoToTrack(track: List<TrackDto>): List<Track> {
 
         val result = track.map {

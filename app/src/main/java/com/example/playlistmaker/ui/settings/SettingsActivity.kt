@@ -5,38 +5,40 @@ import android.app.SearchManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
-import com.example.playlistmaker.ui.App
-import com.example.playlistmaker.ui.darkTheme
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySettingsBinding
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
-        val shearButton = findViewById<ImageView>(R.id.shear_button)
+        val settingsViewModel = ViewModelProvider(
+            this,
+            SettingsViewModelFactory(context = applicationContext)
+        )[SettingsViewModel::class.java]
 
-        shearButton.setOnClickListener {
+        binding.shearButton.setOnClickListener {
             val shearIntent = Intent(Intent.ACTION_SEND)
             shearIntent.data = Uri.parse("")
             shearIntent.type = "text/html"
             shearIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.shear_app))
             startActivity(shearIntent)
-
         }
 
-        val supportButton = findViewById<ImageView>(R.id.support_button)
-        supportButton.setOnClickListener {
+        binding.supportButton.setOnClickListener {
             val supportIntent = Intent(Intent.ACTION_SEND)
             supportIntent.data = Uri.parse("mailto:")
             supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.student_mail)))
@@ -45,29 +47,39 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(supportIntent)
 
         }
-        val termsOfUseButton = findViewById<ImageView>(R.id.terms_of_use_button)
-        termsOfUseButton.setOnClickListener {
+
+        binding.termsOfUseButton.setOnClickListener {
 
             val termsOfUseIntent = Intent(Intent.ACTION_WEB_SEARCH)
             termsOfUseIntent.putExtra(SearchManager.QUERY, getString(R.string.term_of_use_web))
             startActivity(termsOfUseIntent)
         }
-        val backButton = findViewById<Button>(R.id.back_button)
-        backButton.setOnClickListener {
+
+        binding.backButton.setOnClickListener {
             this.finish()
         }
 
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
-        themeSwitcher.isChecked = darkTheme
+        binding.themeSwitcher.isChecked =
+            settingsViewModel.getSettingsState().value?.themeState ?: false
 
+        settingsViewModel.getSettingsState().observe(this) { settingState ->
 
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-
+            switchTheme(settingState.themeState)
         }
 
-
+        binding.themeSwitcher.setOnCheckedChangeListener { _, _ ->
+            settingsViewModel.changeSettingTheme()
+        }
     }
 
+    private fun switchTheme(isDarkTheme: Boolean) {
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDarkTheme) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
+    }
 }

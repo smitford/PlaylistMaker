@@ -4,7 +4,7 @@ import com.example.playlistmaker.data.models.TrackSharedPref
 import com.example.playlistmaker.domain.models.Track
 
 
-object adapterTrackSharedPref {
+object AdapterTrackSharedPref {
 
     fun trackSharedToTrack(track: List<TrackSharedPref>): List<Track> {
 

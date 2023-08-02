@@ -1,29 +1,62 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.data.network.TrackNetworkRepositoryImp
 import com.example.playlistmaker.data.player.PlayerRepositoryImp
+import com.example.playlistmaker.data.shares_pref.ThemeSharedPrefRepositoryImp
 import com.example.playlistmaker.data.shares_pref.TrackSharedPreRepositoryImp
 import com.example.playlistmaker.domain.api.PlayerRepository
+import com.example.playlistmaker.domain.api.ThemeSharedPrefRepository
+import com.example.playlistmaker.domain.api.TrackNetworkRepository
 import com.example.playlistmaker.domain.api.TrackSharedPrefRepository
 import com.example.playlistmaker.domain.use_cases.PlayerInteractor
+import com.example.playlistmaker.domain.use_cases.ThemeInteractor
 import com.example.playlistmaker.domain.use_cases.TrackClearHistoryUseCase
 import com.example.playlistmaker.domain.use_cases.TrackGetUseCase
 import com.example.playlistmaker.domain.use_cases.TrackSaveUseCase
+import com.example.playlistmaker.domain.use_cases.TrackSearchUseCase
+import com.example.playlistmaker.domain.use_cases.implementation.PlayerInteractorImp
+import com.example.playlistmaker.domain.use_cases.implementation.TrackClearHistoryUseCaseImp
+import com.example.playlistmaker.domain.use_cases.implementation.TrackGetUseCaseImp
+import com.example.playlistmaker.domain.use_cases.implementation.TrackSaveUseCaseImp
+import com.example.playlistmaker.domain.use_cases.implementation.TrackSearchUseCaseImp
+import com.example.playlistmaker.domain.use_cases.implementation.ThemeInteractorImp
 
 object Creator {
+
+    fun getTrackClearHistoryUseCase(context: Context): TrackClearHistoryUseCase =
+        TrackClearHistoryUseCaseImp(getTrackSharedPrefRepo(context))
+
+    fun getTrackGetUseCase(context: Context): TrackGetUseCase =
+        TrackGetUseCaseImp(getTrackSharedPrefRepo(context))
+
+    fun getTrackSaveUseCase(context: Context): TrackSaveUseCase =
+        TrackSaveUseCaseImp(getTrackSharedPrefRepo(context))
 
     private fun getTrackSharedPrefRepo(context: Context): TrackSharedPrefRepository =
         TrackSharedPreRepositoryImp(context)
 
-    fun getTrackClearHistoryUseCase(context: Context): TrackClearHistoryUseCase =
-        TrackClearHistoryUseCase(getTrackSharedPrefRepo(context))
+    fun getTrackSearchUseCase(context: Context): TrackSearchUseCase = TrackSearchUseCaseImp(
+        repository = getRepository(context = context)
+    )
 
-    fun getTrackGetUseCase(context: Context): TrackGetUseCase =
-        TrackGetUseCase(getTrackSharedPrefRepo(context))
+    private fun getRepository(context: Context): TrackNetworkRepository =
+        TrackNetworkRepositoryImp(
+            getRetrofitNetworkClient(context = context)
+        )
 
-    fun getTrackSaveUseCase(context: Context): TrackSaveUseCase =
-        TrackSaveUseCase(getTrackSharedPrefRepo(context))
+    private fun getRetrofitNetworkClient(context: Context): RetrofitNetworkClient =
+        RetrofitNetworkClient(context = context)
 
+    fun getPlayerInteractor(): PlayerInteractor = PlayerInteractorImp(getPlayerRepository())
     private fun getPlayerRepository(): PlayerRepository = PlayerRepositoryImp()
-    fun getPlayerInteractor(): PlayerInteractor = PlayerInteractor(getPlayerRepository())
+
+    fun getSaveThemeUseCase(context: Context): ThemeInteractor =
+        ThemeInteractorImp(getThemeSharedPrefRepository(context = context))
+
+    private fun getThemeSharedPrefRepository(context: Context): ThemeSharedPrefRepository =
+        ThemeSharedPrefRepositoryImp(context = context)
+
+
 }

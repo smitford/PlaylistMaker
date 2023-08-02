@@ -2,8 +2,6 @@ package com.example.playlistmaker.domain.models
 
 import android.os.Parcel
 import android.os.Parcelable
-import java.text.SimpleDateFormat
-import java.util.*
 
 data class Track(
     val trackName: String,
@@ -29,9 +27,7 @@ data class Track(
         primaryGenreName = parcel.readString().toString(),
         country = parcel.readString().toString(),
         previewUrl = parcel.readString().toString(),
-        ) {
-        val resultCode = 0
-    }
+        )
 
 
     override fun equals(other: Any?): Boolean =

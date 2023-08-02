@@ -25,7 +25,7 @@ class TrackSharedPreRepositoryImp(context: Context) : TrackSharedPrefRepository 
             listOf()
         }
 
-        return adapterTrackSharedPref.trackSharedToTrack(trackList)
+        return AdapterTrackSharedPref.trackSharedToTrack(trackList)
     }
 
     override fun saveTrackList(track: Track) {
@@ -39,7 +39,7 @@ class TrackSharedPreRepositoryImp(context: Context) : TrackSharedPrefRepository 
         catch (e: Exception) {
             mutableListOf()
         }
-        val trackNew = adapterTrackSharedPref.trackToTrackShared(track)
+        val trackNew = AdapterTrackSharedPref.trackToTrackShared(track)
 
         addToSearchHistory(historyList, trackNew)
         sharePref.edit().putString(

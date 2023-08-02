@@ -147,19 +147,20 @@
         app:layout_constraintTag="length"
         app:layout_constraintVertical_weight="1" />
 
+    <!--    Название альбома     -->
+
     <TextView
         android:id="@+id/text_song_length"
         style="@style/SongInformation"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="28dp"
         android:textColor="?attr/colorOnSecondary"
         app:layout_constraintEnd_toEndOf="@id/rightBorderSmall"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/text_barrier"
         app:layout_constraintTop_toBottomOf="@id/song_play_time"
         app:layout_constraintVertical_chainStyle="spread_inside"
         app:layout_constraintVertical_weight="1"
         tools:text="2:15" />
-
-    <!--    Название альбома     -->
 
     <TextView
         android:id="@+id/album"

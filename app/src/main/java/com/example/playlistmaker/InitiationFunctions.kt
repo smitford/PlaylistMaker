@@ -2,8 +2,9 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Looper
-import com.example.playlistmaker.ui.THEME_PREFERENCES_AND_HISTORY
 
+
+const val THEME_PREFERENCES_AND_HISTORY = "theme_preferences"
 private const val CLICK_DEBOUNCE_DELAY = 1000L
 val handler = android.os.Handler(Looper.getMainLooper())
 private var isClickable = true
