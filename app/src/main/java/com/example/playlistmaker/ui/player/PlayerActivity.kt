@@ -4,12 +4,13 @@ import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
 class PlayerActivity : AppCompatActivity() {
@@ -20,7 +21,10 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityPlayerBinding
-    private lateinit var playerViewModel: PlayerViewModel
+    private var track: Track? = null
+    private val playerViewModel by viewModel<PlayerViewModel>{
+        parametersOf(track)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,17 +32,12 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val track =
+        track =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra("track", Track::class.java)
             } else {
                 intent.getParcelableExtra("track")
             }
-
-        playerViewModel = ViewModelProvider(
-            this,
-            PlayerViewModelFactory(track = track)
-        )[PlayerViewModel::class.java]
 
         val roundedCorners = (8 / (this.resources
             .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT))
@@ -50,13 +49,13 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.albumImage)
 
         if (track != null) {
-            binding.playerTextSongName.text = track.trackName
-            binding.playerTextSongArtist.text = track.artistName
-            binding.textSongLength.text = track.trackTimeMillis
-            binding.textSongAlbum.text = track.collectionName
-            binding.textSongYear.text = track.releaseDate
-            binding.textSongGenre.text = track.primaryGenreName
-            binding.textSongCountry.text = track.country
+            binding.playerTextSongName.text = track!!.trackName
+            binding.playerTextSongArtist.text = track!!.artistName
+            binding.textSongLength.text = track!!.trackTimeMillis
+            binding.textSongAlbum.text = track!!.collectionName
+            binding.textSongYear.text = track!!.releaseDate
+            binding.textSongGenre.text = track!!.primaryGenreName
+            binding.textSongCountry.text = track!!.country
         }
 
         playerViewModel.getPlayerState()

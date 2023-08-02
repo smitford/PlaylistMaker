@@ -7,15 +7,15 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+    private val settingsViewModel by viewModel<SettingsViewModel>()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,10 +25,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val settingsViewModel = ViewModelProvider(
-            this,
-            SettingsViewModelFactory(context = applicationContext)
-        )[SettingsViewModel::class.java]
 
         binding.shearButton.setOnClickListener {
             val shearIntent = Intent(Intent.ACTION_SEND)
