@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.models.Track
 import handler
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import textOfSearch
 import SEARCH_DEBOUNCE_DELAY as SEARCH_DEBOUNCE_DELAY1
 
@@ -30,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var adapterSearchHistory: AdapterSearchHistory
     private val searchRequest = Runnable { search() }
     private val clear = Runnable { clearSearchField() }
-    private lateinit var searchTrackViewModel: SearchTrackViewModel
+    private val searchTrackViewModel by viewModel<SearchTrackViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +40,6 @@ class SearchActivity : AppCompatActivity() {
         val callBack = fun(track: Track) {
             searchTrackViewModel.saveTrack(track = track)
         }
-        searchTrackViewModel = ViewModelProvider(
-            this,
-            SearchViewModelFactory(this.applicationContext)
-        )[SearchTrackViewModel::class.java]
 
         textSearch = ""
         recyclerViewSongs = findViewById(R.id.recyclerView_songs)
