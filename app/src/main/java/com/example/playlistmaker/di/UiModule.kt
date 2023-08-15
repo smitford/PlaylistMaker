@@ -1,6 +1,8 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.media.MediaFragmentViewModel
+import com.example.playlistmaker.ui.media.PlaylistFragmentViewModel
 import com.example.playlistmaker.ui.player.PlayerViewModel
 import com.example.playlistmaker.ui.search.SearchTrackViewModel
 import com.example.playlistmaker.ui.settings.SettingsViewModel
@@ -23,6 +25,12 @@ val uiModules = module {
     }
     viewModel<SettingsViewModel> {
         SettingsViewModel(themeInteractor = get())
+    }
+    viewModel<MediaFragmentViewModel>() {
+        MediaFragmentViewModel()
+    }
+    viewModel<PlaylistFragmentViewModel>(){
+        PlaylistFragmentViewModel()
     }
 }
 

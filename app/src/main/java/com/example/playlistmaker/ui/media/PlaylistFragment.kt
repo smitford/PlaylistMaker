@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentMediaBinding
-import com.example.playlistmaker.ui.player.PlayerViewModel
+import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MediaFragment : Fragment() {
+class PlaylistFragment : Fragment() {
     companion object {
-        fun newInstance() = MediaFragment()
+        fun newInstance() = PlaylistFragment()
     }
-    private val playerViewModel by viewModel<MediaFragmentViewModel>()
 
-    private var _binding: FragmentMediaBinding? = null
+    private val playerViewModel by viewModel<PlaylistFragmentViewModel>()
+    private var _binding: FragmentPlaylistBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -24,7 +22,7 @@ class MediaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMediaBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -33,4 +31,3 @@ class MediaFragment : Fragment() {
         _binding = null
     }
 }
-

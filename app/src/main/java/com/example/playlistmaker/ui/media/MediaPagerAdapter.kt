@@ -7,12 +7,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class MediaPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
-    override fun getItemCount(): Int {
-        return 2
-    }
+    override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
-        return if (position == 0) MediaFragment.newInstance(isPlayList = false)
-        else MediaFragment.newInstance(isPlayList = true)
+        return when (position) {
+            0 -> MediaFragment.newInstance()
+            else -> PlaylistFragment.newInstance()
+        }
     }
 }

@@ -9,6 +9,10 @@
         <item name="fontFamily">@font/ys_display_medium</item>
     </style>
 
+    <style name="TableLayoutText" parent="AllText">
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
     <style name="SongInformationTag">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/zero</item>
@@ -97,8 +101,6 @@
         <item name="iconTint">@color/black1</item>
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:backgroundTint">@color/white</item>
-
-
     </style>
 
     <style name="FAB" parent="ButtonBasic">
