@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorOnPrimary"
-    android:padding="@dimen/padding_small">
+    android:padding="@dimen/padding_4">
 
     <Button
         android:id="@+id/back_button_player_act"
@@ -19,14 +19,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/padding_large" />
+        app:layout_constraintGuide_begin="@dimen/padding_24" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorderSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/pending_medium2" />
+        app:layout_constraintGuide_begin="@dimen/padding_16" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -34,14 +34,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/padding_large" />
+        app:layout_constraintGuide_end="@dimen/padding_24" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rightBorderSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/pending_medium2" />
+        app:layout_constraintGuide_end="@dimen/padding_16" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontal_line"
@@ -54,7 +54,7 @@
         android:id="@+id/album_image"
         android:layout_width="@dimen/zero"
         android:layout_height="@dimen/zero"
-        android:layout_marginTop="@dimen/padding_large"
+        android:layout_marginTop="@dimen/padding_24"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@id/horizontal_line"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
@@ -65,7 +65,7 @@
     <TextView
         android:id="@+id/player_text_song_name"
         style="@style/PlayerSong"
-        android:layout_marginTop="@dimen/padding_large"
+        android:layout_marginTop="@dimen/padding_24"
         android:textSize="@dimen/text_size_22"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/album_image"
@@ -74,7 +74,7 @@
     <TextView
         android:id="@+id/player_text_song_artist"
         style="@style/PlayerSong"
-        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_12"
         android:textSize="@dimen/text_size_14"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/player_text_song_name"
@@ -122,7 +122,7 @@
     <TextView
         android:id="@+id/song_play_time"
         style="@style/AllText"
-        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_12"
         android:text="@string/play_time"
         android:textSize="@dimen/text_size_14"
         app:layout_constraintEnd_toEndOf="@id/player_button_play"

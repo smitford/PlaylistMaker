@@ -6,7 +6,7 @@
     <dimen name="start_button_pending">17dp</dimen>
     <dimen name="end_button_pending">15dp</dimen>
     <dimen name="corner_of_button">16dp</dimen>
-    <dimen name="icon_padding_mm">10.66dp</dimen>
+    <dimen name="icon_padding_mm">10dp</dimen>
     <dimen name="panel_header">56dp</dimen>
     <dimen name="button_size">48dp</dimen>
     <dimen name="high_of_basic_stripe">60dp</dimen>
@@ -24,9 +24,11 @@
     <dimen name="size_text_13">13sp</dimen>
 
     <dimen name="wright_padding_icons">20dp</dimen>
-    <dimen name="pending_medium2">16dp</dimen>
-    <dimen name="padding_small">4dp</dimen>
-    <dimen name="padding_large">24dp</dimen>
-    <dimen name="padding_medium">12dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_4">4dp</dimen>
+    <dimen name="padding_24">24dp</dimen>
+    <dimen name="padding_12">12dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_46">46dp</dimen>
     <dimen name="music_padding_srch">8dp</dimen>
 </resources>

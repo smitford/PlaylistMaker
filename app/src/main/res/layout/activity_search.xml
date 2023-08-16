@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorOnPrimary"
     android:orientation="vertical"
-    android:padding="@dimen/padding_small">
+    android:padding="@dimen/padding_4">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -29,9 +29,9 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_search"
-        android:layout_marginStart="@dimen/pending_medium2"
+        android:layout_marginStart="@dimen/padding_16"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="@dimen/pending_medium2"
+        android:layout_marginEnd="@dimen/padding_16"
         android:background="@drawable/rounding_of_edittext">
 
         <EditText
@@ -61,7 +61,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/padding_large" />
+        android:layout_height="@dimen/padding_24" />
 
     <ProgressBar
         android:id="@+id/search_progressBar"
@@ -118,8 +118,8 @@
             <TextView
                 android:id="@+id/textview_download_fail"
                 style="@style/AllText"
-                android:layout_marginStart="@dimen/padding_large"
-                android:layout_marginEnd="@dimen/padding_large"
+                android:layout_marginStart="@dimen/padding_24"
+                android:layout_marginEnd="@dimen/padding_24"
                 android:gravity="center"
                 android:textSize="19sp"
                 tools:text="@string/internet_lost_connection" />
@@ -139,7 +139,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginTop="@dimen/padding_large">
+        android:layout_marginTop="@dimen/padding_24">
 
         <Button
             android:id="@+id/button_clear_search_history"

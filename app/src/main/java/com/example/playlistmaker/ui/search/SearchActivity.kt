@@ -166,7 +166,7 @@ class SearchActivity : AppCompatActivity() {
                 recyclerViewSongs.visibility = View.GONE
                 binding.linearlayoutDownloadFail.visibility = View.VISIBLE
                 binding.buttonDownloadFail.visibility = View.GONE
-                binding.imageviewDownloadFail.setImageResource(R.drawable.serch_zero)
+                binding.imageviewDownloadFail.setImageResource(R.drawable.search_zero)
                 binding.textviewDownloadFail.setText(R.string.search_fail)
                 binding.searchProgressBar.visibility = View.GONE
             }

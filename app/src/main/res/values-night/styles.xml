@@ -9,6 +9,10 @@
         <item name="fontFamily">@font/ys_display_medium</item>
     </style>
 
+    <style name="TableLayoutText" parent="AllText">
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
     <style name="SongInformationTag">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/zero</item>
@@ -38,7 +42,7 @@
     </style>
 
     <style name="Text_1" parent="AllText">
-        <item name="android:layout_marginStart">@dimen/padding_medium</item>
+        <item name="android:layout_marginStart">@dimen/padding_12</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_size_22</item>
     </style>
@@ -84,7 +88,7 @@
     <style name="ButtonMainAct" parent="ButtonBasic">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/zero</item>
-        <item name="android:layout_marginTop">@dimen/pending_medium2</item>
+        <item name="android:layout_marginTop">@dimen/padding_16</item>
         <item name="android:layout_marginStart">@dimen/start_button_pending</item>
         <item name="android:layout_marginEnd">@dimen/end_button_pending</item>
         <item name="android:layout_weight">1</item>
@@ -97,8 +101,6 @@
         <item name="iconTint">@color/black1</item>
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:backgroundTint">@color/white</item>
-
-
     </style>
 
     <style name="FAB" parent="ButtonBasic">
