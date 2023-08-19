@@ -26,17 +26,11 @@ class AdapterSearch(val callBack: (Track) -> Unit) :
         )
     }
 
-
     override fun onBindViewHolder(holder: ViewHolderOfSongs, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
                 callBack(tracks[position])
-                //  trackSaveUseCase.execute(tracks[position])
-
-                val displayPlayer = Intent(it.context, PlayerActivity::class.java)
-                displayPlayer.putExtra("track", tracks[position])
-                it.context.startActivity(displayPlayer)
             }
         }
     }

@@ -11,9 +11,8 @@ import org.koin.dsl.module
 
 val uiModules = module {
 
-    viewModel<PlayerViewModel> { (track: Track) ->
-        PlayerViewModel(playerInteractor = get(), track = track)
-
+    viewModel<PlayerViewModel> {
+        PlayerViewModel(playerInteractor = get())
     }
     viewModel<SearchFragmentViewModel> {
         SearchFragmentViewModel(
@@ -29,7 +28,7 @@ val uiModules = module {
     viewModel<FavoriteTracksFragmentVm>() {
         FavoriteTracksFragmentVm()
     }
-    viewModel<PlaylistFragmentViewModel>(){
+    viewModel<PlaylistFragmentViewModel>() {
         PlaylistFragmentViewModel()
     }
 }

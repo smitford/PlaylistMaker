@@ -1,18 +1,20 @@
 package com.example.playlistmaker.ui.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import handler
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,13 +51,33 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val callBack = fun(track: Track) {
+        val callBackSearch = fun(track: Track) {
             searchFragmentViewModel.saveTrack(track = track)
+            val displayPlayer =
+                Intent(requireContext(), PlayerActivity::class.java)
+            displayPlayer.putExtra("track", track)
+            activity?.let {
+                Navigation.findNavController(it.findViewById(R.id.action_searchFragment_to_playerActivity))
+                    .handleDeepLink(displayPlayer)
+
+            }
         }
+
+        val callBackHistory = fun(track: Track) {
+            val displayPlayer =
+                Intent(requireContext(), PlayerActivity::class.java)
+            displayPlayer.putExtra("track", track)
+            activity?.let {
+                Navigation.findNavController(it.findViewById(R.id.action_searchFragment_to_playerActivity))
+                    .handleDeepLink(displayPlayer)
+
+            }
+        }
+
         recyclerViewSongs = binding.recyclerViewSongs
         recyclerViewSongs.layoutManager = LinearLayoutManager(requireContext())
-        adapterSearch = AdapterSearch(callBack)
-        adapterSearchHistory = AdapterSearchHistory()
+        adapterSearch = AdapterSearch(callBackSearch)
+        adapterSearchHistory = AdapterSearchHistory(callBackHistory)
         recyclerViewSongs.adapter = adapterSearch
 
         if (savedInstanceState != null)
@@ -153,7 +175,7 @@ class SearchFragment : Fragment() {
     private fun changeVisBottomNav(focus: Int) {
         val bottomNavigation =
             requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigation)
-            bottomNavigation.visibility = focus
+        bottomNavigation.visibility = focus
     }
 
     private fun search() =

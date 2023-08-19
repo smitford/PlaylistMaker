@@ -12,7 +12,7 @@ import com.example.playlistmaker.domain.use_cases.PlayerInteractor
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor, track: Track?) :
+class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
     ViewModel() {
 
     companion object {
@@ -33,11 +33,6 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor, track: Tra
             playerState = STATE_DEFAULT,
             timeCode = R.string.play_time.toString()
         )
-        try {
-            prepareMediaPlayer(track?.previewUrl.toString())
-        } catch (e: Exception) {
-            playerActivityState.value =getCurrentStatus()
-        }
     }
 
     override fun onCleared() {
@@ -46,6 +41,14 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor, track: Tra
         handler.removeCallbacksAndMessages(null)
     }
 
+    fun prepare(track: Track) {
+        try {
+            prepareMediaPlayer(track?.previewUrl.toString())
+            Log.d("Release","Done")
+        } catch (e: Exception) {
+            playerActivityState.value =getCurrentStatus()
+        }
+    }
     fun getPlayerState(): LiveData<PlayerActivityState> = playerActivityState
 
 
@@ -63,14 +66,11 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor, track: Tra
         playerInteractor.start()
         playerActivityState.value = getCurrentStatus().copy(playerState = STATE_PLAYING)
         handler.post(playerTimeRefresher())
-        Log.d("Start", "${playerActivityState.value!!.playerState}")
     }
 
     fun pauseMediaPlayer() {
         playerInteractor.pause()
         playerActivityState.value = getCurrentStatus().copy(playerState = STATE_PAUSED)
-        Log.d("Paused_ViewModel", "Paused")
-        Log.d("Paused_ViewModel", "${playerActivityState.value!!.playerState}")
     }
 
     private fun playerTimeRefresher(): Runnable {

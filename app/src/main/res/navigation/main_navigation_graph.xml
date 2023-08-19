@@ -22,10 +22,19 @@
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.ui.search.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search"/>
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_playerActivity"
+            app:destination="@id/playerActivity" />
+    </fragment>
     <fragment
         android:id="@+id/termOfUseFragment"
         android:name="com.example.playlistmaker.ui.settings.TermOfUseFragment"
         android:label="TermOfUseFragment"
         tools:layout="@layout/fragment_terms_of_use"/>
+    <activity
+        android:id="@+id/playerActivity"
+        android:name="com.example.playlistmaker.ui.player.PlayerActivity"
+        android:label="PlayerActivity"
+        tools:layout="@layout/activity_player"/>
 </navigation>
