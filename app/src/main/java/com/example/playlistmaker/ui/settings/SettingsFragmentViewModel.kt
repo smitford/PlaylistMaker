@@ -8,11 +8,11 @@ import com.example.playlistmaker.domain.use_cases.ThemeInteractor
 
 
 
-class SettingsViewModel(
+class SettingsFragmentViewModel(
     private val themeInteractor: ThemeInteractor
 ) : ViewModel() {
 
-    private var themeState = MutableLiveData<SettingsActivityState>()
+    private var themeState = MutableLiveData<SettingsFragmentState>()
 
     init {
         getThemeState()
@@ -27,14 +27,14 @@ class SettingsViewModel(
         themeInteractor.saveTheme(getCurrentState().themeState)
     }
 
-    private fun getCurrentState(): SettingsActivityState =
-        themeState.value ?: SettingsActivityState(false)
+    private fun getCurrentState(): SettingsFragmentState =
+        themeState.value ?: SettingsFragmentState(false)
 
-    fun getSettingsState(): LiveData<SettingsActivityState> = themeState
+    fun getSettingsState(): LiveData<SettingsFragmentState> = themeState
 
     fun changeSettingTheme() {
         Log.d("Change Theme", "Theme Changed")
-        themeState.value = SettingsActivityState(!getCurrentState().themeState)
+        themeState.value = SettingsFragmentState(!getCurrentState().themeState)
         saveThemeState()
     }
 

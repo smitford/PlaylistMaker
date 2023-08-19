@@ -13,7 +13,7 @@ import com.example.playlistmaker.domain.use_cases.TrackGetUseCase
 import com.example.playlistmaker.domain.use_cases.TrackSaveUseCase
 import com.example.playlistmaker.domain.use_cases.TrackSearchUseCase
 
-class SearchTrackViewModel(
+class SearchFragmentViewModel(
     private val trackClearHistoryUseCase: TrackClearHistoryUseCase,
     private val trackGetUseCase: TrackGetUseCase,
     private val trackSaveUseCase: TrackSaveUseCase,
@@ -24,17 +24,17 @@ class SearchTrackViewModel(
         const val STATE_SEARCH_RESULT_SHOW = "Result"
     }
 
-    private var searchActivityState = MutableLiveData<SearchActivityState>()
+    private var searchFragmentState = MutableLiveData<SearchFragmentState>()
     private val handler = Handler(Looper.getMainLooper())
     private var currentConsumeRunnable: Runnable? = null
 
     init {
-        searchActivityState.value = SearchActivityState.Start
+        searchFragmentState.value = SearchFragmentState.Start
     }
 
     fun clearHistory() {
         trackClearHistoryUseCase.execute()
-        searchActivityState.value = SearchActivityState.Start
+        searchFragmentState.value = SearchFragmentState.Start
     }
 
     fun saveTrack(track: Track) {
@@ -43,16 +43,16 @@ class SearchTrackViewModel(
 
     fun refreshHistory() {
         if (trackGetUseCase.execute().isEmpty()) {
-            searchActivityState.value = SearchActivityState.Start
+            searchFragmentState.value = SearchFragmentState.Start
         } else {
-            searchActivityState.value = SearchActivityState.State(
+            searchFragmentState.value = SearchFragmentState.State(
                 trackList = trackGetUseCase.execute().toMutableList(), STATE_HISTORY_SHOW
             )
         }
     }
 
     fun searchTrack(term: String) {
-        searchActivityState.value = SearchActivityState.Loading
+        searchFragmentState.value = SearchFragmentState.Loading
         trackSearchUseCase.searchTracks(
             term = term,
             consumer = object : Consumer<List<Track>> {
@@ -70,22 +70,22 @@ class SearchTrackViewModel(
             when (result) {
                 is DataConsumer.Success -> {
                     if (result.data.isNotEmpty()) {
-                        searchActivityState.value = SearchActivityState.State(
+                        searchFragmentState.value = SearchFragmentState.State(
                             trackList = result.data, STATE_SEARCH_RESULT_SHOW
                         )
                     } else {
-                        searchActivityState.value = SearchActivityState.InvalidRequest
+                        searchFragmentState.value = SearchFragmentState.InvalidRequest
                     }
                 }
                 is DataConsumer.Error -> {
-                    searchActivityState.value = SearchActivityState.ConnectionError
+                    searchFragmentState.value = SearchFragmentState.ConnectionError
                 }
             }
         }
     }
 
-    fun getSearchActivityState(): LiveData<SearchActivityState> =
-        searchActivityState
+    fun getSearchActivityState(): LiveData<SearchFragmentState> =
+        searchFragmentState
 
     override fun onCleared() {
         super.onCleared()

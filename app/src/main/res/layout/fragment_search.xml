@@ -14,12 +14,6 @@
         android:layout_gravity="start"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/back_button_search_act"
-            style="@style/ButtonBack"
-            android:outlineSpotShadowColor="?attr/colorOnPrimary"
-            tools:ignore="SpeakableTextPresentCheck" />
-
         <TextView
             style="@style/Text_1"
             android:text="@string/search"
@@ -149,6 +143,4 @@
             android:visibility="gone"
             tools:visibility="visible" />
     </FrameLayout>
-
-
 </LinearLayout>

@@ -1,63 +1,67 @@
 package com.example.playlistmaker.ui.search
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.Track
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import handler
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import textOfSearch
 import SEARCH_DEBOUNCE_DELAY as SEARCH_DEBOUNCE_DELAY1
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
     companion object {
         const val CLEAR_DEBOUNCE_DELAY = 500L
         const val STATE_HISTORY_SHOW = "History"
+        fun newInstance(): SearchFragment = SearchFragment()
     }
 
-    private lateinit var binding: ActivitySearchBinding
-
-    private lateinit var textSearch: String
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+    private var textSearch: String? = null
     private lateinit var recyclerViewSongs: RecyclerView
     private lateinit var adapterSearch: AdapterSearch
     private lateinit var adapterSearchHistory: AdapterSearchHistory
     private val searchRequest = Runnable { search() }
     private val clear = Runnable { clearSearchField() }
-    private val searchTrackViewModel by viewModel<SearchTrackViewModel>()
+    private val searchFragmentViewModel by viewModel<SearchFragmentViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val callBack = fun(track: Track) {
-            searchTrackViewModel.saveTrack(track = track)
+            searchFragmentViewModel.saveTrack(track = track)
         }
-
-        textSearch = ""
-        recyclerViewSongs = findViewById(R.id.recyclerView_songs)
-        recyclerViewSongs.layoutManager = LinearLayoutManager(this)
+        recyclerViewSongs = binding.recyclerViewSongs
+        recyclerViewSongs.layoutManager = LinearLayoutManager(requireContext())
         adapterSearch = AdapterSearch(callBack)
         adapterSearchHistory = AdapterSearchHistory()
         recyclerViewSongs.adapter = adapterSearch
 
-        binding.backButtonSearchAct.setOnClickListener {
-            finish()
-        }
-
-        if (savedInstanceState != null) {
-            binding.searchBar.setText(textSearch)
-        }
+        if (savedInstanceState != null)
+            textSearch = savedInstanceState.getString(textOfSearch)
 
         binding.clearSearchHistoryLl.setOnClickListener {
-            searchTrackViewModel.clearHistory()
+            searchFragmentViewModel.clearHistory()
         }
 
         binding.buttonDownloadFail.setOnClickListener { search() }
@@ -67,58 +71,62 @@ class SearchActivity : AppCompatActivity() {
             clearDebounce()
         }
 
-        searchTrackViewModel.getSearchActivityState().observe(this) { searchActivityState ->
-            when (searchActivityState) {
-                is SearchActivityState.Start -> {
-                    elementsVisibility(SearchActItemsVis.START_VIEW)
-                }
+        searchFragmentViewModel.getSearchActivityState()
+            .observe(viewLifecycleOwner) { searchActivityState ->
+                when (searchActivityState) {
+                    is SearchFragmentState.Start -> {
+                        elementsVisibility(SearchActItemsVis.START_VIEW)
+                    }
 
-                is SearchActivityState.Loading -> {
-                    elementsVisibility(SearchActItemsVis.LOADING)
-                }
+                    is SearchFragmentState.Loading -> {
+                        elementsVisibility(SearchActItemsVis.LOADING)
+                    }
 
-                is SearchActivityState.ConnectionError -> {
-                    elementsVisibility(SearchActItemsVis.CONNECTION_ERROR)
-                }
+                    is SearchFragmentState.ConnectionError -> {
+                        elementsVisibility(SearchActItemsVis.CONNECTION_ERROR)
+                    }
 
-                is SearchActivityState.InvalidRequest -> {
-                    elementsVisibility(SearchActItemsVis.EMPTY_SEARCH)
-                }
+                    is SearchFragmentState.InvalidRequest -> {
+                        elementsVisibility(SearchActItemsVis.EMPTY_SEARCH)
+                    }
 
-                is SearchActivityState.State -> {
-                    when (searchActivityState.state) {
-                        STATE_HISTORY_SHOW -> {
-                            elementsVisibility(SearchActItemsVis.SHOW_HISTORY)
-                            recyclerViewSongs.adapter = adapterSearchHistory
-                            adapterSearchHistory.tracks =
-                                searchActivityState.trackList.toMutableList()
-                        }
+                    is SearchFragmentState.State -> {
+                        when (searchActivityState.state) {
+                            STATE_HISTORY_SHOW -> {
+                                elementsVisibility(SearchActItemsVis.SHOW_HISTORY)
+                                recyclerViewSongs.adapter = adapterSearchHistory
+                                adapterSearchHistory.tracks =
+                                    searchActivityState.trackList.toMutableList()
+                            }
 
-                        else -> {
-                            elementsVisibility(SearchActItemsVis.SUCCESS)
-                            recyclerViewSongs.adapter = adapterSearch
-                            adapterSearch.tracks = searchActivityState.trackList.toMutableList()
+                            else -> {
+                                elementsVisibility(SearchActItemsVis.SUCCESS)
+                                recyclerViewSongs.adapter = adapterSearch
+                                adapterSearch.tracks = searchActivityState.trackList.toMutableList()
+                            }
                         }
                     }
                 }
             }
-        }
 
         val searchActivityTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                changeVisBottomNav(View.GONE)
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.clearTextSearch.visibility = clearButtonVisibility(s)
-                if (binding.searchBar.hasFocus() && binding.searchBar.text.isEmpty()) {
-                    searchTrackViewModel.refreshHistory()
+                if (binding.searchBar.hasFocus() && binding.searchBar.text.isNullOrBlank()) {
+                    searchFragmentViewModel.refreshHistory()
                 } else {
-                    searchDebounce()
+                    if (!binding.searchBar.text.isNullOrBlank())
+                        searchDebounce()
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
                 textSearch = binding.searchBar.text.toString()
+                changeVisBottomNav(View.VISIBLE)
             }
 
             fun clearButtonVisibility(s: CharSequence?): Int {
@@ -131,29 +139,37 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchBar.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && binding.searchBar.text.isEmpty()) {
-                searchTrackViewModel.refreshHistory()
+            if (hasFocus && binding.searchBar.text.isNullOrBlank()) {
+                searchFragmentViewModel.refreshHistory()
+
             }
+
+
         }
         binding.searchBar.addTextChangedListener(searchActivityTextWatcher)
     }
 
+    private fun changeVisBottomNav(focus: Int) {
+        val bottomNavigation =
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigation)
+            bottomNavigation.visibility = focus
+    }
+
     private fun search() =
-        searchTrackViewModel.searchTrack(binding.searchBar.text.toString())
+        searchFragmentViewModel.searchTrack(binding.searchBar.text.toString())
 
     private fun clearSearchField() {
         binding.searchBar.setText("")
-        searchTrackViewModel.refreshHistory()
+        searchFragmentViewModel.refreshHistory()
     }
 
     private fun clearDebounce() {
         handler.removeCallbacks(clear)
         handler.postDelayed(clear, CLEAR_DEBOUNCE_DELAY)
+        elementsVisibility(SearchActItemsVis.START_VIEW)
     }
 
     private fun elementsVisibility(result: SearchActItemsVis) {
-
-
         when (result) {
             SearchActItemsVis.SUCCESS -> {
                 recyclerViewSongs.visibility = View.VISIBLE
@@ -209,17 +225,20 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(textOfSearch, textSearch)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        textSearch = savedInstanceState.getString(textOfSearch, "")
+        if (textSearch != null)
+            outState.putString(textOfSearch, textSearch)
     }
 
     fun searchDebounce() {
         handler.removeCallbacks(searchRequest)
         handler.postDelayed(searchRequest, SEARCH_DEBOUNCE_DELAY1)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        handler.removeCallbacks(searchRequest)
+        textSearch = null
+        _binding = null
     }
 }
 
