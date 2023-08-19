@@ -3,6 +3,7 @@ package com.example.playlistmaker.ui.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,7 @@ class SearchFragment : Fragment() {
     companion object {
         const val CLEAR_DEBOUNCE_DELAY = 500L
         const val STATE_HISTORY_SHOW = "History"
-        fun newInstance(): SearchFragment = SearchFragment()
+
     }
 
     private var _binding: FragmentSearchBinding? = null
@@ -60,7 +61,7 @@ class SearchFragment : Fragment() {
         if (savedInstanceState != null)
             textSearch = savedInstanceState.getString(textOfSearch)
 
-        binding.clearSearchHistoryLl.setOnClickListener {
+        binding.buttonClearSearchHistory.setOnClickListener {
             searchFragmentViewModel.clearHistory()
         }
 
