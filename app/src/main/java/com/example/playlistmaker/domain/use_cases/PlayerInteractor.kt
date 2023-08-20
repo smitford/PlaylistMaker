@@ -7,4 +7,5 @@ interface PlayerInteractor {
     fun release()
     fun getPosition(): Int
     fun isPlaying(): Boolean
+    fun stop()
 }

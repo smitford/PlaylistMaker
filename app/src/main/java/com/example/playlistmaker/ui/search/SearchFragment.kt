@@ -1,20 +1,26 @@
 package com.example.playlistmaker.ui.search
 
 import android.content.Intent
+import android.health.connect.datatypes.BloodGlucoseRecord.SpecimenSource
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDeepLink
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.ui.player.PlayerFragment
+import com.example.playlistmaker.ui.player.PlayerFragmentArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import handler
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -53,25 +59,13 @@ class SearchFragment : Fragment() {
 
         val callBackSearch = fun(track: Track) {
             searchFragmentViewModel.saveTrack(track = track)
-            val displayPlayer =
-                Intent(requireContext(), PlayerActivity::class.java)
-            displayPlayer.putExtra("track", track)
-            activity?.let {
-                Navigation.findNavController(it.findViewById(R.id.action_searchFragment_to_playerActivity))
-                    .handleDeepLink(displayPlayer)
-
-            }
+            val arg = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
+            findNavController().navigate(arg)
         }
 
         val callBackHistory = fun(track: Track) {
-            val displayPlayer =
-                Intent(requireContext(), PlayerActivity::class.java)
-            displayPlayer.putExtra("track", track)
-            activity?.let {
-                Navigation.findNavController(it.findViewById(R.id.action_searchFragment_to_playerActivity))
-                    .handleDeepLink(displayPlayer)
-
-            }
+            val arg = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
+            findNavController().navigate(arg)
         }
 
         recyclerViewSongs = binding.recyclerViewSongs

@@ -7,9 +7,11 @@ import com.example.playlistmaker.domain.api.PlayerRepository
 
 class PlayerRepositoryImp : PlayerRepository {
 
-    private var player = MediaPlayer()
+    private var _player : MediaPlayer? = null
+    private val player get() = _player!!
     private var completion = true
     override fun prepareMediaPlayer(url: String) {
+        _player = MediaPlayer()
         player.setDataSource(url)
         player.prepareAsync()
         player.setOnPreparedListener {
@@ -18,6 +20,10 @@ class PlayerRepositoryImp : PlayerRepository {
         player.setOnCompletionListener {
             completion = false
         }
+    }
+
+    override fun stop() {
+        player.stop()
     }
 
     override fun startMediaPlayer() {
@@ -30,7 +36,9 @@ class PlayerRepositoryImp : PlayerRepository {
     }
 
     override fun releaseMediaPlayer() {
+
         player.release()
+        _player=null
 
     }
 

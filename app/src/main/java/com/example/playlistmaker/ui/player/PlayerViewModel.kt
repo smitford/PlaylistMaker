@@ -25,11 +25,11 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private var playerActivityState =
-        MutableLiveData<PlayerActivityState>()
+    private var playerFragmentState =
+        MutableLiveData<PlayerFragmentState>()
 
     init {
-        playerActivityState.value = PlayerActivityState(
+        playerFragmentState.value = PlayerFragmentState(
             playerState = STATE_DEFAULT,
             timeCode = R.string.play_time.toString()
         )
@@ -37,47 +37,50 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
 
     override fun onCleared() {
         super.onCleared()
-        playerInteractor.release()
+        stop ()
+        release()
         handler.removeCallbacksAndMessages(null)
     }
 
+    private fun stop () = playerInteractor.stop()
+    private fun release () = playerInteractor.release()
+
     fun prepare(track: Track) {
         try {
-            prepareMediaPlayer(track?.previewUrl.toString())
-            Log.d("Release","Done")
+            prepareMediaPlayer(track.previewUrl)
         } catch (e: Exception) {
-            playerActivityState.value =getCurrentStatus()
+            playerFragmentState.value =getCurrentStatus()
         }
     }
-    fun getPlayerState(): LiveData<PlayerActivityState> = playerActivityState
+    fun getPlayerState(): LiveData<PlayerFragmentState> = playerFragmentState
 
 
     private fun prepareMediaPlayer(url: String) {
         playerInteractor.prepare(url)
-        playerActivityState.value = getCurrentStatus().copy(playerState = STATE_PREPARED)
+        playerFragmentState.value = getCurrentStatus().copy(playerState = STATE_PREPARED)
     }
 
-    private fun getCurrentStatus(): PlayerActivityState =
-        playerActivityState.value ?: PlayerActivityState(
+    private fun getCurrentStatus(): PlayerFragmentState =
+        playerFragmentState.value ?: PlayerFragmentState(
             playerState = STATE_DEFAULT, timeCode = R.string.play_time.toString()
         )
 
     private fun startMediaPlayer() {
         playerInteractor.start()
-        playerActivityState.value = getCurrentStatus().copy(playerState = STATE_PLAYING)
+        playerFragmentState.value = getCurrentStatus().copy(playerState = STATE_PLAYING)
         handler.post(playerTimeRefresher())
     }
 
     fun pauseMediaPlayer() {
         playerInteractor.pause()
-        playerActivityState.value = getCurrentStatus().copy(playerState = STATE_PAUSED)
+        playerFragmentState.value = getCurrentStatus().copy(playerState = STATE_PAUSED)
     }
 
     private fun playerTimeRefresher(): Runnable {
         return object : Runnable {
             override fun run() {
                 if (playerInteractor.isPlaying()) {
-                    playerActivityState.value =
+                    playerFragmentState.value =
                         getCurrentStatus().copy(
                             timeCode =
                             SimpleDateFormat(
@@ -87,8 +90,8 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
                         )
                     handler.postDelayed(this, PLAY_DEBOUNCE_DELAY)
                 } else {
-                    playerActivityState.value =
-                        PlayerActivityState(
+                    playerFragmentState.value =
+                        PlayerFragmentState(
                             playerState = STATE_PREPARED, timeCode = R.string.play_time.toString()
                         )
                 }
@@ -97,7 +100,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
     }
 
     fun playbackControl() {
-        when (playerActivityState.value?.playerState) {
+        when (playerFragmentState.value?.playerState) {
             STATE_PLAYING -> pauseMediaPlayer()
             STATE_PREPARED, STATE_PAUSED -> startMediaPlayer()
         }

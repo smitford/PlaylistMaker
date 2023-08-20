@@ -1,44 +1,49 @@
 package com.example.playlistmaker.ui.player
 
-import android.os.Build
+
 import android.os.Bundle
 import android.util.DisplayMetrics
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 
-class PlayerActivity : AppCompatActivity() {
+
+class PlayerFragment : Fragment() {
+
     companion object {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
     }
+    private val args :PlayerFragmentArgs by navArgs()
 
-    private lateinit var binding: ActivityPlayerBinding
-    private var _track: Track? = null
-    private val track get() = _track!!
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
     private val playerViewModel by viewModel<PlayerViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        _track =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra("track", Track::class.java)
-            } else {
-                intent.getParcelableExtra("track")
-            }
+        val track = args.track
 
         val roundedCorners = (8 / (this.resources
             .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT))
@@ -60,7 +65,7 @@ class PlayerActivity : AppCompatActivity() {
         playerViewModel.prepare(track)
 
         playerViewModel.getPlayerState()
-            .observe(this) { playerActivityState ->
+            .observe(viewLifecycleOwner) { playerActivityState ->
                 when (playerActivityState.playerState) {
                     STATE_PREPARED -> {
                         binding.playerButtonPlay.isEnabled = true
@@ -89,14 +94,13 @@ class PlayerActivity : AppCompatActivity() {
             (playerViewModel).playbackControl()
         }
         binding.backButtonPlayerAct.setOnClickListener {
-            findNavController(R.id.action_searchFragment_to_playerActivity).popBackStack()
+
+            findNavController().popBackStack()
 
         }
     }
-
     override fun onPause() {
         super.onPause()
-        (playerViewModel).pauseMediaPlayer()
+        playerViewModel.pauseMediaPlayer()
     }
-
 }

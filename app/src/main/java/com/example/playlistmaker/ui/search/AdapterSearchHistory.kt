@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import clickDebounce
 import com.example.playlistmaker.databinding.TrackrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.ui.player.PlayerFragment
 
 class AdapterSearchHistory(val callBack: (Track) -> Unit) :
     RecyclerView.Adapter<ViewHolderOfSongs>() {
@@ -30,10 +30,7 @@ class AdapterSearchHistory(val callBack: (Track) -> Unit) :
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
-
-                val displayPlayer = Intent(it.context, PlayerActivity::class.java)
-                displayPlayer.putExtra("track", tracks[position])
-                it.context.startActivity(displayPlayer)
+                callBack(tracks[position])
             }
         }
     }
