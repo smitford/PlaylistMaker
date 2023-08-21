@@ -10,10 +10,6 @@ import com.example.playlistmaker.databinding.FragmentMediaBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
-    companion object {
-        fun newInstance() = FavoriteTracksFragment()
-    }
-
     private val playerViewModel by viewModel<FavoriteTracksFragmentVm>()
 
     private var _binding: FragmentFavoriteTracksBinding? = null
@@ -31,6 +27,10 @@ class FavoriteTracksFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        fun newInstance() = FavoriteTracksFragment()
     }
 }
 

@@ -13,17 +13,7 @@ import java.util.Locale
 
 class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
     ViewModel() {
-
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val PLAY_DEBOUNCE_DELAY = 250L
-    }
-
     private val handler = Handler(Looper.getMainLooper())
-
     private var playerFragmentState =
         MutableLiveData<PlayerFragmentState>()
 
@@ -36,21 +26,22 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
 
     override fun onCleared() {
         super.onCleared()
-        stop ()
+        stop()
         release()
         handler.removeCallbacksAndMessages(null)
     }
 
-    private fun stop () = playerInteractor.stop()
-    private fun release () = playerInteractor.release()
+    private fun stop() = playerInteractor.stop()
+    private fun release() = playerInteractor.release()
 
     fun prepare(track: Track) {
         try {
             prepareMediaPlayer(track.previewUrl)
         } catch (e: Exception) {
-            playerFragmentState.value =getCurrentStatus()
+            playerFragmentState.value = getCurrentStatus()
         }
     }
+
     fun getPlayerState(): LiveData<PlayerFragmentState> = playerFragmentState
 
 
@@ -103,6 +94,14 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
             STATE_PLAYING -> pauseMediaPlayer()
             STATE_PREPARED, STATE_PAUSED -> startMediaPlayer()
         }
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val PLAY_DEBOUNCE_DELAY = 250L
     }
 
 }

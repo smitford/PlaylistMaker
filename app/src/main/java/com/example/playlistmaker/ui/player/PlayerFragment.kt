@@ -16,16 +16,8 @@ import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-
 class PlayerFragment : Fragment() {
-
-    companion object {
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-    }
-    private val args :PlayerFragmentArgs by navArgs()
-
+    private val args: PlayerFragmentArgs by navArgs()
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
     private val playerViewModel by viewModel<PlayerViewModel>()
@@ -98,8 +90,20 @@ class PlayerFragment : Fragment() {
 
         }
     }
+
     override fun onPause() {
         super.onPause()
         playerViewModel.pauseMediaPlayer()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
     }
 }

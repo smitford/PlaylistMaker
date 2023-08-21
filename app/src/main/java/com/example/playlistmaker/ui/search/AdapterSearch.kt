@@ -8,9 +8,8 @@ import clickDebounce
 import com.example.playlistmaker.databinding.TrackrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.Track
 
-class AdapterSearch(val callBack: (Track) -> Unit) :
+class AdapterSearch(val onTrackClicked: (Track) -> Unit) :
     RecyclerView.Adapter<ViewHolderOfSongs>() {
-
     var tracks: MutableList<Track> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderOfSongs {
@@ -28,12 +27,11 @@ class AdapterSearch(val callBack: (Track) -> Unit) :
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
-                callBack(tracks[position])
+                onTrackClicked(tracks[position])
             }
         }
     }
 
     override fun getItemCount() = tracks.size
-
 }
 

@@ -10,9 +10,9 @@
         android:id="@+id/imageviewMediaEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="106dp"
         android:background="@drawable/search_zero"
-        android:layout_gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,10 +22,9 @@
         style="@style/AllText"
         android:layout_marginTop="@dimen/padding_16"
         android:gravity="center"
-        android:textSize="19sp"
         android:text="@string/empty_media"
+        android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="@id/imageviewMediaEmpty"
-        app:layout_constraintStart_toEndOf="@id/imageviewMediaEmpty"
         app:layout_constraintStart_toStartOf="@id/imageviewMediaEmpty"
         app:layout_constraintTop_toBottomOf="@id/imageviewMediaEmpty" />
 

@@ -16,7 +16,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsFragment : Fragment() {
-
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val settingsFragmentViewModel by viewModel<SettingsFragmentViewModel>()
@@ -79,5 +78,10 @@ class SettingsFragment : Fragment() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

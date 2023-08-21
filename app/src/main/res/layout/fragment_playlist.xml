@@ -22,7 +22,6 @@
         android:layout_marginTop="@dimen/padding_46"
         android:background="@drawable/search_zero"
         app:layout_constraintEnd_toEndOf="@id/buttonNewPlayList"
-        app:layout_constraintStart_toEndOf="@id/buttonNewPlayList"
         app:layout_constraintStart_toStartOf="@id/buttonNewPlayList"
         app:layout_constraintTop_toBottomOf="@id/buttonNewPlayList"
         app:layout_goneMarginTop="106dp" />

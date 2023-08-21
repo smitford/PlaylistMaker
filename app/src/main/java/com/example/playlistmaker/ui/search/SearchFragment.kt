@@ -21,12 +21,6 @@ import SEARCH_DEBOUNCE_DELAY as SEARCH_DEBOUNCE_DELAY1
 
 
 class SearchFragment : Fragment() {
-    companion object {
-        const val CLEAR_DEBOUNCE_DELAY = 500L
-        const val STATE_HISTORY_SHOW = "History"
-
-    }
-
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var textSearch: String? = null
@@ -84,32 +78,32 @@ class SearchFragment : Fragment() {
             .observe(viewLifecycleOwner) { searchActivityState ->
                 when (searchActivityState) {
                     is SearchFragmentState.Start -> {
-                        elementsVisibility(SearchActItemsVis.START_VIEW)
+                        elementsVisibility(SearchFragmentItemsVis.START_VIEW)
                     }
 
                     is SearchFragmentState.Loading -> {
-                        elementsVisibility(SearchActItemsVis.LOADING)
+                        elementsVisibility(SearchFragmentItemsVis.LOADING)
                     }
 
                     is SearchFragmentState.ConnectionError -> {
-                        elementsVisibility(SearchActItemsVis.CONNECTION_ERROR)
+                        elementsVisibility(SearchFragmentItemsVis.CONNECTION_ERROR)
                     }
 
                     is SearchFragmentState.InvalidRequest -> {
-                        elementsVisibility(SearchActItemsVis.EMPTY_SEARCH)
+                        elementsVisibility(SearchFragmentItemsVis.EMPTY_SEARCH)
                     }
 
                     is SearchFragmentState.State -> {
                         when (searchActivityState.state) {
                             STATE_HISTORY_SHOW -> {
-                                elementsVisibility(SearchActItemsVis.SHOW_HISTORY)
+                                elementsVisibility(SearchFragmentItemsVis.SHOW_HISTORY)
                                 recyclerViewSongs.adapter = adapterSearchHistory
                                 adapterSearchHistory.tracks =
                                     searchActivityState.trackList.toMutableList()
                             }
 
                             else -> {
-                                elementsVisibility(SearchActItemsVis.SUCCESS)
+                                elementsVisibility(SearchFragmentItemsVis.SUCCESS)
                                 recyclerViewSongs.adapter = adapterSearch
                                 adapterSearch.tracks = searchActivityState.trackList.toMutableList()
                             }
@@ -175,19 +169,19 @@ class SearchFragment : Fragment() {
     private fun clearDebounce() {
         handler.removeCallbacks(clear)
         handler.postDelayed(clear, CLEAR_DEBOUNCE_DELAY)
-        elementsVisibility(SearchActItemsVis.START_VIEW)
+        elementsVisibility(SearchFragmentItemsVis.START_VIEW)
     }
 
-    private fun elementsVisibility(result: SearchActItemsVis) {
+    private fun elementsVisibility(result: SearchFragmentItemsVis) {
         when (result) {
-            SearchActItemsVis.SUCCESS -> {
+            SearchFragmentItemsVis.SUCCESS -> {
                 recyclerViewSongs.visibility = View.VISIBLE
                 binding.linearlayoutDownloadFail.visibility = View.GONE
                 binding.buttonDownloadFail.visibility = View.GONE
                 binding.searchProgressBar.visibility = View.GONE
             }
 
-            SearchActItemsVis.EMPTY_SEARCH -> {
+            SearchFragmentItemsVis.EMPTY_SEARCH -> {
                 recyclerViewSongs.visibility = View.GONE
                 binding.linearlayoutDownloadFail.visibility = View.VISIBLE
                 binding.buttonDownloadFail.visibility = View.GONE
@@ -196,7 +190,7 @@ class SearchFragment : Fragment() {
                 binding.searchProgressBar.visibility = View.GONE
             }
 
-            SearchActItemsVis.CONNECTION_ERROR -> {
+            SearchFragmentItemsVis.CONNECTION_ERROR -> {
                 recyclerViewSongs.visibility = View.GONE
                 binding.linearlayoutDownloadFail.visibility = View.VISIBLE
                 binding.buttonDownloadFail.visibility = View.VISIBLE
@@ -205,7 +199,7 @@ class SearchFragment : Fragment() {
                 binding.searchProgressBar.visibility = View.GONE
             }
 
-            SearchActItemsVis.SHOW_HISTORY -> {
+            SearchFragmentItemsVis.SHOW_HISTORY -> {
                 recyclerViewSongs.visibility = View.VISIBLE
                 binding.linearlayoutDownloadFail.visibility = View.GONE
                 binding.buttonDownloadFail.visibility = View.GONE
@@ -213,7 +207,7 @@ class SearchFragment : Fragment() {
                 binding.searchProgressBar.visibility = View.GONE
             }
 
-            SearchActItemsVis.START_VIEW -> {
+            SearchFragmentItemsVis.START_VIEW -> {
                 recyclerViewSongs.visibility = View.GONE
                 binding.linearlayoutDownloadFail.visibility = View.GONE
                 binding.buttonDownloadFail.visibility = View.GONE
@@ -221,7 +215,7 @@ class SearchFragment : Fragment() {
                 binding.searchProgressBar.visibility = View.GONE
             }
 
-            SearchActItemsVis.LOADING -> {
+            SearchFragmentItemsVis.LOADING -> {
                 recyclerViewSongs.visibility = View.GONE
                 binding.linearlayoutDownloadFail.visibility = View.GONE
                 binding.textViewSearchHistory.visibility = View.GONE
@@ -249,9 +243,15 @@ class SearchFragment : Fragment() {
         textSearch = null
         _binding = null
     }
+
+    companion object {
+        const val CLEAR_DEBOUNCE_DELAY = 500L
+        const val STATE_HISTORY_SHOW = "History"
+
+    }
 }
 
-enum class SearchActItemsVis {
+enum class SearchFragmentItemsVis {
     CONNECTION_ERROR,
     EMPTY_SEARCH,
     SUCCESS,

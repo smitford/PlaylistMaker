@@ -19,11 +19,6 @@ class SearchFragmentViewModel(
     private val trackSaveUseCase: TrackSaveUseCase,
     private val trackSearchUseCase: TrackSearchUseCase
 ) : ViewModel() {
-    companion object {
-        const val STATE_HISTORY_SHOW = "History"
-        const val STATE_SEARCH_RESULT_SHOW = "Result"
-    }
-
     private var searchFragmentState = MutableLiveData<SearchFragmentState>()
     private val handler = Handler(Looper.getMainLooper())
     private var currentConsumeRunnable: Runnable? = null
@@ -77,6 +72,7 @@ class SearchFragmentViewModel(
                         searchFragmentState.value = SearchFragmentState.InvalidRequest
                     }
                 }
+
                 is DataConsumer.Error -> {
                     searchFragmentState.value = SearchFragmentState.ConnectionError
                 }
@@ -96,5 +92,10 @@ class SearchFragmentViewModel(
         r?.let {
             removeCallbacks(r)
         }
+    }
+
+    companion object {
+        const val STATE_HISTORY_SHOW = "History"
+        const val STATE_SEARCH_RESULT_SHOW = "Result"
     }
 }
