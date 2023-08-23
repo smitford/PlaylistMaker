@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorOnPrimary"
-    android:padding="@dimen/padding_4">
+    android:padding="@dimen/padding_4"
+    tools:context=".ui.player.PlayerFragment">
 
     <Button
         android:id="@+id/back_button_player_act"

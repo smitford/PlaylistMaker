@@ -1,40 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/buttonNewPlayList"
-        style="@style/FAB"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/padding_24"
-        android:text="@string/new_playlist"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="match_parent"
+    tools:context=".ui.media.FavoriteTracksFragment">
 
     <ImageView
         android:id="@+id/imageviewMediaEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_46"
+        android:layout_gravity="center"
+        android:layout_marginTop="106dp"
         android:background="@drawable/search_zero"
-        app:layout_constraintEnd_toEndOf="@id/buttonNewPlayList"
-        app:layout_constraintStart_toStartOf="@id/buttonNewPlayList"
-        app:layout_constraintTop_toBottomOf="@id/buttonNewPlayList"
-        app:layout_goneMarginTop="106dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textviewMediaEmpty"
         style="@style/AllText"
         android:layout_marginTop="@dimen/padding_16"
         android:gravity="center"
-        android:text="@string/non_playlists"
+        android:text="@string/empty_media"
         android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="@id/imageviewMediaEmpty"
-        app:layout_constraintStart_toEndOf="@id/imageviewMediaEmpty"
         app:layout_constraintStart_toStartOf="@id/imageviewMediaEmpty"
         app:layout_constraintTop_toBottomOf="@id/imageviewMediaEmpty" />
 

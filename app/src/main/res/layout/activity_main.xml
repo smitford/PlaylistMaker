@@ -1,42 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_4">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mainFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/panel_header"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/zero"
+        app:defaultNavHost="true"
 
-        <TextView
-            style="@style/Text_1"
-            android:layout_margin="10dp"
-            android:text="@string/app_name" />
-    </LinearLayout>
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/main_navigation_graph" />
 
-    <Button
-        android:id="@+id/search_button"
-        style="@style/ButtonMainAct"
-        android:layout_marginTop="@dimen/padding_24"
-        android:text="@string/search"
-        app:icon="@drawable/search" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorOnSecondary"
+        app:itemTextColor="@color/bottom_nav_controller"
+        app:itemIconTint="@color/bottom_nav_controller"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainFragment"
+        app:menu="@menu/bottom_navigation_menu"
+        tools:layout_editor_absoluteX="75dp" />
 
-    <Button
-        android:id="@+id/media_button"
-        style="@style/ButtonMainAct"
-        android:text="@string/media"
-        app:icon="@drawable/library" />
-
-    <Button
-        android:id="@+id/settings_button"
-        style="@style/ButtonMainAct"
-        android:layout_marginBottom="28dp"
-        android:text="@string/settings"
-        app:icon="@drawable/vector" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

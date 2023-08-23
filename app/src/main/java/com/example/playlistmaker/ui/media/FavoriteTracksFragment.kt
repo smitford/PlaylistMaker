@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.playlistmaker.databinding.FragmentPlaylistBinding
+import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
+import com.example.playlistmaker.databinding.FragmentMediaBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistFragment : Fragment() {
-    private val playerViewModel by viewModel<PlaylistFragmentViewModel>()
-    private var _binding: FragmentPlaylistBinding? = null
+class FavoriteTracksFragment : Fragment() {
+    private val playerViewModel by viewModel<FavoriteTracksFragmentVm>()
+
+    private var _binding: FragmentFavoriteTracksBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -18,7 +20,7 @@ class PlaylistFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPlaylistBinding.inflate(inflater, container, false)
+        _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -28,6 +30,7 @@ class PlaylistFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() = PlaylistFragment()
+        fun newInstance() = FavoriteTracksFragment()
     }
 }
+

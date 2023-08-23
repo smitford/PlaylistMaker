@@ -1,38 +1,35 @@
 package com.example.playlistmaker.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.ui.media.MediaActivity
-import com.example.playlistmaker.ui.search.SearchActivity
-import com.example.playlistmaker.ui.settings.SettingsActivity
+import com.example.playlistmaker.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val mediaButton = findViewById<Button>(R.id.media_button)
-        val settingButton = findViewById<Button>(R.id.settings_button)
-        val searchButton = findViewById<Button>(R.id.search_button)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.mainFragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        binding.bottomNavigation.setupWithNavController(navController)
 
-        mediaButton.setOnClickListener {
-            val displayMedia = Intent(this, MediaActivity::class.java)
-            startActivity(displayMedia)
-        }
-
-        settingButton.setOnClickListener {
-            val displaySettings = Intent(this, SettingsActivity::class.java)
-            startActivity(displaySettings)
-        }
-        searchButton.setOnClickListener {
-            val displaySearch = Intent(this, SearchActivity::class.java)
-            startActivity(displaySearch)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.termOfUseFragment -> binding.bottomNavigation.visibility = View.GONE
+                R.id.playerFragment-> binding.bottomNavigation.visibility = View.GONE
+                else -> binding.bottomNavigation.visibility = View.VISIBLE
+            }
         }
     }
 }

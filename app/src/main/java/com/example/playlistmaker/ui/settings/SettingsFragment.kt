@@ -1,30 +1,37 @@
 package com.example.playlistmaker.ui.settings
 
-import android.annotation.SuppressLint
+
 import android.app.SearchManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+    private val settingsFragmentViewModel by viewModel<SettingsFragmentViewModel>()
 
-    private lateinit var binding: ActivitySettingsBinding
-    private val settingsViewModel by viewModel<SettingsViewModel>()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.shearButton.setOnClickListener {
             val shearIntent = Intent(Intent.ACTION_SEND)
@@ -41,7 +48,6 @@ class SettingsActivity : AppCompatActivity() {
             supportIntent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_of_sup_mail))
             supportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.text_of_sup_mail))
             startActivity(supportIntent)
-
         }
 
         binding.termsOfUseButton.setOnClickListener {
@@ -51,21 +57,16 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(termsOfUseIntent)
         }
 
-        binding.backButton.setOnClickListener {
-            this.finish()
-        }
-
-
         binding.themeSwitcher.isChecked =
-            settingsViewModel.getSettingsState().value?.themeState ?: false
+            settingsFragmentViewModel.getSettingsState().value?.themeState ?: false
 
-        settingsViewModel.getSettingsState().observe(this) { settingState ->
+        settingsFragmentViewModel.getSettingsState().observe(viewLifecycleOwner) { settingState ->
 
             switchTheme(settingState.themeState)
         }
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, _ ->
-            settingsViewModel.changeSettingTheme()
+            settingsFragmentViewModel.changeSettingTheme()
         }
     }
 
@@ -77,5 +78,10 @@ class SettingsActivity : AppCompatActivity() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

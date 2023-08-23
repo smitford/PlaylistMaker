@@ -42,7 +42,7 @@
     </style>
 
     <style name="Text_1" parent="AllText">
-        <item name="android:layout_marginStart">@dimen/padding_12</item>
+        <item name="android:layout_marginStart">@dimen/padding_16</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_size_22</item>
     </style>
