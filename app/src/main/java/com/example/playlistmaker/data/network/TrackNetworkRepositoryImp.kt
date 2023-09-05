@@ -6,18 +6,23 @@ import com.example.playlistmaker.data.models.TrackSearchResponse
 import com.example.playlistmaker.domain.api.TrackNetworkRepository
 import com.example.playlistmaker.domain.consumer.DataConsumer
 import com.example.playlistmaker.domain.models.Track
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+
 
 
 class TrackNetworkRepositoryImp(private val networkClient: NetworkClient) : TrackNetworkRepository {
 
-    override fun searchTracks(term: String): DataConsumer<List<Track>> {
+    override fun searchTracks(term: String): Flow<DataConsumer<List<Track>>> = flow {
         val response =
             networkClient.doRequest(TrackSearchRequest(term))
 
-        return if (response.resultCode == 200) {
+        if (response.resultCode == 200) {
             val track = (response as TrackSearchResponse).results
-            DataConsumer.Success(AdapterTrackDto.trackDtoToTrack(track))
-        } else DataConsumer.Error(response.resultCode)
+            emit(DataConsumer.Success(AdapterTrackDto.trackDtoToTrack(track)))
+        } else emit(DataConsumer.Error(response.resultCode))
 
-    }
+    }.flowOn(Dispatchers.IO)
 }

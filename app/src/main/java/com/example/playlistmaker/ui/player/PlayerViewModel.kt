@@ -5,17 +5,21 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.use_cases.PlayerInteractor
-import java.text.SimpleDateFormat
-import java.util.Locale
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 
 class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
     ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
     private var playerFragmentState =
         MutableLiveData<PlayerFragmentState>()
+    private var playerJob: Job? = null
 
     init {
         playerFragmentState.value = PlayerFragmentState(
@@ -52,40 +56,37 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
 
     private fun getCurrentStatus(): PlayerFragmentState =
         playerFragmentState.value ?: PlayerFragmentState(
-            playerState = STATE_DEFAULT, timeCode = R.string.play_time.toString()
+            playerState = STATE_DEFAULT, timeCode = "00:00"
         )
 
     private fun startMediaPlayer() {
         playerInteractor.start()
         playerFragmentState.value = getCurrentStatus().copy(playerState = STATE_PLAYING)
-        handler.post(playerTimeRefresher())
+        playerTimeRefresher()
     }
 
     fun pauseMediaPlayer() {
         playerInteractor.pause()
+        playerJob?.cancel()
         playerFragmentState.value = getCurrentStatus().copy(playerState = STATE_PAUSED)
     }
 
-    private fun playerTimeRefresher(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (playerInteractor.isPlaying()) {
-                    playerFragmentState.value =
-                        getCurrentStatus().copy(
-                            timeCode =
-                            SimpleDateFormat(
-                                "mm:ss",
-                                Locale.getDefault()
-                            ).format(playerInteractor.getPosition())
-                        )
-                    handler.postDelayed(this, PLAY_DEBOUNCE_DELAY)
-                } else {
-                    playerFragmentState.value =
-                        PlayerFragmentState(
-                            playerState = STATE_PREPARED, timeCode = R.string.play_time.toString()
-                        )
-                }
+    private fun playerTimeRefresher() {
+        playerJob = viewModelScope.launch {
+            while (playerInteractor.isPlaying()) {
+
+                playerFragmentState.value =
+                    getCurrentStatus().copy(
+                        timeCode =
+                        playerInteractor.getPosition()
+                    )
+                delay(PLAY_DEBOUNCE_DELAY)
             }
+            playerFragmentState.value =
+                PlayerFragmentState(
+                    playerState = STATE_PREPARED, timeCode = "00:00"
+                )
+
         }
     }
 

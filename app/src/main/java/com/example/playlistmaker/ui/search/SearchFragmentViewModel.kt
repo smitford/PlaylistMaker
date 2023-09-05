@@ -1,17 +1,17 @@
 package com.example.playlistmaker.ui.search
 
-import android.os.Handler
-import android.os.Looper
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.domain.consumer.Consumer
-import com.example.playlistmaker.domain.consumer.DataConsumer
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.use_cases.TrackClearHistoryUseCase
 import com.example.playlistmaker.domain.use_cases.TrackGetUseCase
 import com.example.playlistmaker.domain.use_cases.TrackSaveUseCase
 import com.example.playlistmaker.domain.use_cases.TrackSearchUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class SearchFragmentViewModel(
     private val trackClearHistoryUseCase: TrackClearHistoryUseCase,
@@ -20,8 +20,8 @@ class SearchFragmentViewModel(
     private val trackSearchUseCase: TrackSearchUseCase
 ) : ViewModel() {
     private var searchFragmentState = MutableLiveData<SearchFragmentState>()
-    private val handler = Handler(Looper.getMainLooper())
-    private var currentConsumeRunnable: Runnable? = null
+
+    private var searchJob: Job? = null
 
     init {
         searchFragmentState.value = SearchFragmentState.Start
@@ -30,6 +30,11 @@ class SearchFragmentViewModel(
     fun clearHistory() {
         trackClearHistoryUseCase.execute()
         searchFragmentState.value = SearchFragmentState.Start
+    }
+
+    fun stopSearch() {
+
+        searchJob?.cancel()
     }
 
     fun saveTrack(track: Track) {
@@ -47,52 +52,32 @@ class SearchFragmentViewModel(
     }
 
     fun searchTrack(term: String) {
+        if (term.isBlank()) return
         searchFragmentState.value = SearchFragmentState.Loading
-        trackSearchUseCase.searchTracks(
-            term = term,
-            consumer = object : Consumer<List<Track>> {
-                override fun consume(data: DataConsumer<List<Track>>) {
-                    handler.removeCallbacksSafe(currentConsumeRunnable)
-                    val consumeRunnable = getSearchRunnable(data)
-                    currentConsumeRunnable = consumeRunnable
-                    handler.post(consumeRunnable)
-                }
-            })
+        searchJob = viewModelScope.launch {
+            trackSearchUseCase.searchTracks(term = term).collect { list ->
+                getSearchRunnable(list)
+            }
+        }
     }
 
-    private fun getSearchRunnable(result: DataConsumer<List<Track>>): Runnable {
-        return Runnable {
-            when (result) {
-                is DataConsumer.Success -> {
-                    if (result.data.isNotEmpty()) {
-                        searchFragmentState.value = SearchFragmentState.State(
-                            trackList = result.data, STATE_SEARCH_RESULT_SHOW
-                        )
-                    } else {
-                        searchFragmentState.value = SearchFragmentState.InvalidRequest
-                    }
-                }
+    private fun getSearchRunnable(result: List<Track>?) {
 
-                is DataConsumer.Error -> {
-                    searchFragmentState.value = SearchFragmentState.ConnectionError
-                }
+        if (result == null) {
+            searchFragmentState.value = SearchFragmentState.ConnectionError
+        } else {
+            if (result.isNotEmpty()) {
+                searchFragmentState.value = SearchFragmentState.State(
+                    trackList = result, STATE_SEARCH_RESULT_SHOW
+                )
+            } else {
+                searchFragmentState.value = SearchFragmentState.InvalidRequest
             }
         }
     }
 
     fun getSearchActivityState(): LiveData<SearchFragmentState> =
         searchFragmentState
-
-    override fun onCleared() {
-        super.onCleared()
-        handler.removeCallbacksSafe(currentConsumeRunnable)
-    }
-
-    private fun Handler.removeCallbacksSafe(r: Runnable?) {
-        r?.let {
-            removeCallbacks(r)
-        }
-    }
 
     companion object {
         const val STATE_HISTORY_SHOW = "History"

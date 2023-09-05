@@ -7,17 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.utils.debounce
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import handler
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import textOfSearch
-import SEARCH_DEBOUNCE_DELAY as SEARCH_DEBOUNCE_DELAY1
+
 
 
 class SearchFragment : Fragment() {
@@ -27,8 +31,9 @@ class SearchFragment : Fragment() {
     private lateinit var recyclerViewSongs: RecyclerView
     private lateinit var adapterSearch: AdapterSearch
     private lateinit var adapterSearchHistory: AdapterSearchHistory
-    private val searchRequest = Runnable { search() }
-    private val clear = Runnable { clearSearchField() }
+    private lateinit var onTrackClickDebounceSearchH: (Track) -> Unit
+    private lateinit var onTrackClickDebounceSearch: (Track) -> Unit
+    private var searchJob: Job? = null
     private val searchFragmentViewModel by viewModel<SearchFragmentViewModel>()
 
     override fun onCreateView(
@@ -43,21 +48,29 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val callBackSearch = fun(track: Track) {
-            searchFragmentViewModel.saveTrack(track = track)
+        onTrackClickDebounceSearchH = debounce(
+            delayMillis = DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { track ->
             val arg = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
             findNavController().navigate(arg)
         }
 
-        val callBackHistory = fun(track: Track) {
+        onTrackClickDebounceSearch = debounce(
+            delayMillis = DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { track ->
+            searchFragmentViewModel.saveTrack(track = track)
             val arg = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
             findNavController().navigate(arg)
         }
 
         recyclerViewSongs = binding.recyclerViewSongs
         recyclerViewSongs.layoutManager = LinearLayoutManager(requireContext())
-        adapterSearch = AdapterSearch(callBackSearch)
-        adapterSearchHistory = AdapterSearchHistory(callBackHistory)
+        adapterSearch = AdapterSearch(onTrackClickDebounceSearch)
+        adapterSearchHistory = AdapterSearchHistory(onTrackClickDebounceSearchH)
         recyclerViewSongs.adapter = adapterSearch
 
         if (savedInstanceState != null)
@@ -70,8 +83,10 @@ class SearchFragment : Fragment() {
         binding.buttonDownloadFail.setOnClickListener { search() }
 
         binding.clearTextSearch.setOnClickListener {
-            handler.removeCallbacks(searchRequest)
-            clearDebounce()
+            searchJob?.cancel()
+            searchFragmentViewModel.stopSearch()
+            elementsVisibility(SearchFragmentItemsVis.START_VIEW)
+            clearSearchField()
         }
 
         searchFragmentViewModel.getSearchActivityState()
@@ -122,8 +137,11 @@ class SearchFragment : Fragment() {
                 if (binding.searchBar.hasFocus() && binding.searchBar.text.isNullOrBlank()) {
                     searchFragmentViewModel.refreshHistory()
                 } else {
-                    if (!binding.searchBar.text.isNullOrBlank())
-                        searchDebounce()
+                        searchJob?.cancel()
+                        searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                            delay(SEARCH_DEBOUNCE_DELAY)
+                            search()
+                        }
                 }
             }
 
@@ -140,14 +158,11 @@ class SearchFragment : Fragment() {
                 }
             }
         }
-
         binding.searchBar.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.searchBar.text.isNullOrBlank()) {
+                elementsVisibility(SearchFragmentItemsVis.START_VIEW)
                 searchFragmentViewModel.refreshHistory()
-
             }
-
-
         }
         binding.searchBar.addTextChangedListener(searchActivityTextWatcher)
     }
@@ -166,11 +181,6 @@ class SearchFragment : Fragment() {
         searchFragmentViewModel.refreshHistory()
     }
 
-    private fun clearDebounce() {
-        handler.removeCallbacks(clear)
-        handler.postDelayed(clear, CLEAR_DEBOUNCE_DELAY)
-        elementsVisibility(SearchFragmentItemsVis.START_VIEW)
-    }
 
     private fun elementsVisibility(result: SearchFragmentItemsVis) {
         when (result) {
@@ -232,20 +242,16 @@ class SearchFragment : Fragment() {
             outState.putString(textOfSearch, textSearch)
     }
 
-    fun searchDebounce() {
-        handler.removeCallbacks(searchRequest)
-        handler.postDelayed(searchRequest, SEARCH_DEBOUNCE_DELAY1)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        handler.removeCallbacks(searchRequest)
         textSearch = null
         _binding = null
+        searchJob =null
     }
 
     companion object {
-        const val CLEAR_DEBOUNCE_DELAY = 500L
+        const val DEBOUNCE_DELAY = 500L
+        const val SEARCH_DEBOUNCE_DELAY =2000L
         const val STATE_HISTORY_SHOW = "History"
 
     }

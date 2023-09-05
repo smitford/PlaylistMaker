@@ -3,6 +3,8 @@ package com.example.playlistmaker.data.player
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.domain.api.PlayerRepository
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class PlayerRepositoryImp : PlayerRepository {
@@ -42,7 +44,10 @@ class PlayerRepositoryImp : PlayerRepository {
 
     }
 
-    override fun getPosition(): Int = player.currentPosition
+    override fun getPosition(): String = SimpleDateFormat(
+        "mm:ss",
+        Locale.getDefault()
+    ).format( player.currentPosition)
 
     override fun isPlaying(): Boolean = completion
 }
