@@ -102,7 +102,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val PLAY_DEBOUNCE_DELAY = 250L
+        private const val PLAY_DEBOUNCE_DELAY = 300L
     }
 
 }
