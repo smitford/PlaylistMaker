@@ -11,7 +11,6 @@
         android:id="@+id/album_image"
         android:layout_width="@dimen/album_image"
         android:layout_height="@dimen/album_image"
-        android:layout_marginStart="13dp"
         android:background="@android:color/transparent"
         android:scaleType="centerInside"
         tools:src="@drawable/album"
