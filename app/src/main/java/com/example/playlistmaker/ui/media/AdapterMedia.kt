@@ -1,5 +1,4 @@
-package com.example.playlistmaker.ui.search
-
+package com.example.playlistmaker.ui.media
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import clickDebounce
 import com.example.playlistmaker.databinding.TrackrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.search.ViewHolderOfSongs
 
-class AdapterSearch(val onTrackClicked: (Track, Boolean) -> Unit, private val isSearch: Boolean) :
+class AdapterMedia(val onTrackClicked: (Track) -> Unit) :
     RecyclerView.Adapter<ViewHolderOfSongs>() {
     var tracks: MutableList<Track> = mutableListOf()
 
@@ -27,11 +27,10 @@ class AdapterSearch(val onTrackClicked: (Track, Boolean) -> Unit, private val is
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
-                onTrackClicked(tracks[position], isSearch)
+                onTrackClicked(tracks[position])
             }
         }
     }
 
     override fun getItemCount() = tracks.size
 }
-

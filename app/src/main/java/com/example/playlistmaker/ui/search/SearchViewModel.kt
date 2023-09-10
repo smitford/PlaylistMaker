@@ -13,7 +13,7 @@ import com.example.playlistmaker.domain.use_cases.TrackSearchUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class SearchFragmentViewModel(
+class SearchViewModel(
     private val trackClearHistoryUseCase: TrackClearHistoryUseCase,
     private val trackGetUseCase: TrackGetUseCase,
     private val trackSaveUseCase: TrackSaveUseCase,

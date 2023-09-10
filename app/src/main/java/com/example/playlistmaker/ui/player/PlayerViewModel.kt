@@ -1,30 +1,34 @@
 package com.example.playlistmaker.ui.player
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.use_cases.DataBaseInteractor
 import com.example.playlistmaker.domain.use_cases.PlayerInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    val dataBase: DataBaseInteractor
+) :
     ViewModel() {
-    private val handler = Handler(Looper.getMainLooper())
     private var playerFragmentState =
         MutableLiveData<PlayerFragmentState>()
     private var playerJob: Job? = null
+    private var isFavorite = false
 
     init {
         playerFragmentState.value = PlayerFragmentState(
             playerState = STATE_DEFAULT,
-            timeCode = R.string.play_time.toString()
+            timeCode = R.string.play_time.toString(),
+            isFavorite = isFavorite
         )
     }
 
@@ -32,7 +36,6 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
         super.onCleared()
         stop()
         release()
-        handler.removeCallbacksAndMessages(null)
     }
 
     private fun stop() = playerInteractor.stop()
@@ -48,7 +51,6 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
 
     fun getPlayerState(): LiveData<PlayerFragmentState> = playerFragmentState
 
-
     private fun prepareMediaPlayer(url: String) {
         playerInteractor.prepare(url)
         playerFragmentState.value = getCurrentStatus().copy(playerState = STATE_PREPARED)
@@ -56,13 +58,52 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
 
     private fun getCurrentStatus(): PlayerFragmentState =
         playerFragmentState.value ?: PlayerFragmentState(
-            playerState = STATE_DEFAULT, timeCode = "00:00"
+            playerState = STATE_DEFAULT,
+            timeCode = R.string.play_time.toString(),
+            isFavorite = isFavorite
         )
+
+    fun checkForFavorite(trackID: Int) {
+        viewModelScope.launch {
+            dataBase.isTrackFavorite(trackID = trackID).collect { isFav ->
+                changeStatus(isFav)
+            }
+        }
+    }
+
+    private fun changeStatus(status: Boolean) {
+        playerFragmentState.value = getCurrentStatus().copy(isFavorite = status)
+    }
+
 
     private fun startMediaPlayer() {
         playerInteractor.start()
         playerFragmentState.value = getCurrentStatus().copy(playerState = STATE_PLAYING)
         playerTimeRefresher()
+    }
+
+    fun changeStatus(track: Track) {
+        if (isFavorite)
+            removeTrackFromFav(track = track)
+        else
+            addTrackToFav(track = track)
+    }
+
+    private fun addTrackToFav(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataBase.saveFavoriteTrack(track = track)
+        }
+        isFavorite = true
+        playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)
+    }
+
+    private fun removeTrackFromFav(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataBase.deleteTrack(track = track)
+        }
+        isFavorite = false
+        playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)
+
     }
 
     fun pauseMediaPlayer() {
@@ -84,7 +125,9 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
             }
             playerFragmentState.value =
                 PlayerFragmentState(
-                    playerState = STATE_PREPARED, timeCode = "00:00"
+                    playerState = STATE_PREPARED,
+                    timeCode = R.string.play_time.toString(),
+                    isFavorite = isFavorite
                 )
 
         }

@@ -53,10 +53,17 @@ class PlayerFragment : Fragment() {
         binding.textSongYear.text = track.releaseDate
         binding.textSongGenre.text = track.primaryGenreName
 
+        playerViewModel.checkForFavorite(trackID = track.trackId)
+
         playerViewModel.prepare(track)
 
         playerViewModel.getPlayerState()
             .observe(viewLifecycleOwner) { playerActivityState ->
+                if (playerActivityState.isFavorite) {
+                    binding.playerButtonLike.setImageResource(R.drawable.like_button)
+                } else {
+                    binding.playerButtonLike.setImageResource(R.drawable.like)
+                }
                 when (playerActivityState.playerState) {
                     STATE_PREPARED -> {
                         binding.playerButtonPlay.isEnabled = true
@@ -85,9 +92,11 @@ class PlayerFragment : Fragment() {
             (playerViewModel).playbackControl()
         }
         binding.backButtonPlayerAct.setOnClickListener {
-
             findNavController().popBackStack()
+        }
 
+        binding.playerButtonLike.setOnClickListener {
+            playerViewModel.changeStatus(track = track)
         }
     }
 
