@@ -5,7 +5,7 @@ interface PlayerRepository {
     fun pauseMediaPlayer()
     fun startMediaPlayer()
     fun releaseMediaPlayer()
-    fun getPosition() : Int
+    fun getPosition() : String
     fun stop()
     fun isPlaying() : Boolean
 

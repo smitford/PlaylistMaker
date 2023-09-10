@@ -9,7 +9,6 @@ private const val CLICK_DEBOUNCE_DELAY = 1000L
 val handler = android.os.Handler(Looper.getMainLooper())
 private var isClickable = true
 const val textOfSearch = "TEXT_OF_SEARCH"
-const val SEARCH_DEBOUNCE_DELAY = 2000L
 
 fun clickDebounce(): Boolean {
     val current = isClickable

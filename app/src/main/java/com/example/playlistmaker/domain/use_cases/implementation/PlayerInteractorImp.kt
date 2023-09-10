@@ -8,7 +8,7 @@ class PlayerInteractorImp(private val repository: PlayerRepository) : PlayerInte
     override fun pause() = repository.pauseMediaPlayer()
     override fun start()= repository.startMediaPlayer()
     override fun release() = repository.releaseMediaPlayer()
-    override fun getPosition(): Int = repository.getPosition()
+    override fun getPosition(): String = repository.getPosition()
     override fun isPlaying() : Boolean = repository.isPlaying()
     override fun stop() =repository.stop()
 }
