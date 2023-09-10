@@ -15,7 +15,7 @@ class DataBaseRepositoryImp(private val appDatabase: AppDatabase) : DataBaseRepo
     }.flowOn(Dispatchers.IO)
 
     override suspend fun saveTrackToFav(track: Track) {
-        val trackEnt = DaoAdapter.trackToTrackEntityNew(track = track)
+        val trackEnt = DaoAdapter.trackToTrackEntity(track = track)
         appDatabase.trackDAO().insertTrack(trackEnt)
     }
 

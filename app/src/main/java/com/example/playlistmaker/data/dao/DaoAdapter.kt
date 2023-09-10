@@ -12,7 +12,7 @@ object DaoAdapter {
                 artistName = it.artistName,
                 trackTimeMillis = it.trackTimeMillis,
                 artworkUrl100 = it.artworkUrl100,
-                trackId = it.id?:0,
+                trackId = it.id,
                 collectionName = it.collectionName,
                 releaseDate = it.releaseDate,
                 primaryGenreName = it.primaryGenreName,
@@ -38,20 +38,6 @@ object DaoAdapter {
         )
     }
 
-    fun trackToTrackEntityNew(track: Track): TrackEntity {
-        return TrackEntity(
-            trackName = track.trackName,
-            artistName = track.artistName,
-            trackTimeMillis = track.trackTimeMillis,
-            artworkUrl100 = track.artworkUrl100,
-            id = null,
-            collectionName = track.collectionName,
-            releaseDate = track.releaseDate,
-            primaryGenreName = track.primaryGenreName,
-            previewUrl = track.previewUrl,
-            country = track.country
-        )
-    }
 
 
 }

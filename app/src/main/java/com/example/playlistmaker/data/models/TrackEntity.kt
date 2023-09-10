@@ -7,8 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "track_table")
 data class TrackEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "track_name") val trackName: String,
     @ColumnInfo(name = "artist_name") val artistName: String,
     @ColumnInfo(name = "track_time_millis") val trackTimeMillis: String,
