@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flowOn
 class DataBaseRepositoryImp(private val appDatabase: AppDatabase) : DataBaseRepository {
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
         val tracks = appDatabase.trackDAO().getAllTracks()
-        emit(DaoAdapter.trackEntityToTrack(track = tracks))
+        emit(DaoAdapter.trackEntityToTrack(trackList = tracks))
     }.flowOn(Dispatchers.IO)
 
     override suspend fun saveTrackToFav(track: Track) {

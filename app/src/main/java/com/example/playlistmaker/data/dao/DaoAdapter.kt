@@ -7,8 +7,8 @@ import java.util.Date
 
 
 object DaoAdapter {
-    fun trackEntityToTrack(track: List<TrackEntity>): List<Track> {
-        val result = track.map {
+    fun trackEntityToTrack(trackList: List<TrackEntity>): List<Track> {
+        val result = trackList.map {
             Track(
                 trackName = it.trackName,
                 artistName = it.artistName,

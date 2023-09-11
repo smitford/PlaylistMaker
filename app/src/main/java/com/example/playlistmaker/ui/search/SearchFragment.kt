@@ -47,7 +47,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         onTrackClickDebounce = debounceSearch(
-            delayMillis = DEBOUNCE_DELAY,
+            delayMillis = DEBOUNCE_DELAY_MILS,
             viewLifecycleOwner.lifecycleScope,
             false
         ) { track, isSearch ->
@@ -129,7 +129,7 @@ class SearchFragment : Fragment() {
                 } else {
                     searchJob?.cancel()
                     searchJob = viewLifecycleOwner.lifecycleScope.launch {
-                        delay(SEARCH_DEBOUNCE_DELAY)
+                        delay(SEARCH_DEBOUNCE_DELAY_MILS)
                         search()
                     }
                 }
@@ -240,8 +240,8 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
-        const val DEBOUNCE_DELAY = 500L
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val DEBOUNCE_DELAY_MILS = 500L
+        const val SEARCH_DEBOUNCE_DELAY_MILS = 2000L
         const val STATE_HISTORY_SHOW = "History"
     }
 }

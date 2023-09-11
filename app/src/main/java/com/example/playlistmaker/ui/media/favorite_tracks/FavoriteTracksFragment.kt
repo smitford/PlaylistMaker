@@ -36,7 +36,7 @@ class FavoriteTracksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapterCallBack: (Track) -> Unit = debounce(
-            delayMillis = DEBOUNCE_DELAY,
+            delayMillis = DEBOUNCE_DELAY_MILS,
             viewLifecycleOwner.lifecycleScope,
             false
         ) { track ->
@@ -92,7 +92,7 @@ class FavoriteTracksFragment : Fragment() {
 
     companion object {
         fun newInstance() = FavoriteTracksFragment()
-        const val DEBOUNCE_DELAY = 500L
+        const val DEBOUNCE_DELAY_MILS = 500L
     }
 }
 
