@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.search
 
+import android.util.DisplayMetrics
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.bumptech.glide.Glide
@@ -19,8 +20,16 @@ class ViewHolderOfSongs(private val binding: TrackrecycleviewItemBinding) :
         Glide.with(binding.albumImage)
             .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(2))
+            .centerCrop()
+            .transform(RoundedCorners(roundCorner()))
             .into(binding.albumImage)
+    }
+
+    private fun roundCorner() : Int = ROUNDING_OF_CORNERS_PX * (itemView.resources
+        .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
+
+    companion object{
+       private const val ROUNDING_OF_CORNERS_PX = 2
     }
 }
 

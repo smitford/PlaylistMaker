@@ -9,12 +9,12 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.search.ViewHolderOfSongs
 
 class AdapterMedia(val onTrackClicked: (Track) -> Unit) :
-    RecyclerView.Adapter<ViewHolderOfSongs>() {
+    RecyclerView.Adapter<ViewHolderMedia>() {
     var tracks: MutableList<Track> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderOfSongs {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderMedia {
         val layoutInspector = LayoutInflater.from(parent.context)
-        return ViewHolderOfSongs(
+        return ViewHolderMedia(
             TrackrecycleviewItemBinding.inflate(
                 layoutInspector,
                 parent,
@@ -23,7 +23,7 @@ class AdapterMedia(val onTrackClicked: (Track) -> Unit) :
         )
     }
 
-    override fun onBindViewHolder(holder: ViewHolderOfSongs, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolderMedia, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
