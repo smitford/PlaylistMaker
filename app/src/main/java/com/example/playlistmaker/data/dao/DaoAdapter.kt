@@ -2,6 +2,8 @@ package com.example.playlistmaker.data.dao
 
 import com.example.playlistmaker.data.models.TrackEntity
 import com.example.playlistmaker.domain.models.Track
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 object DaoAdapter {
@@ -34,7 +36,8 @@ object DaoAdapter {
             releaseDate = track.releaseDate,
             primaryGenreName = track.primaryGenreName,
             previewUrl = track.previewUrl,
-            country = track.country
+            country = track.country,
+            timeOfAdding = SimpleDateFormat("ddMMyyyyhhmm").format(Date()).toLong()
         )
     }
 

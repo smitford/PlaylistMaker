@@ -7,5 +7,5 @@ interface DataBaseRepository {
     fun getFavoriteTracks(): Flow<List<Track>>
     suspend fun saveTrackToFav(track: Track)
     fun isTrackFavorite(trackID: Int): Flow<Boolean>
-    suspend fun deleteTrack(track: Track)
+    suspend fun deleteTrack(trackID: Int)
 }

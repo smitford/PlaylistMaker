@@ -16,7 +16,7 @@ class DataBaseInteractorImp(private val repository: DataBaseRepository) : DataBa
     override fun isTrackFavorite(trackID: Int): Flow<Boolean> =
         repository.isTrackFavorite(trackID = trackID)
 
-    override suspend fun deleteTrack(track: Track) {
-        repository.deleteTrack(track = track)
+    override suspend fun deleteTrack(trackID: Int) {
+        repository.deleteTrack(trackID = trackID)
     }
 }

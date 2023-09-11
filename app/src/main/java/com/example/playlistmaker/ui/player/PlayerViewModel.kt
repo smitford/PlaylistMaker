@@ -99,7 +99,7 @@ class PlayerViewModel(
 
     private fun removeTrackFromFav(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataBase.deleteTrack(track = track)
+            dataBase.deleteTrack(trackID = track.trackId)
         }
         isFavorite = false
         playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)

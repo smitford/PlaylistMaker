@@ -13,12 +13,12 @@ interface TrackDAO {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     fun insertTrack(track: TrackEntity)
 
-    @Query("SELECT * FROM track_table " )
+    @Query("SELECT * FROM track_table ORDER BY timeOfAdding" )
     fun getAllTracks(): List<TrackEntity>
 
     @Query("SELECT id FROM track_table WHERE id == :trackID")
     fun getTrack(trackID: Int): Int?
 
-    @Delete(entity = TrackEntity::class)
-    fun delete(track: TrackEntity)
+    @Query("DELETE FROM track_table WHERE id== :trackID")
+    fun delete(trackID: Int)
 }

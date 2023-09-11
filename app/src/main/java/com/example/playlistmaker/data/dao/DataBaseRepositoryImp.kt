@@ -24,8 +24,8 @@ class DataBaseRepositoryImp(private val appDatabase: AppDatabase) : DataBaseRepo
         emit(track != null)
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun deleteTrack(track: Track) {
-        appDatabase.trackDAO().delete(track= DaoAdapter.trackToTrackEntity(track))
+    override suspend fun deleteTrack(trackID: Int) {
+        appDatabase.trackDAO().delete(trackID= trackID)
     }
 
 
