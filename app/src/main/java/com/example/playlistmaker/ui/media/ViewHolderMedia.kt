@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.ui.media
 
 import android.util.DisplayMetrics
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +9,7 @@ import com.example.playlistmaker.databinding.TrackrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.Track
 
 
-class ViewHolderOfSongs(private val binding: TrackrecycleviewItemBinding) :
+class ViewHolderMedia(private val binding: TrackrecycleviewItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(track: Track) {
@@ -29,7 +29,6 @@ class ViewHolderOfSongs(private val binding: TrackrecycleviewItemBinding) :
         .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
 
     companion object{
-       private const val ROUNDING_OF_CORNERS_PX = 2
+        private const val ROUNDING_OF_CORNERS_PX = 2
     }
 }
-

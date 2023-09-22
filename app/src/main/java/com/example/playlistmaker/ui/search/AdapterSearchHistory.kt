@@ -8,7 +8,7 @@ import com.example.playlistmaker.databinding.TrackrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.Track
 
 
-class AdapterSearchHistory(val onTrackClicked: (Track) -> Unit) :
+class AdapterSearchHistory(val onTrackClicked: (Track, Boolean) -> Unit, private val isSearch: Boolean) :
     RecyclerView.Adapter<ViewHolderOfSongs>() {
     var tracks: MutableList<Track> = mutableListOf()
 
@@ -27,7 +27,7 @@ class AdapterSearchHistory(val onTrackClicked: (Track) -> Unit) :
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
-                onTrackClicked(tracks[position])
+                onTrackClicked(tracks[position], isSearch)
             }
         }
     }

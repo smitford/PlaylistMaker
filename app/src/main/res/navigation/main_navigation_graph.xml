@@ -8,7 +8,11 @@
         android:id="@+id/mediaFragment"
         android:name="com.example.playlistmaker.ui.media.MediaFragment"
         android:label="fragment_media"
-        tools:layout="@layout/fragment_media" />
+        tools:layout="@layout/fragment_media" >
+        <action
+            android:id="@+id/action_mediaFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.ui.settings.SettingsFragment"
@@ -41,4 +45,9 @@
             android:name="track"
             app:argType="com.example.playlistmaker.domain.models.Track" />
     </fragment>
+    <fragment
+        android:id="@+id/favoriteTracksFragment"
+        android:name="com.example.playlistmaker.ui.media.favorite_tracks.FavoriteTracksFragment"
+        android:label="fragment_favorite_tracks"
+        tools:layout="@layout/fragment_favorite_tracks" />
 </navigation>

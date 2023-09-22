@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.media.FavoriteTracksFragment">
+    tools:context=".ui.media.favorite_tracks.FavoriteTracksFragment">
 
     <ImageView
         android:id="@+id/imageviewMediaEmpty"
@@ -13,6 +13,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="106dp"
         android:background="@drawable/search_zero"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,9 +25,22 @@
         android:gravity="center"
         android:text="@string/empty_media"
         android:textSize="19sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/imageviewMediaEmpty"
         app:layout_constraintStart_toStartOf="@id/imageviewMediaEmpty"
         app:layout_constraintTop_toBottomOf="@id/imageviewMediaEmpty" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewFavTracks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/padding_16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/trackrecycleview_item"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

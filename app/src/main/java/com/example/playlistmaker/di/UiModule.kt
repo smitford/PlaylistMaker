@@ -1,10 +1,9 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.media.FavoriteTracksFragmentVm
-import com.example.playlistmaker.ui.media.PlaylistFragmentViewModel
+import com.example.playlistmaker.ui.media.favorite_tracks.FavoriteTracksViewModel
+import com.example.playlistmaker.ui.media.PlaylistViewModel
 import com.example.playlistmaker.ui.player.PlayerViewModel
-import com.example.playlistmaker.ui.search.SearchFragmentViewModel
+import com.example.playlistmaker.ui.search.SearchViewModel
 import com.example.playlistmaker.ui.settings.SettingsFragmentViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -12,10 +11,13 @@ import org.koin.dsl.module
 val uiModules = module {
 
     viewModel<PlayerViewModel> {
-        PlayerViewModel(playerInteractor = get())
+        PlayerViewModel(
+            playerInteractor = get(),
+            dataBase = get()
+        )
     }
-    viewModel<SearchFragmentViewModel> {
-        SearchFragmentViewModel(
+    viewModel<SearchViewModel> {
+        SearchViewModel(
             trackSearchUseCase = get(),
             trackSaveUseCase = get(),
             trackGetUseCase = get(),
@@ -25,11 +27,11 @@ val uiModules = module {
     viewModel<SettingsFragmentViewModel> {
         SettingsFragmentViewModel(themeInteractor = get())
     }
-    viewModel<FavoriteTracksFragmentVm>() {
-        FavoriteTracksFragmentVm()
+    viewModel<FavoriteTracksViewModel>() {
+        FavoriteTracksViewModel(dataBase = get())
     }
-    viewModel<PlaylistFragmentViewModel>() {
-        PlaylistFragmentViewModel()
+    viewModel<PlaylistViewModel>() {
+        PlaylistViewModel()
     }
 }
 
