@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/high_of_basic_stripe"
+    android:backgroundTint="?attr/colorOnPrimary"
+    android:orientation="horizontal"
+    android:padding="@dimen/music_padding_srch">
+
+    <ImageView
+        android:id="@+id/album_image"
+        android:layout_width="@dimen/album_image"
+        android:layout_height="@dimen/album_image"
+        android:layout_marginStart="@dimen/padding_12"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"
+        tools:src="@drawable/album" />
+
+    <LinearLayout
+        android:layout_width="@dimen/zero"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/song_name"
+            style="@style/TextSongs"
+            android:layout_marginStart="@dimen/music_padding_srch"
+            android:singleLine="true"
+            tools:text="Some text" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/music_padding_srch"
+            android:layout_marginTop="1dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/artist_name"
+                style="@style/TextSongs"
+                android:textColor="@color/grey1"
+                android:textSize="@dimen/text_size_11"
+                tools:text="Some text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

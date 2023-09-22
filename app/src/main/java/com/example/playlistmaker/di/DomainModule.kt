@@ -1,13 +1,15 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.domain.use_cases.DataBaseInteractor
+import com.example.playlistmaker.domain.use_cases.DataBasePlaylistInteractor
+import com.example.playlistmaker.domain.use_cases.DataBaseTrackInteractor
 import com.example.playlistmaker.domain.use_cases.PlayerInteractor
 import com.example.playlistmaker.domain.use_cases.ThemeInteractor
 import com.example.playlistmaker.domain.use_cases.TrackClearHistoryUseCase
 import com.example.playlistmaker.domain.use_cases.TrackGetUseCase
 import com.example.playlistmaker.domain.use_cases.TrackSaveUseCase
 import com.example.playlistmaker.domain.use_cases.TrackSearchUseCase
-import com.example.playlistmaker.domain.use_cases.implementation.DataBaseInteractorImp
+import com.example.playlistmaker.domain.use_cases.implementation.DataBasePlaylistInteractorImp
+import com.example.playlistmaker.domain.use_cases.implementation.DataBaseTrackInteractorImp
 import com.example.playlistmaker.domain.use_cases.implementation.PlayerInteractorImp
 import com.example.playlistmaker.domain.use_cases.implementation.ThemeInteractorImp
 import com.example.playlistmaker.domain.use_cases.implementation.TrackClearHistoryUseCaseImp
@@ -35,7 +37,11 @@ val domainModules = module {
     factory<TrackSearchUseCase> {
         TrackSearchUseCaseImp(repository = get())
     }
-    factory<DataBaseInteractor> {
-        DataBaseInteractorImp(repository = get())
+    factory<DataBaseTrackInteractor> {
+        DataBaseTrackInteractorImp(repository = get())
+    }
+
+    factory <DataBasePlaylistInteractor> {
+        DataBasePlaylistInteractorImp(repository = get())
     }
 }

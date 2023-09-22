@@ -1,32 +1,34 @@
 package com.example.playlistmaker.data.dao
 
+import com.example.playlistmaker.data.models.PlaylistEntity
+import com.example.playlistmaker.data.models.PlaylistInfoDao
 import com.example.playlistmaker.data.models.TrackEntity
+import com.example.playlistmaker.domain.consumer.DaoConsumer
+import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.PlaylistInfo
 import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Date
 
 
 object DaoAdapter {
-    fun trackEntityToTrack(trackList: List<TrackEntity>): List<Track> {
-        val result = trackList.map {
-            Track(
-                trackName = it.trackName,
-                artistName = it.artistName,
-                trackTimeMillis = it.trackTimeMillis,
-                artworkUrl100 = it.artworkUrl100,
-                trackId = it.id,
-                collectionName = it.collectionName,
-                releaseDate = it.releaseDate,
-                primaryGenreName = it.primaryGenreName,
-                previewUrl = it.previewUrl,
-                country = it.country
-            )
-        }
-        return result
+    fun trackEntityToTrack(trackList: List<TrackEntity>): List<Track> = trackList.map {
+        Track(
+            trackName = it.trackName,
+            artistName = it.artistName,
+            trackTimeMillis = it.trackTimeMillis,
+            artworkUrl100 = it.artworkUrl100,
+            trackId = it.id,
+            collectionName = it.collectionName,
+            releaseDate = it.releaseDate,
+            primaryGenreName = it.primaryGenreName,
+            previewUrl = it.previewUrl,
+            country = it.country
+        )
     }
 
-    fun trackToTrackEntity(track: Track): TrackEntity {
-        return TrackEntity(
+    fun trackToTrackEntity(track: Track, isFavorite: Boolean): TrackEntity =
+        TrackEntity(
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -37,10 +39,40 @@ object DaoAdapter {
             primaryGenreName = track.primaryGenreName,
             previewUrl = track.previewUrl,
             country = track.country,
-            timeOfAdding = SimpleDateFormat("ddMMyyyyhhmm").format(Date()).toLong()
+            timeOfAdding = SimpleDateFormat("ddMMyyyyhhmm").format(Date()).toLong(),
+            isFavorite = isFavorite
         )
+
+    fun playListToPlaylistEntity(playlistName: String, playlistDescription: String) = PlaylistEntity(
+        id = null,
+        name = playlistName,
+        description = playlistDescription,
+    )
+
+    fun playlistEntityToPlaylist(playlist: PlaylistEntity, playlistTracks: List<Track>) =
+        playlist.id?.let {
+            Playlist(
+                id = it,
+                name = playlist.name,
+                description = playlist.description,
+                tracks = playlistTracks
+            )
+        }
+
+    fun playlistsEntityToPlaylistInfo(playlist: List<PlaylistInfoDao?>): DaoConsumer<List<PlaylistInfo>> {
+        val result = DaoConsumer.Success(playlist.map { playlistComp ->
+            if (playlistComp != null)
+                PlaylistInfo(
+                    id = playlistComp.id,
+                    name = playlistComp.name,
+                    description = playlistComp.description,
+                    tracksNumber = playlistComp.tracksNumber
+                )
+            else
+                return DaoConsumer.Error("NullPointException")
+        })
+
+        return result
     }
-
-
 
 }

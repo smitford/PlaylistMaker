@@ -1,11 +1,11 @@
-package com.example.playlistmaker.domain.api
+package com.example.playlistmaker.domain.use_cases
 
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-interface DataBaseRepository {
+interface DataBaseTrackInteractor {
     fun getFavoriteTracks(): Flow<List<Track>>
-    suspend fun saveTrackToFav(track: Track)
+    suspend fun saveFavoriteTrack(track: Track)
     fun isTrackFavorite(trackID: Int): Flow<Boolean>
-    suspend fun deleteTrack(trackID: Int)
+    suspend fun deleteTrackFromFav(trackID: Int)
 }

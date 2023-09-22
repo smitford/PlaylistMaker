@@ -17,5 +17,6 @@ data class TrackEntity(
     @ColumnInfo(name = "primary_genre_name") val primaryGenreName: String,
     val country: String,
     @ColumnInfo(name = "preview_url") val previewUrl: String,
-    val timeOfAdding: Long?
+    val timeOfAdding: Long?,
+    var isFavorite: Boolean
 )

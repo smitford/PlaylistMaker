@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.use_cases.DataBaseInteractor
+import com.example.playlistmaker.domain.use_cases.DataBaseTrackInteractor
 import com.example.playlistmaker.domain.use_cases.PlayerInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    val dataBase: DataBaseInteractor
+    val dataBase: DataBaseTrackInteractor
 ) :
     ViewModel() {
     private var playerFragmentState =
@@ -99,7 +99,7 @@ class PlayerViewModel(
 
     private fun removeTrackFromFav(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataBase.deleteTrack(trackID = track.trackId)
+            dataBase.deleteTrackFromFav(trackID = track.trackId)
         }
         isFavorite = false
         playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)

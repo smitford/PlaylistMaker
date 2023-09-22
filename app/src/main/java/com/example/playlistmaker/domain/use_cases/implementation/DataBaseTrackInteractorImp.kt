@@ -1,11 +1,11 @@
 package com.example.playlistmaker.domain.use_cases.implementation
 
-import com.example.playlistmaker.domain.api.DataBaseRepository
+import com.example.playlistmaker.domain.api.DataBaseTrackRepository
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.use_cases.DataBaseInteractor
+import com.example.playlistmaker.domain.use_cases.DataBaseTrackInteractor
 import kotlinx.coroutines.flow.Flow
 
-class DataBaseInteractorImp(private val repository: DataBaseRepository) : DataBaseInteractor {
+class DataBaseTrackInteractorImp(private val repository: DataBaseTrackRepository) : DataBaseTrackInteractor {
     override fun getFavoriteTracks(): Flow<List<Track>> =
         repository.getFavoriteTracks()
 
@@ -16,7 +16,7 @@ class DataBaseInteractorImp(private val repository: DataBaseRepository) : DataBa
     override fun isTrackFavorite(trackID: Int): Flow<Boolean> =
         repository.isTrackFavorite(trackID = trackID)
 
-    override suspend fun deleteTrack(trackID: Int) {
-        repository.deleteTrack(trackID = trackID)
+    override suspend fun deleteTrackFromFav(trackID: Int) {
+        repository.deleteTrackFromFav(trackID = trackID)
     }
 }
