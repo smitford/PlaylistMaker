@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface DataBasePlaylistInteractor {
     fun getPlaylist(playlistPK: Int): Flow<List<Track>>
 
-    fun getPlaylistsInfo(): Flow<DaoConsumer<List<PlaylistInfo>>>
+    fun getPlaylistsInfo(): Flow<List<PlaylistInfo>?>
 
-    suspend fun createPlaylist(playlistName: String, playlistDescription: String)
+    suspend fun createPlaylist(playlistName: String, playlistDescription: String, imgUri: String)
 
     suspend fun addTrackToPlaylist(playlistPK: Int, trackPK: Int)
 

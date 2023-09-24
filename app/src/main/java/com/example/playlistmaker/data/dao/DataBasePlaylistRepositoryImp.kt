@@ -33,6 +33,7 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
                     it1,
                     it.name,
                     it.description,
+                    it.imgUri,
                     tracksNumber ?: 0
                 )
             }
@@ -40,12 +41,17 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
         emit(DaoAdapter.playlistsEntityToPlaylistInfo(playlistInfo))
     }
 
-    override suspend fun createPlaylist(playlistName: String, playlistDescription: String) {
+    override suspend fun createPlaylist(
+        playlistName: String,
+        playlistDescription: String,
+        imgUri: String
+    ) {
         appDatabase.playlistDAO()
             .insertPlaylist(
                 DaoAdapter.playListToPlaylistEntity(
                     playlistName = playlistName,
-                    playlistDescription = playlistDescription
+                    playlistDescription = playlistDescription,
+                    imgUri = imgUri
                 )
             )
     }

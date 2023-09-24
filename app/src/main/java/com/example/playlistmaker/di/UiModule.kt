@@ -2,7 +2,7 @@ package com.example.playlistmaker.di
 
 import com.example.playlistmaker.ui.createPlaylist.CreatePlaylistViewModel
 import com.example.playlistmaker.ui.media.favorite_tracks.FavoriteTracksViewModel
-import com.example.playlistmaker.ui.media.playlists.PlaylistsListViewModel
+import com.example.playlistmaker.ui.media.playlists.PlaylistsCatalogViewModel
 import com.example.playlistmaker.ui.player.PlayerViewModel
 import com.example.playlistmaker.ui.search.SearchViewModel
 import com.example.playlistmaker.ui.settings.SettingsFragmentViewModel
@@ -31,8 +31,8 @@ val uiModules = module {
     viewModel<FavoriteTracksViewModel>() {
         FavoriteTracksViewModel(dataBase = get())
     }
-    viewModel<PlaylistsListViewModel>() {
-        PlaylistsListViewModel()
+    viewModel<PlaylistsCatalogViewModel>() {
+        PlaylistsCatalogViewModel(dataBasePlaylist = get())
     }
 
     viewModel<CreatePlaylistViewModel>() {

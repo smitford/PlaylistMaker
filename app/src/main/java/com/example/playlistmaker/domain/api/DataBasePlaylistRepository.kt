@@ -10,7 +10,7 @@ interface DataBasePlaylistRepository {
 
     fun getPlaylistsInfo(): Flow<DaoConsumer<List<PlaylistInfo>>>
 
-    suspend fun createPlaylist(playlistName: String, playlistDescription: String)
+    suspend fun createPlaylist(playlistName: String, playlistDescription: String, imgUri: String)
 
     suspend fun addTrackToPlaylist(playlistPK: Int, trackPK: Int)
 

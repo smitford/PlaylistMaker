@@ -43,10 +43,15 @@ object DaoAdapter {
             isFavorite = isFavorite
         )
 
-    fun playListToPlaylistEntity(playlistName: String, playlistDescription: String) = PlaylistEntity(
+    fun playListToPlaylistEntity(
+        playlistName: String,
+        playlistDescription: String,
+        imgUri: String
+    ) = PlaylistEntity(
         id = null,
         name = playlistName,
         description = playlistDescription,
+        imgUri = imgUri
     )
 
     fun playlistEntityToPlaylist(playlist: PlaylistEntity, playlistTracks: List<Track>) =
@@ -55,6 +60,7 @@ object DaoAdapter {
                 id = it,
                 name = playlist.name,
                 description = playlist.description,
+                imgUri = playlist.imgUri,
                 tracks = playlistTracks
             )
         }
@@ -66,6 +72,7 @@ object DaoAdapter {
                     id = playlistComp.id,
                     name = playlistComp.name,
                     description = playlistComp.description,
+                    imgUri = playlistComp.imgUri,
                     tracksNumber = playlistComp.tracksNumber
                 )
             else

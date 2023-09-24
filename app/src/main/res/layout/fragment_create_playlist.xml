@@ -36,13 +36,15 @@
         android:layout_marginStart="@dimen/padding_24"
         android:layout_marginTop="82dp"
         android:layout_marginEnd="@dimen/padding_24"
-        android:background="@drawable/add_img_shape"
+        android:background="@drawable/playlist_add"
         android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="@+id/horizontal_line"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/add_photo" />
+        android:clickable="true"
+        android:src="@drawable/add_photo"
+        android:focusable="true" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/editTextName"

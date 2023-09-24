@@ -248,6 +248,8 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!--
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -256,8 +258,7 @@
         app:behavior_hidable="true"
         app:behavior_peekHeight="@dimen/zero"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:alpha="0.5"
-        tools:behavior_peekHeight="">
+        tools:alpha="0.5">
 
         <View
             android:id="@+id/topOfBottomSheet"
@@ -294,14 +295,16 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/zero"
             android:layout_gravity="top"
+            android:layout_marginTop="@dimen/padding_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/buttonNewPlaylist"
-            android:layout_marginTop="@dimen/padding_24"
             tools:listitem="@layout/playlist_new_recycleview_item" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    -->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

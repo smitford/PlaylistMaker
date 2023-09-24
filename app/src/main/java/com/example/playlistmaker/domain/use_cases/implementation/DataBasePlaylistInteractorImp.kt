@@ -6,19 +6,32 @@ import com.example.playlistmaker.domain.models.PlaylistInfo
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.use_cases.DataBasePlaylistInteractor
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class DataBasePlaylistInteractorImp(private val repository: DataBasePlaylistRepository) :
     DataBasePlaylistInteractor {
     override fun getPlaylist(playlistPK: Int): Flow<List<Track>> =
         repository.getPlaylist(playlistPK = playlistPK)
 
-    override fun getPlaylistsInfo(): Flow<DaoConsumer<List<PlaylistInfo>>> =
-        repository.getPlaylistsInfo()
+    override fun getPlaylistsInfo(): Flow<List<PlaylistInfo>?> {
+        return repository.getPlaylistsInfo().map { result ->
+            when (result) {
+                is DaoConsumer.Success -> result.data
+                is DaoConsumer.Error -> null
+            }
+        }
+    }
 
-    override suspend fun createPlaylist(playlistName: String, playlistDescription: String) =
+
+    override suspend fun createPlaylist(
+        playlistName: String,
+        playlistDescription: String,
+        imgUri: String
+    ) =
         repository.createPlaylist(
             playlistName = playlistName,
-            playlistDescription = playlistDescription
+            playlistDescription = playlistDescription,
+            imgUri = imgUri
         )
 
     override suspend fun addTrackToPlaylist(playlistPK: Int, trackPK: Int) {
