@@ -8,8 +8,6 @@ import com.example.playlistmaker.domain.use_cases.DataBasePlaylistInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistInteractor) :
     ViewModel() {
@@ -20,34 +18,29 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
     }
 
 
-    private fun changeState(data: String?, newState: AllStates) {
-        when (newState) {
-            AllStates.SAVED_IMG -> {
+    private fun changeState(data: String?, action: Actions) {
+        createPlaylistState.value = getCurrentStatus()?.copy(state = AllStates.SAVED_DATA)
+
+        when (action) {
+            Actions.SAVE_IMG -> {
                 createPlaylistState.value =
-                    getCurrentStatus()?.apply { this.uri = data; this.state = AllStates.SAVED_IMG }
-                Log.d("Sae Description", "${createPlaylistState.value?.state}")
+                    getCurrentStatus()?.copy(uri = data)
             }
 
-            AllStates.SAVED_NAME -> {
+            Actions.SAVE_NAME -> {
                 createPlaylistState.value =
-                    getCurrentStatus()?.apply {
-                        this.playlistName = data!!; this.state = AllStates.SAVED_NAME
-                    }
-                Log.d("Sae Description", "${createPlaylistState.value?.state}")
+                    data?.let { getCurrentStatus()?.copy(playlistName = it) }
+
             }
 
-            AllStates.SAVED_DESCRIPTION -> {
+            Actions.SAVE_DESCRIPTION -> {
                 createPlaylistState.value =
-                    getCurrentStatus()?.apply {
-                        this.description = data!!; this.state = AllStates.SAVED_DESCRIPTION
-                    }
-                Log.d("Sae Description", "${createPlaylistState.value?.state}")
+                    getCurrentStatus()?.copy(description = data)
             }
 
-            AllStates.SAVED_PLAYLIST -> createPlaylistState.value =
+            Actions.SAVE_ALL -> createPlaylistState.value =
                 getCurrentStatus()?.copy(state = AllStates.SAVED_PLAYLIST)
 
-            else -> createPlaylistState.value = getCurrentStatus()
         }
     }
 
@@ -56,22 +49,19 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
     fun getCurrentData() = createPlaylistState
 
     fun saveImg(imgUri: String?) {
-        if (imgUri != null)
-            changeState(imgUri, AllStates.SAVED_IMG)
+            changeState(imgUri, Actions.SAVE_IMG)
     }
 
     fun saveName(playlistName: String) {
-        changeState(playlistName, AllStates.SAVED_NAME)
+        changeState(playlistName, Actions.SAVE_NAME)
     }
 
     fun saveDescription(playlistDescription: String?) {
-        if (playlistDescription != null)
-            changeState(playlistDescription, AllStates.SAVED_DESCRIPTION)
+            changeState(playlistDescription, Actions.SAVE_DESCRIPTION)
     }
 
     suspend fun savePlaylist() {
         val data = getCurrentStatus()
-
         val saveData = viewModelScope.async(Dispatchers.IO) {
             if (data != null) {
                 dataBasePlaylistInteractor.createPlaylist(
@@ -84,14 +74,21 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
 
         val changeStatus = viewModelScope.async(Dispatchers.Main) {
             delay(SAVE_DELAY_MLS)
-            changeState(data = null, newState = AllStates.SAVED_PLAYLIST)
+            changeState(data = null, action = Actions.SAVE_ALL)
         }
         saveData.await()
         changeStatus.await()
     }
 
-    companion object{
-        const val SAVE_DELAY_MLS=1000L
+    companion object {
+        const val SAVE_DELAY_MLS = 1000L
+    }
+
+    enum class Actions {
+        SAVE_IMG,
+        SAVE_NAME,
+        SAVE_DESCRIPTION,
+        SAVE_ALL
     }
 
 }

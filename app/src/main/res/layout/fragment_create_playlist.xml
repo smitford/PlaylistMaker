@@ -83,7 +83,6 @@
         android:hint="@string/description"
         android:imeOptions="actionDone"
         app:hintTextAppearance="@string/description"
-        app:hintTextColor="@color/blue1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textInputLayoutName">

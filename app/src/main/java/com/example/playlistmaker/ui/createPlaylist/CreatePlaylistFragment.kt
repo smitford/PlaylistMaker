@@ -27,6 +27,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -51,7 +52,6 @@ class CreatePlaylistFragment : Fragment() {
         _binding = FragmentCreatePlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,8 +81,8 @@ class CreatePlaylistFragment : Fragment() {
 
             binding.backButtonNewPlaylist.setOnClickListener {
                 when (currentState.state) {
-                    AllStates.START, AllStates.SAVED_PLAYLIST -> findNavController().popBackStack()
-                    else -> showDialog()
+                    AllStates.SAVED_DATA -> showDialog()
+                    else -> findNavController().popBackStack()
                 }
             }
 
@@ -97,42 +97,11 @@ class CreatePlaylistFragment : Fragment() {
                     )
                 }
 
-                AllStates.SAVED_IMG -> {
-                    binding.playListImg.setImageURI(currentState.uri?.toUri())
-                }
-
-                AllStates.SAVED_NAME -> {
-                    binding.playListImg.setImageURI(currentState.uri?.toUri())
-                    binding.editTextName.setText(currentState.playlistName)
-                    binding.buttonCreate.isEnabled = true
-                    binding.buttonCreate.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.blue1
-                        )
-                    )
-                    binding.textInputLayoutName.defaultHintTextColor =
-                        ContextCompat.getColorStateList(requireContext(), R.color.blue1)
-                    binding.textInputLayoutDescription.requestFocus()
-                    ContextCompat.getColorStateList(
-                        requireContext(),
-                        R.color.blue1
-                    )?.let {
-                        binding.textInputLayoutName.setBoxStrokeColorStateList(
-                            it
-                        )
-                    }
-
-                }
-
-                AllStates.SAVED_DESCRIPTION -> {
+                AllStates.SAVED_DATA -> {
                     binding.playListImg.setImageURI(currentState.uri?.toUri())
                     binding.editTextName.setText(currentState.playlistName)
                     binding.editTextDescription.setText(currentState.description)
-                    binding.textInputLayoutDescription.defaultHintTextColor =
-                        ContextCompat.getColorStateList(requireContext(), R.color.blue1)
-                    binding.textInputLayoutDescription.boxStrokeColor =
-                        ContextCompat.getColor(requireContext(), R.color.blue1)
+
                 }
 
                 AllStates.SAVED_PLAYLIST -> {
@@ -142,25 +111,37 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         val editTextDescriptionChList = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (binding.editTextDescription.hasFocus() && !binding.editTextDescription.text.isNullOrBlank()) {
-                    descriptionJob?.cancel()
-                    descriptionJob = viewLifecycleOwner.lifecycleScope.launch {
-                        delay(DEBOUNCE_DELAY_MSC)
-                        Log.d("ChangeListenerDesc", "Saved")
-                        createPlaylistVM.saveDescription(p0.toString())
-                    }
+                descriptionJob?.cancel()
+                descriptionJob = viewLifecycleOwner.lifecycleScope.launch {
+                    delay(DEBOUNCE_DELAY_MSC)
+                    createPlaylistVM.saveDescription(p0.toString())
                 }
+                activateEditTextStateChanger(binding.textInputLayoutDescription, p0.isNullOrBlank())
             }
 
-            override fun afterTextChanged(p0: Editable?) {}
+            override fun afterTextChanged(p0: Editable?) = Unit
+        }
+        val editTextNameChList = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                descriptionJob?.cancel()
+                descriptionJob = viewLifecycleOwner.lifecycleScope.launch {
+                    delay(DEBOUNCE_DELAY_MSC)
+                    createPlaylistVM.saveName(p0.toString())
+                }
+                activateEditTextStateChanger(binding.textInputLayoutName, p0.isNullOrBlank())
+            }
+
+            override fun afterTextChanged(p0: Editable?) = Unit
         }
 
-        binding.editTextDescription.addTextChangedListener(
-            editTextDescriptionChList
-        )
+        binding.editTextName.addTextChangedListener(editTextNameChList)
+
+        binding.editTextDescription.addTextChangedListener(editTextDescriptionChList)
 
         binding.editTextDescription.setOnEditorActionListener { _, actionID, _ ->
             if (actionID == EditorInfo.IME_ACTION_DONE) {
@@ -178,10 +159,22 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         binding.editTextName.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus && !binding.editTextName.text.isNullOrBlank()) {
+            if (!hasFocus) {
                 Log.d("ChangeListenerName", "Saved")
                 createPlaylistVM.saveName(binding.editTextName.text.toString())
             }
+            activateButtonSaveStateChanger(binding.editTextName.text.isNullOrBlank())
+            activateEditTextStateChanger(
+                binding.textInputLayoutName,
+                binding.editTextName.text.isNullOrBlank()
+            )
+        }
+        binding.editTextDescription.setOnFocusChangeListener { _, _ ->
+            activateEditTextStateChanger(
+                binding.textInputLayoutDescription,
+                binding.editTextDescription.text.isNullOrBlank()
+            )
+
         }
 
         binding.buttonCreate.setOnClickListener {
@@ -190,6 +183,27 @@ class CreatePlaylistFragment : Fragment() {
             showToast()
         }
     }
+
+    private fun activateButtonSaveStateChanger(hasName: Boolean) {
+        val color = if (hasName)
+            ContextCompat.getColor(requireContext(), R.color.blue1)
+        else
+            ContextCompat.getColor(requireContext(), R.color.grey1)
+        binding.buttonCreate.isEnabled = hasName
+        binding.buttonCreate.setBackgroundColor(color)
+    }
+
+    private fun activateEditTextStateChanger(view: TextInputLayout, isBlank: Boolean) {
+        val colorHint = if (isBlank)
+            ContextCompat.getColorStateList(requireContext(), R.color.grey1)
+        else
+            ContextCompat.getColorStateList(requireContext(), R.color.blue1)
+
+        view.defaultHintTextColor = colorHint
+        colorHint?.let { view.setBoxStrokeColorStateList(it) }
+
+    }
+
 
     private fun showDialog() {
         MaterialAlertDialogBuilder(requireContext())
