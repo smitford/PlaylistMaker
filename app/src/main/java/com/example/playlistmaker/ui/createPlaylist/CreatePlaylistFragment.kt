@@ -98,10 +98,6 @@ class CreatePlaylistFragment : Fragment() {
                 }
 
                 AllStates.SAVED_DATA -> {
-                    binding.playListImg.setImageURI(currentState.uri?.toUri())
-                    binding.editTextName.setText(currentState.playlistName)
-                    binding.editTextDescription.setText(currentState.description)
-
                 }
 
                 AllStates.SAVED_PLAYLIST -> {
@@ -134,6 +130,7 @@ class CreatePlaylistFragment : Fragment() {
                     createPlaylistVM.saveName(p0.toString())
                 }
                 activateEditTextStateChanger(binding.textInputLayoutName, p0.isNullOrBlank())
+                activateButtonSaveStateChanger(p0.isNullOrBlank())
             }
 
             override fun afterTextChanged(p0: Editable?) = Unit
@@ -163,7 +160,6 @@ class CreatePlaylistFragment : Fragment() {
                 Log.d("ChangeListenerName", "Saved")
                 createPlaylistVM.saveName(binding.editTextName.text.toString())
             }
-            activateButtonSaveStateChanger(binding.editTextName.text.isNullOrBlank())
             activateEditTextStateChanger(
                 binding.textInputLayoutName,
                 binding.editTextName.text.isNullOrBlank()
@@ -185,7 +181,7 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun activateButtonSaveStateChanger(hasName: Boolean) {
-        val color = if (hasName)
+        val color = if (!hasName)
             ContextCompat.getColor(requireContext(), R.color.blue1)
         else
             ContextCompat.getColor(requireContext(), R.color.grey1)
@@ -194,11 +190,17 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun activateEditTextStateChanger(view: TextInputLayout, isBlank: Boolean) {
-        val colorHint = if (isBlank)
+        val colorHint = if (isBlank) {
             ContextCompat.getColorStateList(requireContext(), R.color.grey1)
-        else
+        } else {
             ContextCompat.getColorStateList(requireContext(), R.color.blue1)
+        }
+        val color = if (isBlank)
+            ContextCompat.getColor(requireContext(), R.color.blue1)
+        else
+            ContextCompat.getColor(requireContext(), R.color.grey1)
 
+        view.boxStrokeColor = color
         view.defaultHintTextColor = colorHint
         colorHint?.let { view.setBoxStrokeColorStateList(it) }
 
