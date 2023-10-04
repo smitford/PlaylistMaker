@@ -56,6 +56,8 @@
         android:layout_marginEnd="@dimen/padding_16"
         android:hint="@string/name"
         android:imeOptions="actionDone"
+        android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
+        app:boxStrokeColor="@color/box_stroke_selector_grey"
         app:hintTextAppearance="@string/name"
         app:hintTextColor="@color/blue1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,24 +67,23 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextName"
             style="@style/EditTextPlaylist"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:imeOptions="actionDone"
-            android:paddingStart="@dimen/padding_16"
-            android:singleLine="true" />
+            android:imeOptions="actionDone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutDescription"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_16"
         android:layout_marginTop="@dimen/padding_16"
         android:layout_marginEnd="@dimen/padding_16"
+        app:boxStrokeColor="@color/box_stroke_selector_grey"
         android:hint="@string/description"
         android:imeOptions="actionDone"
+        android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
         app:hintTextAppearance="@string/description"
+        app:hintTextColor="@color/blue1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textInputLayoutName">
@@ -90,11 +91,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextDescription"
             style="@style/EditTextPlaylist"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:imeOptions="actionDone"
-            android:paddingStart="@dimen/padding_16"
-            android:singleLine="true" />
+            android:imeOptions="actionDone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

@@ -115,7 +115,7 @@ class CreatePlaylistFragment : Fragment() {
                     delay(DEBOUNCE_DELAY_MSC)
                     createPlaylistVM.saveDescription(p0.toString())
                 }
-                activateEditTextStateChanger(binding.textInputLayoutDescription, p0.isNullOrBlank())
+                activateEditTextStateChanger(binding.textInputLayoutDescription, p0.isNullOrEmpty())
             }
 
             override fun afterTextChanged(p0: Editable?) = Unit
@@ -129,7 +129,7 @@ class CreatePlaylistFragment : Fragment() {
                     delay(DEBOUNCE_DELAY_MSC)
                     createPlaylistVM.saveName(p0.toString())
                 }
-                activateEditTextStateChanger(binding.textInputLayoutName, p0.isNullOrBlank())
+                activateEditTextStateChanger(binding.textInputLayoutName, p0.isNullOrEmpty())
                 activateButtonSaveStateChanger(p0.isNullOrBlank())
             }
 
@@ -147,9 +147,9 @@ class CreatePlaylistFragment : Fragment() {
             } else false
         }
 
-        binding.editTextName.setOnEditorActionListener { view, actionID, _ ->
+        binding.editTextName.setOnEditorActionListener { _, actionID, _ ->
             if (actionID == EditorInfo.IME_ACTION_DONE) {
-                inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
                 binding.editTextDescription.requestFocus()
                 true
             } else false
@@ -195,15 +195,15 @@ class CreatePlaylistFragment : Fragment() {
         } else {
             ContextCompat.getColorStateList(requireContext(), R.color.blue1)
         }
-        val color = if (isBlank)
-            ContextCompat.getColor(requireContext(), R.color.blue1)
-        else
-            ContextCompat.getColor(requireContext(), R.color.grey1)
+        val selector = if (isBlank) {
+            ContextCompat.getColorStateList(requireContext(), R.color.box_stroke_selector_grey)
+        } else {
+            ContextCompat.getColorStateList(requireContext(), R.color.box_stroke_selector)
+        }
 
-        view.boxStrokeColor = color
+        view.setHelperTextColor(colorHint)
         view.defaultHintTextColor = colorHint
-        colorHint?.let { view.setBoxStrokeColorStateList(it) }
-
+        selector?.let { view.setBoxStrokeColorStateList(it) }
     }
 
 

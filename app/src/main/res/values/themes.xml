@@ -17,5 +17,6 @@
         <item name="thumbTint">@color/grey1</item>
         <item name="trackTint">@color/light_grey</item>
 
+
     </style>
 </resources>
