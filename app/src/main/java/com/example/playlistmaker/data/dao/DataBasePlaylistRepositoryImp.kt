@@ -1,13 +1,17 @@
 package com.example.playlistmaker.data.dao
 
+import android.util.Log
 import com.example.playlistmaker.data.models.PlaylistInfoDao
 import com.example.playlistmaker.data.models.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.DataBasePlaylistRepository
 import com.example.playlistmaker.domain.consumer.DaoConsumer
 import com.example.playlistmaker.domain.models.PlaylistInfo
 import com.example.playlistmaker.domain.models.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import okhttp3.Dispatcher
 
 class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
     DataBasePlaylistRepository {
@@ -18,7 +22,7 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
             appDatabase.trackDAO().getTrack(playlistTrack.trackPK)
         }
         emit(DaoAdapter.trackEntityToTrack(playlist))
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun getPlaylistsInfo(): Flow<DaoConsumer<List<PlaylistInfo>>> = flow {
         val playlists = appDatabase.playlistDAO().getPlaylistsInfo()
@@ -39,12 +43,12 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
             }
         }
         emit(DaoAdapter.playlistsEntityToPlaylistInfo(playlistInfo))
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun createPlaylist(
         playlistName: String,
-        playlistDescription: String,
-        imgUri: String
+        playlistDescription: String?,
+        imgUri: String?
     ) {
         appDatabase.playlistDAO()
             .insertPlaylist(
@@ -56,14 +60,22 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
             )
     }
 
-    override suspend fun addTrackToPlaylist(playlistPK: Int, trackPK: Int) {
-        appDatabase.playlistDAO().insertTrackIntoPlaylist(
-            PlaylistTrackEntity(
-                playlistPK = playlistPK,
-                trackPK = trackPK
+    override fun addTrackToPlaylist(playlistPK: Int, trackPK: Int): Flow<Boolean> = flow {
+        val result = appDatabase.playlistDAO()
+            .isPlaylistIncludeTrack(playlistPK = playlistPK, trackPK = trackPK)
+        Log.d("Result of tr search","$result")
+        if (result == null) {
+            appDatabase.playlistDAO().insertTrackIntoPlaylist(
+                PlaylistTrackEntity(
+                    playlistPK = playlistPK,
+                    trackPK = trackPK
+                )
             )
-        )
-    }
+
+            emit(true)
+        } else
+            emit(false)
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun deleteTrackFromPlaylist(playlistPK: Int, trackPK: Int) {
         appDatabase.playlistDAO().deleteTrackFromPlaylist(
@@ -78,5 +90,6 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
         appDatabase.playlistDAO().deletePlaylistsTracks(playlistPK = playlistPK)
         appDatabase.playlistDAO().deletePlaylist(playlistPK = playlistPK)
     }
+
 
 }

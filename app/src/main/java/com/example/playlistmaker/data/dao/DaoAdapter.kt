@@ -45,8 +45,8 @@ object DaoAdapter {
 
     fun playListToPlaylistEntity(
         playlistName: String,
-        playlistDescription: String,
-        imgUri: String
+        playlistDescription: String?,
+        imgUri: String?
     ) = PlaylistEntity(
         id = null,
         name = playlistName,

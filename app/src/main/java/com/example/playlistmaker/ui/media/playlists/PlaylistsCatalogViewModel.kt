@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.media.playlists
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,22 +10,20 @@ import kotlinx.coroutines.launch
 
 class PlaylistsCatalogViewModel(val dataBasePlaylist: DataBasePlaylistInteractor) : ViewModel() {
 
-    private lateinit var playlistCatalogState: MutableLiveData<PlaylistCatalogState>
+    private var playlistCatalogState= MutableLiveData<PlaylistCatalogState>()
 
-    init {
-        loadPlaylistCatalog()
-    }
-
-    fun getState(): MutableLiveData<PlaylistCatalogState> = playlistCatalogState
+    fun getState() = playlistCatalogState
 
     private fun changeStatus(result: List<PlaylistInfo>?) =
-        if (result != null)
-            playlistCatalogState = MutableLiveData(PlaylistCatalogState.LoadedCatalog(result))
-        else
-            playlistCatalogState = MutableLiveData(PlaylistCatalogState.Empty)
+        if (!result.isNullOrEmpty()) {
+            Log.d("Status changed", "$result")
+            playlistCatalogState.value = PlaylistCatalogState.LoadedCatalog(result)
+        } else {
+            Log.d("Status changed null", "$result")
+            playlistCatalogState.value = PlaylistCatalogState.Empty
+        }
 
-
-    private fun loadPlaylistCatalog() {
+    fun loadPlaylistCatalog() {
         viewModelScope.launch {
             dataBasePlaylist.getPlaylistsInfo().collect { result ->
                 changeStatus(result)

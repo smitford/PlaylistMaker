@@ -12,10 +12,10 @@ import com.example.playlistmaker.data.models.PlaylistTrackEntity
 @Dao
 interface PlaylistDao {
 
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPlaylist(playlist: PlaylistEntity)
 
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTrackIntoPlaylist(playlistTrack: PlaylistTrackEntity)
 
     @Query("SELECT * FROM playlist")
@@ -35,4 +35,7 @@ interface PlaylistDao {
 
     @Query("SELECT COUNT(playlistPK) FROM playlist_tracks WHERE playlistPK ==:playlistPK")
     fun countTracksInPlaylist(playlistPK: Int): Int
+
+    @Query("SELECT * FROM playlist_tracks WHERE playlistPK =:playlistPK AND trackPK =:trackPK")
+    fun isPlaylistIncludeTrack(playlistPK: Int, trackPK: Int): PlaylistTrackEntity?
 }

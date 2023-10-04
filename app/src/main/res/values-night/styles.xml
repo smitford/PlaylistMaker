@@ -127,8 +127,7 @@
     </style>
 
     <style name="EditTextPlaylist" >
-        <item name="android:background">@drawable/bg_edittext_npl</item>
-        <item name="android:textColorHint">?attr/colorOnSecondary</item>
+               <item name="android:textColorHint">?attr/colorOnSecondary</item>
         <item name="drawableTint">?attr/colorOnPrimary</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:layout_height">56dp</item>

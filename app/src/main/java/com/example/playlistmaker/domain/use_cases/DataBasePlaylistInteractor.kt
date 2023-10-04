@@ -10,9 +10,9 @@ interface DataBasePlaylistInteractor {
 
     fun getPlaylistsInfo(): Flow<List<PlaylistInfo>?>
 
-    suspend fun createPlaylist(playlistName: String, playlistDescription: String, imgUri: String)
+    suspend fun createPlaylist(playlistName: String, playlistDescription: String?, imgUri: String?)
 
-    suspend fun addTrackToPlaylist(playlistPK: Int, trackPK: Int)
+    fun addTrackToPlaylist(playlistPK: Int, trackPK: Int): Flow<Boolean>
 
     suspend fun deleteTrackFromPlaylist(playlistPK: Int, trackPK: Int)
 

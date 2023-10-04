@@ -9,10 +9,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.ui.media.playlists.CatalogAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -21,6 +25,8 @@ class PlayerFragment : Fragment() {
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
     private val playerViewModel by viewModel<PlayerViewModel>()
+    private lateinit var recyclerViewPlaylist: RecyclerView
+    private lateinit var playerCatalogAdapter: PlayerCatalogAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,16 +41,29 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val track = args.track
+        val bottomSheetContainer = binding.bottomSheet
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+        bottomSheetBehavior.isHideable = true
 
-        val roundedCorners = (8 / (this.resources
+        val roundedCorners = (ROUNDING_OF_CORNERS_PX * (requireContext().resources
             .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT))
+
+        val addTrackToPlaylistCallBack = { trackPK: Int, playlistPK: Int ->
+            playerViewModel.addTrackToPlaylist(playlistPK = playlistPK, trackPK = trackPK)
+        }
+        recyclerViewPlaylist = binding.recyclerViewSongs
+        recyclerViewPlaylist.layoutManager = LinearLayoutManager(requireContext())
+        playerCatalogAdapter = PlayerCatalogAdapter(
+            addTrackToPlaylist = addTrackToPlaylistCallBack,
+            trackPK = track.trackId
+        )
+        recyclerViewPlaylist.adapter = playerCatalogAdapter
 
         Glide.with(binding.albumImage)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(roundedCorners))
             .into(binding.albumImage)
-
 
         binding.playerTextSongName.text = track.trackName
         binding.playerTextSongArtist.text = track.artistName
@@ -88,6 +107,41 @@ class PlayerFragment : Fragment() {
                     }
                 }
             }
+
+        playerViewModel.getPlaylistCatalogState().observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                playerCatalogAdapter.catalog = result.toMutableList()
+                playerCatalogAdapter.notifyDataSetChanged()
+            }
+
+        }
+
+        playerViewModel.getAddStatus().observe(viewLifecycleOwner) { status ->
+            when (status) {
+                true -> {}
+                false -> {}
+                null -> {}
+            }
+        }
+
+        val bottomSheetCallback = object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HALF_EXPANDED, BottomSheetBehavior.STATE_DRAGGING,
+                    BottomSheetBehavior.STATE_SETTLING -> binding.screenDimming.visibility =
+                        View.VISIBLE
+
+                    else -> binding.screenDimming.visibility = View.GONE
+                }
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        }
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+
         binding.playerButtonPlay.setOnClickListener {
             (playerViewModel).playbackControl()
         }
@@ -97,6 +151,14 @@ class PlayerFragment : Fragment() {
 
         binding.playerButtonLike.setOnClickListener {
             playerViewModel.changeStatus(track = track)
+        }
+        binding.playerButtonAdd.setOnClickListener {
+            playerViewModel.loadPlaylistCatalog()
+            bottomSheetBehavior.halfExpandedRatio = 0.65F
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
+        binding.buttonNewPlaylist.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_createPlaylistFragment)
         }
     }
 
@@ -114,5 +176,6 @@ class PlayerFragment : Fragment() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
+        private const val ROUNDING_OF_CORNERS_PX =8
     }
 }

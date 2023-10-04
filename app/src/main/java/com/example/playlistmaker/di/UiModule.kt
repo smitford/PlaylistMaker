@@ -14,7 +14,8 @@ val uiModules = module {
     viewModel<PlayerViewModel> {
         PlayerViewModel(
             playerInteractor = get(),
-            dataBase = get()
+            dataBaseTrack = get(),
+            dataBasePlaylist = get()
         )
     }
     viewModel<SearchViewModel> {

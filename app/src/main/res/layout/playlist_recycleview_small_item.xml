@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/high_of_basic_stripe"
+    android:backgroundTint="?attr/colorOnPrimary"
+    android:orientation="horizontal"
+    android:padding="@dimen/padding_8">
+
+    <ImageView
+        android:id="@+id/playlistImg"
+        android:layout_width="@dimen/album_image"
+        android:layout_height="@dimen/album_image"
+        android:layout_marginStart="@dimen/padding_12"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/album" />
+
+    <TextView
+        android:id="@+id/playlistName"
+        style="@style/TextSongs"
+        android:layout_marginStart="@dimen/padding_8"
+        android:layout_marginTop="@dimen/padding_6"
+        android:singleLine="true"
+        app:layout_constraintStart_toEndOf="@id/playlistImg"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Some text" />
+
+    <TextView
+        android:id="@+id/trackCount"
+        style="@style/TextSongs"
+        android:singleLine="true"
+        android:textColor="@color/grey1"
+        android:textSize="@dimen/text_size_11"
+        app:layout_constraintTop_toBottomOf="@id/playlistName"
+        app:layout_constraintStart_toStartOf="@id/playlistName"
+        tools:text="Some text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
