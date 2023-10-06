@@ -12,6 +12,7 @@ class PlayerCatalogAdapter(val addTrackToPlaylist: (Int, Int) -> Unit, val track
 
     var catalog = mutableListOf<PlaylistInfo>()
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerCatalogViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
         return PlayerCatalogViewHolder(
@@ -28,7 +29,7 @@ class PlayerCatalogAdapter(val addTrackToPlaylist: (Int, Int) -> Unit, val track
     override fun onBindViewHolder(holder: PlayerCatalogViewHolder, position: Int) {
         holder.bind(catalog[position])
         holder.itemView.setOnClickListener {
-            addTrackToPlaylist( trackPK,catalog[position].id,)
+            addTrackToPlaylist(trackPK, catalog[position].id)
         }
     }
 }

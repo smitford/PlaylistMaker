@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.media
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,7 @@ class MediaFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMediaBinding.inflate(inflater, container, false)
         return binding.root
     }

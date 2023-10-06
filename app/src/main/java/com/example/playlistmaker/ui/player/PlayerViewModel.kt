@@ -11,7 +11,6 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.use_cases.DataBasePlaylistInteractor
 import com.example.playlistmaker.domain.use_cases.DataBaseTrackInteractor
 import com.example.playlistmaker.domain.use_cases.PlayerInteractor
-import com.example.playlistmaker.ui.media.playlists.PlaylistCatalogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -116,6 +115,8 @@ class PlayerViewModel(
         }
 
     }
+
+    fun getPlayerName(playlistPK: Int) = playlistCatalogState.value?.get(playlistPK)?.name
 
     private fun addToPlaylistStatus(result: Boolean) {
         Log.d("If there duplicates","$result")

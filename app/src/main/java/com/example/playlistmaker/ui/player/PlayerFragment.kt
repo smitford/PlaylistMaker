@@ -3,10 +3,12 @@ package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,9 +17,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
-import com.example.playlistmaker.ui.media.playlists.CatalogAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 
 class PlayerFragment : Fragment() {
@@ -50,7 +55,22 @@ class PlayerFragment : Fragment() {
 
         val addTrackToPlaylistCallBack = { trackPK: Int, playlistPK: Int ->
             playerViewModel.addTrackToPlaylist(playlistPK = playlistPK, trackPK = trackPK)
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(TOAST_DEBOUNCE_MSC)
+                val status = playerViewModel.getAddStatus().value
+                Log.d("Call back status", "$status")
+                val snackText = if (status == true) {
+                    "Добавлено в плейлист ${playerViewModel.getPlayerName(playlistPK)}"
+                } else {
+                    "Трек уже добавлен в плейлист ${playerViewModel.getPlayerName(playlistPK)}"
+                }
+                initSnack(snackText)
+            }
+
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
+
         recyclerViewPlaylist = binding.recyclerViewSongs
         recyclerViewPlaylist.layoutManager = LinearLayoutManager(requireContext())
         playerCatalogAdapter = PlayerCatalogAdapter(
@@ -116,13 +136,6 @@ class PlayerFragment : Fragment() {
 
         }
 
-        playerViewModel.getAddStatus().observe(viewLifecycleOwner) { status ->
-            when (status) {
-                true -> {}
-                false -> {}
-                null -> {}
-            }
-        }
 
         val bottomSheetCallback = object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -172,10 +185,20 @@ class PlayerFragment : Fragment() {
         _binding = null
     }
 
+    private fun initSnack(snackText: String) {
+        val createdSnack =
+            Snackbar.make(binding.recyclerViewSongs, snackText, Snackbar.LENGTH_SHORT)
+        createdSnack
+            .setTextMaxLines(1)
+            .show()
+
+    }
+
     companion object {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val ROUNDING_OF_CORNERS_PX =8
+        private const val ROUNDING_OF_CORNERS_PX = 8
+        private const val TOAST_DEBOUNCE_MSC = 200L
     }
 }

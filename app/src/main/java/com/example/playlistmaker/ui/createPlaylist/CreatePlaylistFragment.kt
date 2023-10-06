@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -27,6 +26,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.make
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -53,6 +54,16 @@ class CreatePlaylistFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        val state = createPlaylistVM.getCurrentData().value
+        if (state?.state == AllStates.SAVED_DATA) {
+            binding.playListImg.setImageURI(state.uri?.toUri())
+            binding.editTextName.setText(state.playlistName)
+            binding.editTextDescription.setText(state.description)
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,8 +74,8 @@ class CreatePlaylistFragment : Fragment() {
                 ActivityResultContracts.PickVisualMedia()
             ) { uri ->
                 if (uri != null) {
-
                     binding.playListImg.scaleType = ImageView.ScaleType.CENTER_CROP
+                    binding.playListImg.setImageURI(uri)
                     createPlaylistVM.saveImg(uri.toString())
                 } else {
                     Log.d("ImgPicker", "Not chose")
@@ -97,8 +108,7 @@ class CreatePlaylistFragment : Fragment() {
                     )
                 }
 
-                AllStates.SAVED_DATA -> {
-                }
+                AllStates.SAVED_DATA -> {}
 
                 AllStates.SAVED_PLAYLIST -> {
                     findNavController().popBackStack()
@@ -176,7 +186,7 @@ class CreatePlaylistFragment : Fragment() {
         binding.buttonCreate.setOnClickListener {
             lifecycleScope.launch { createPlaylistVM.savePlaylist() }
             saveImageToStorage()
-            showToast()
+            initSnack()
         }
     }
 
@@ -185,7 +195,7 @@ class CreatePlaylistFragment : Fragment() {
             ContextCompat.getColor(requireContext(), R.color.blue1)
         else
             ContextCompat.getColor(requireContext(), R.color.grey1)
-        binding.buttonCreate.isEnabled = hasName
+        binding.buttonCreate.isEnabled = !hasName
         binding.buttonCreate.setBackgroundColor(color)
     }
 
@@ -201,14 +211,13 @@ class CreatePlaylistFragment : Fragment() {
             ContextCompat.getColorStateList(requireContext(), R.color.box_stroke_selector)
         }
 
-        view.setHelperTextColor(colorHint)
         view.defaultHintTextColor = colorHint
         selector?.let { view.setBoxStrokeColorStateList(it) }
     }
 
 
     private fun showDialog() {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), R.style.dialogStyle)
             .setTitle(R.string.complete_playlist_creation)
             .setMessage(R.string.completion_dialog)
             .setNegativeButton(R.string.cancel) { _, _ ->
@@ -228,11 +237,9 @@ class CreatePlaylistFragment : Fragment() {
                 requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 PLAYLIST_IMAGE_DIRECTORY
             )
-
             if (!filePath.exists()) {
                 filePath.mkdirs()
             }
-
             val file = File(
                 filePath,
                 createPlaylistVM.getCurrentData().value?.playlistName + Calendar.getInstance().timeInMillis
@@ -244,12 +251,12 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun showToast() {
-        Toast.makeText(
-            requireContext(),
-            "Плейлист ${createPlaylistVM.getCurrentData().value?.playlistName} создан",
-            Toast.LENGTH_SHORT
-        ).show()
+    private fun initSnack() {
+        val snackText = "Плейлист ${createPlaylistVM.getCurrentData().value?.playlistName} создан"
+        val createdSnack = make(binding.buttonCreate, snackText, Snackbar.LENGTH_SHORT)
+        createdSnack
+            .setTextMaxLines(1)
+            .show()
     }
 
     override fun onDestroyView() {
@@ -259,7 +266,7 @@ class CreatePlaylistFragment : Fragment() {
 
     companion object {
         const val PLAYLIST_IMAGE_DIRECTORY = "playlist_images"
-        const val DEBOUNCE_DELAY_MSC = 2000L
+        const val DEBOUNCE_DELAY_MSC = 1000L
     }
 }
 
