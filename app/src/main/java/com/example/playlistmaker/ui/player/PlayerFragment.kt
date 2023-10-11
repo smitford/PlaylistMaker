@@ -54,17 +54,17 @@ class PlayerFragment : Fragment() {
         val roundedCorners = (ROUNDING_OF_CORNERS_PX * (requireContext().resources
             .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT))
 
-        val addTrackToPlaylistCallBack = { track: Track, playlistPK: Int ->
-            playerViewModel.addTrackToPlaylist(playlistPK = playlistPK, track = track)
+        val addTrackToPlaylistCallBack = { track: Track, playlistPK: Int, playlistPosition :Int ->
+            playerViewModel.addTrackToPlaylist(playlistId = playlistPK, track = track)
 
             viewLifecycleOwner.lifecycleScope.launch {
                 delay(TOAST_DEBOUNCE_MSC)
                 val status = playerViewModel.getAddStatus().value
                 Log.d("Call back status", "$status")
                 val snackText = if (status == true) {
-                    "Добавлено в плейлист ${playerViewModel.getPlayerName(playlistPK)}"
+                    "Добавлено в плейлист ${playerViewModel.getPlayerName(playlistPosition)}"
                 } else {
-                    "Трек уже добавлен в плейлист ${playerViewModel.getPlayerName(playlistPK)}"
+                    "Трек уже добавлен в плейлист ${playerViewModel.getPlayerName(playlistPosition)}"
                 }
                 initSnack(snackText)
             }
@@ -93,7 +93,7 @@ class PlayerFragment : Fragment() {
         binding.textSongYear.text = track.releaseDate
         binding.textSongGenre.text = track.primaryGenreName
 
-        playerViewModel.checkForFavorite(trackID = track.trackId)
+        playerViewModel.checkForFavorite(trackId = track.trackId)
 
         playerViewModel.prepare(track)
 

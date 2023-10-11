@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PlayerViewModel(
@@ -70,9 +71,9 @@ class PlayerViewModel(
             isFavorite = isFavorite
         )
 
-    fun checkForFavorite(trackID: Int) {
+    fun checkForFavorite(trackId: Int) {
         viewModelScope.launch {
-            dataBaseTrack.isTrackFavorite(trackID = trackID).collect { isFav ->
+            dataBaseTrack.isTrackFavorite(trackId = trackId).collect { isFav ->
                 changeStatus(isFav)
             }
         }
@@ -104,12 +105,12 @@ class PlayerViewModel(
         playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)
     }
 
-    fun addTrackToPlaylist(track: Track, playlistPK: Int) {
-        Log.d("Saved in playlist", "$playlistPK")
+    fun addTrackToPlaylist(track: Track, playlistId: Int) {
+        Log.d("Saved in playlist", "$playlistId")
         addTrackToPlaylistStatus.value = null
         viewModelScope.launch {
-            saveTrack(track = track)
-            dataBasePlaylist.addTrackToPlaylist(trackPK = track.trackId, playlistPK = playlistPK)
+            withContext(Dispatchers.IO) { saveTrack(track = track) }
+            dataBasePlaylist.addTrackToPlaylist(trackPK = track.trackId, playlistPK = playlistId)
                 .collect { result ->
                     addToPlaylistStatus(result = result)
                 }
@@ -134,7 +135,7 @@ class PlayerViewModel(
 
     private fun removeTrackFromFav(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataBaseTrack.deleteTrackFromFav(trackID = track.trackId)
+            dataBaseTrack.deleteTrackFromFav(trackId = track.trackId)
         }
         isFavorite = false
         playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)

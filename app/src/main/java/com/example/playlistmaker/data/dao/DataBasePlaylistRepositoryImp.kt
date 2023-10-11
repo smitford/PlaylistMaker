@@ -15,8 +15,8 @@ import kotlinx.coroutines.flow.flowOn
 class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
     DataBasePlaylistRepository {
 
-    override fun getPlaylist(playlistPK: Int): Flow<List<Track>> = flow {
-        val playlistTracks = appDatabase.playlistDAO().getPlaylist(playlistPK = playlistPK)
+    override fun getPlaylist(playlistId: Int): Flow<List<Track>> = flow {
+        val playlistTracks = appDatabase.playlistDAO().getPlaylist(playlistPK = playlistId)
         val playlist = playlistTracks.map { playlistTrack ->
             appDatabase.trackDAO().getTrack(playlistTrack.trackPK)
         }
@@ -26,12 +26,12 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
     override fun getPlaylistsInfo(): Flow<DaoConsumer<List<PlaylistInfo>>> = flow {
         val playlists = appDatabase.playlistDAO().getPlaylistsInfo()
         val playlistInfo = playlists.map {
-            val tracksNumber = it.id?.let { it1 ->
+            val tracksNumber = it.playlistPK?.let { it1 ->
                 appDatabase.playlistDAO().countTracksInPlaylist(
                     it1
                 )
             }
-            it.id?.let { it1 ->
+            it.playlistPK?.let { it1 ->
                 PlaylistInfoDao(
                     it1,
                     it.name,
@@ -59,15 +59,15 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
             )
     }
 
-    override fun addTrackToPlaylist(playlistPK: Int, trackPK: Int): Flow<Boolean> = flow {
+    override fun addTrackToPlaylist(playlistId: Int, trackId: Int): Flow<Boolean> = flow {
         val result = appDatabase.playlistDAO()
-            .isPlaylistIncludeTrack(playlistPK = playlistPK, trackPK = trackPK)
-        Log.d("Result of tr search","$result")
+            .isPlaylistIncludeTrack(playlistId = playlistId, trackId = trackId)
+        Log.d("Result of tr search", "$result")
         if (result == null) {
             appDatabase.playlistDAO().insertTrackIntoPlaylist(
                 PlaylistTrackEntity(
-                    playlistPK = playlistPK,
-                    trackPK = trackPK
+                    playlistPK = playlistId,
+                    trackPK = trackId
                 )
             )
             emit(true)
@@ -75,19 +75,31 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
             emit(false)
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun deleteTrackFromPlaylist(playlistPK: Int, trackPK: Int) {
+    override suspend fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int) {
         appDatabase.playlistDAO().deleteTrackFromPlaylist(
             playlistTrack = PlaylistTrackEntity(
-                playlistPK = playlistPK,
-                trackPK = trackPK
+                playlistPK = playlistId,
+                trackPK = trackId
             )
         )
+        if (isFavorite(trackId = trackId) == null && checkPresenceInPlaylists(trackId = trackId) == 0)
+            delete(trackId = trackId)
+
     }
 
-    override suspend fun deletePlaylist(playlistPK: Int) {
-        appDatabase.playlistDAO().deletePlaylistsTracks(playlistPK = playlistPK)
-        appDatabase.playlistDAO().deletePlaylist(playlistPK = playlistPK)
+    override suspend fun deletePlaylist(playlistId: Int) {
+        appDatabase.playlistDAO().deletePlaylistsTracks(playlistPK = playlistId)
+        appDatabase.playlistDAO().deletePlaylist(playlistPK = playlistId)
     }
 
+    private fun delete(trackId: Int) {
+        appDatabase.trackDAO().delete(trackId = trackId)
+    }
+
+    private fun isFavorite(trackId: Int) =
+        appDatabase.trackDAO().getFavTrackId(trackID = trackId)
+
+    private fun checkPresenceInPlaylists(trackId: Int): Int =
+        appDatabase.playlistDAO().isTrackPresenceInPlaylists(trackPK = trackId)
 
 }

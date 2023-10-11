@@ -29,17 +29,20 @@ interface PlaylistDao {
     @Delete(entity = PlaylistTrackEntity::class)
     fun deleteTrackFromPlaylist(playlistTrack: PlaylistTrackEntity)
 
-    @Query("DELETE FROM playlist WHERE id ==:playlistPK")
+    @Query("DELETE FROM playlist WHERE playlistPK ==:playlistPK")
     fun deletePlaylist(playlistPK: Int)
 
     @Query("DELETE FROM playlist_tracks WHERE playlistPK ==:playlistPK")
     fun deletePlaylistsTracks(playlistPK: Int)
 
-    @Query("SELECT COUNT(playlistPK) FROM playlist_tracks WHERE playlistPK ==:playlistPK")
-    fun countTracksInPlaylist(playlistPK: Int): Int
+    @Query("SELECT COUNT(playlistPK) FROM playlist_tracks WHERE playlistPK ==:playlistId")
+    fun countTracksInPlaylist(playlistId: Int): Int
 
-    @Query("SELECT * FROM playlist_tracks WHERE playlistPK =:playlistPK AND trackPK =:trackPK")
-    fun isPlaylistIncludeTrack(playlistPK: Int, trackPK: Int): PlaylistTrackEntity?
+    @Query("SELECT * FROM playlist_tracks WHERE playlistPK =:playlistId AND trackPK =:trackId")
+    fun isPlaylistIncludeTrack(playlistId: Int, trackId: Int): PlaylistTrackEntity?
+
+    @Query("SELECT COUNT(trackPK) FROM playlist_tracks WHERE trackPK ==:trackPK")
+    fun isTrackPresenceInPlaylists(trackPK: Int): Int
 
     @Transaction
     @Query("SELECT* FROM playlist")

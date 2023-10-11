@@ -18,7 +18,7 @@ object DaoAdapter {
             artistName = it.artistName,
             trackTimeMillis = it.trackTimeMillis,
             artworkUrl100 = it.artworkUrl100,
-            trackId = it.id,
+            trackId = it.trackPK,
             collectionName = it.collectionName,
             releaseDate = it.releaseDate,
             primaryGenreName = it.primaryGenreName,
@@ -33,7 +33,7 @@ object DaoAdapter {
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
             artworkUrl100 = track.artworkUrl100,
-            id = track.trackId,
+            trackPK = track.trackId,
             collectionName = track.collectionName,
             releaseDate = track.releaseDate,
             primaryGenreName = track.primaryGenreName,
@@ -48,14 +48,14 @@ object DaoAdapter {
         playlistDescription: String?,
         imgUri: String?
     ) = PlaylistEntity(
-        id = null,
+        playlistPK = null,
         name = playlistName,
         description = playlistDescription,
         imgUri = imgUri
     )
 
     fun playlistEntityToPlaylist(playlist: PlaylistEntity, playlistTracks: List<Track>) =
-        playlist.id?.let {
+        playlist.playlistPK?.let {
             Playlist(
                 id = it,
                 name = playlist.name,

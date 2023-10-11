@@ -15,19 +15,19 @@ interface TrackDAO {
     @Query("SELECT * FROM track_table WHERE isFavorite == 1 ORDER BY timeOfAdding DESC")
     fun getAllTracks(): List<TrackEntity>
 
-    @Query("SELECT id FROM track_table WHERE id == :trackID AND isFavorite= 1")
+    @Query("SELECT trackPK FROM track_table WHERE trackPK == :trackID AND isFavorite= 1")
     fun getFavTrackId(trackID: Int): Int?
 
-    @Query("SELECT id FROM track_table WHERE id == :trackID")
+    @Query("SELECT trackPK FROM track_table WHERE trackPK == :trackID")
     fun checkInBase(trackID: Int): Int?
 
-    @Query("SELECT * FROM track_table WHERE id == :trackID")
+    @Query("SELECT * FROM track_table WHERE trackPK == :trackID")
     fun getTrack(trackID: Int): TrackEntity
 
-    @Query("DELETE FROM track_table WHERE id== :trackID")
-    fun delete(trackID: Int)
+    @Query("DELETE FROM track_table WHERE trackPK== :trackId")
+    fun delete(trackId: Int)
 
-    @Query("UPDATE track_table SET isFavorite =:isFavorite WHERE id ==:trackId")
+    @Query("UPDATE track_table SET isFavorite =:isFavorite WHERE trackPK ==:trackId")
     fun updateFavoriteStatus(trackId: Int, isFavorite: Boolean)
 
 }

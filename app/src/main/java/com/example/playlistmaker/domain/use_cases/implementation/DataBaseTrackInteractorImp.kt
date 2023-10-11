@@ -13,11 +13,11 @@ class DataBaseTrackInteractorImp(private val repository: DataBaseTrackRepository
         repository.saveTrackToFav(track = track)
     }
 
-    override fun isTrackFavorite(trackID: Int): Flow<Boolean> =
-        repository.isTrackFavorite(trackID = trackID)
+    override fun isTrackFavorite(trackId: Int): Flow<Boolean> =
+        repository.isTrackFavorite(trackId = trackId)
 
-    override suspend fun deleteTrackFromFav(trackID: Int) {
-        repository.deleteTrackFromFav(trackID = trackID)
+    override suspend fun deleteTrackFromFav(trackId: Int) {
+        repository.deleteTrackFromFav(trackId = trackId)
     }
 
     override suspend fun saveTrack(track: Track) {

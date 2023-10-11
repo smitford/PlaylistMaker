@@ -7,8 +7,8 @@ import androidx.room.Relation
 data class PlaylistWithSong(
     @Embedded val playlist: PlaylistEntity,
     @Relation(
-        parentColumn = "playlistId",
-        entityColumn = "trackId",
+        parentColumn = "playlistPK",
+        entityColumn = "trackPK",
         associateBy = Junction(PlaylistTrackEntity::class)
     )
     val playlists: List<TrackEntity>

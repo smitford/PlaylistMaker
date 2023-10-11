@@ -8,7 +8,7 @@ import com.example.playlistmaker.domain.models.PlaylistInfo
 import com.example.playlistmaker.domain.models.Track
 
 
-class PlayerCatalogAdapter(val addTrackToPlaylist: (Track, Int) -> Unit, val track: Track) :
+class PlayerCatalogAdapter(val addTrackToPlaylist: (Track, Int, Int) -> Unit, val track: Track) :
     RecyclerView.Adapter<PlayerCatalogViewHolder>() {
 
     var catalog = mutableListOf<PlaylistInfo>()
@@ -30,7 +30,7 @@ class PlayerCatalogAdapter(val addTrackToPlaylist: (Track, Int) -> Unit, val tra
     override fun onBindViewHolder(holder: PlayerCatalogViewHolder, position: Int) {
         holder.bind(catalog[position])
         holder.itemView.setOnClickListener {
-            addTrackToPlaylist(track, catalog[position].id)
+            addTrackToPlaylist(track, catalog[position].id, position)
         }
     }
 }

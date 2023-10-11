@@ -15,7 +15,7 @@ class DataBaseTrackRepositoryImp(private val appDatabase: AppDatabase) : DataBas
     }.flowOn(Dispatchers.IO)
 
     override suspend fun saveTrackToFav(track: Track) {
-        val checkForPresence = appDatabase.trackDAO().checkInBase(trackID = track.trackId)
+        val checkForPresence = checkForPresence(trackId = track.trackId)
         if (checkForPresence == null) {
             val trackEnt = DaoAdapter.trackToTrackEntity(track = track, isFavorite = true)
             appDatabase.trackDAO().insertTrack(trackEnt)
@@ -23,21 +23,32 @@ class DataBaseTrackRepositoryImp(private val appDatabase: AppDatabase) : DataBas
             appDatabase.trackDAO().updateFavoriteStatus(trackId = track.trackId, true)
     }
 
-    override fun isTrackFavorite(trackID: Int): Flow<Boolean> = flow {
-        val track = appDatabase.trackDAO().getFavTrackId(trackID = trackID)
+    override fun isTrackFavorite(trackId: Int): Flow<Boolean> = flow {
+        val track = appDatabase.trackDAO().getFavTrackId(trackID = trackId)
         emit(track != null)
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun deleteTrackFromFav(trackID: Int) {
-        appDatabase.trackDAO().updateFavoriteStatus(trackId = trackID, isFavorite = false)
+    override suspend fun deleteTrackFromFav(trackId: Int) {
+        appDatabase.trackDAO().updateFavoriteStatus(trackId = trackId, isFavorite = false)
+        if (checkPresenceInPlaylists(trackId = trackId) == 0) delete(trackId = trackId)
     }
 
     override suspend fun saveTrack(track: Track) {
-        val checkForPresence = appDatabase.trackDAO().checkInBase(trackID = track.trackId)
+        val checkForPresence = checkForPresence(trackId = track.trackId)
         if (checkForPresence == null) {
             val trackEnt = DaoAdapter.trackToTrackEntity(track = track, isFavorite = false)
             appDatabase.trackDAO().insertTrack(trackEnt)
-        } else
-            appDatabase.trackDAO().updateFavoriteStatus(trackId = track.trackId, true)
+        }
     }
+
+    private fun delete(trackId: Int) {
+        appDatabase.trackDAO().delete(trackId = trackId)
+    }
+
+    private fun checkForPresence(trackId: Int): Int? =
+        appDatabase.trackDAO().checkInBase(trackID = trackId)
+
+    private fun checkPresenceInPlaylists(trackId: Int): Int =
+        appDatabase.playlistDAO().isTrackPresenceInPlaylists(trackPK = trackId)
+
 }
