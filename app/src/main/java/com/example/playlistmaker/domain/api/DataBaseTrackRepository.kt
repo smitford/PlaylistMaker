@@ -8,4 +8,6 @@ interface DataBaseTrackRepository {
     suspend fun saveTrackToFav(track: Track)
     fun isTrackFavorite(trackID: Int): Flow<Boolean>
     suspend fun deleteTrackFromFav(trackID: Int)
+
+    suspend fun saveTrack(track: Track)
 }

@@ -19,4 +19,8 @@ class DataBaseTrackInteractorImp(private val repository: DataBaseTrackRepository
     override suspend fun deleteTrackFromFav(trackID: Int) {
         repository.deleteTrackFromFav(trackID = trackID)
     }
+
+    override suspend fun saveTrack(track: Track) {
+        repository.saveTrack(track = track)
+    }
 }

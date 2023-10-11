@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.PlaylistRecycleviewSmallItemBinding
 import com.example.playlistmaker.domain.models.PlaylistInfo
+import com.example.playlistmaker.domain.models.Track
 
 
-class PlayerCatalogAdapter(val addTrackToPlaylist: (Int, Int) -> Unit, val trackPK: Int) :
+class PlayerCatalogAdapter(val addTrackToPlaylist: (Track, Int) -> Unit, val track: Track) :
     RecyclerView.Adapter<PlayerCatalogViewHolder>() {
 
     var catalog = mutableListOf<PlaylistInfo>()
@@ -29,7 +30,7 @@ class PlayerCatalogAdapter(val addTrackToPlaylist: (Int, Int) -> Unit, val track
     override fun onBindViewHolder(holder: PlayerCatalogViewHolder, position: Int) {
         holder.bind(catalog[position])
         holder.itemView.setOnClickListener {
-            addTrackToPlaylist(trackPK, catalog[position].id)
+            addTrackToPlaylist(track, catalog[position].id)
         }
     }
 }

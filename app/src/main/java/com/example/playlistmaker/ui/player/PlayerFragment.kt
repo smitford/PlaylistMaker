@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.domain.models.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
@@ -53,8 +54,8 @@ class PlayerFragment : Fragment() {
         val roundedCorners = (ROUNDING_OF_CORNERS_PX * (requireContext().resources
             .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT))
 
-        val addTrackToPlaylistCallBack = { trackPK: Int, playlistPK: Int ->
-            playerViewModel.addTrackToPlaylist(playlistPK = playlistPK, trackPK = trackPK)
+        val addTrackToPlaylistCallBack = { track: Track, playlistPK: Int ->
+            playerViewModel.addTrackToPlaylist(playlistPK = playlistPK, track = track)
 
             viewLifecycleOwner.lifecycleScope.launch {
                 delay(TOAST_DEBOUNCE_MSC)
@@ -75,7 +76,7 @@ class PlayerFragment : Fragment() {
         recyclerViewPlaylist.layoutManager = LinearLayoutManager(requireContext())
         playerCatalogAdapter = PlayerCatalogAdapter(
             addTrackToPlaylist = addTrackToPlaylistCallBack,
-            trackPK = track.trackId
+            track = track
         )
         recyclerViewPlaylist.adapter = playerCatalogAdapter
 

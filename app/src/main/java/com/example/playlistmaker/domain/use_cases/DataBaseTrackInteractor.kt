@@ -8,4 +8,5 @@ interface DataBaseTrackInteractor {
     suspend fun saveFavoriteTrack(track: Track)
     fun isTrackFavorite(trackID: Int): Flow<Boolean>
     suspend fun deleteTrackFromFav(trackID: Int)
+    suspend fun saveTrack(track: Track)
 }

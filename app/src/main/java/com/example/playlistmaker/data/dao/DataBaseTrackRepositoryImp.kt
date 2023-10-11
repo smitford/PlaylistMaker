@@ -31,4 +31,13 @@ class DataBaseTrackRepositoryImp(private val appDatabase: AppDatabase) : DataBas
     override suspend fun deleteTrackFromFav(trackID: Int) {
         appDatabase.trackDAO().updateFavoriteStatus(trackId = trackID, isFavorite = false)
     }
+
+    override suspend fun saveTrack(track: Track) {
+        val checkForPresence = appDatabase.trackDAO().checkInBase(trackID = track.trackId)
+        if (checkForPresence == null) {
+            val trackEnt = DaoAdapter.trackToTrackEntity(track = track, isFavorite = false)
+            appDatabase.trackDAO().insertTrack(trackEnt)
+        } else
+            appDatabase.trackDAO().updateFavoriteStatus(trackId = track.trackId, true)
+    }
 }

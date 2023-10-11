@@ -104,11 +104,12 @@ class PlayerViewModel(
         playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)
     }
 
-    fun addTrackToPlaylist(trackPK: Int, playlistPK: Int) {
+    fun addTrackToPlaylist(track: Track, playlistPK: Int) {
         Log.d("Saved in playlist", "$playlistPK")
         addTrackToPlaylistStatus.value = null
         viewModelScope.launch {
-            dataBasePlaylist.addTrackToPlaylist(trackPK = trackPK, playlistPK = playlistPK)
+            saveTrack(track = track)
+            dataBasePlaylist.addTrackToPlaylist(trackPK = track.trackId, playlistPK = playlistPK)
                 .collect { result ->
                     addToPlaylistStatus(result = result)
                 }
@@ -116,10 +117,16 @@ class PlayerViewModel(
 
     }
 
+    private suspend fun saveTrack(track: Track) {
+        dataBaseTrack.saveTrack(track = track)
+
+    }
+
+
     fun getPlayerName(playlistPK: Int) = playlistCatalogState.value?.get(playlistPK)?.name
 
     private fun addToPlaylistStatus(result: Boolean) {
-        Log.d("If there duplicates","$result")
+        Log.d("If there duplicates", "$result")
         addTrackToPlaylistStatus.value = result
     }
 
@@ -178,7 +185,7 @@ class PlayerViewModel(
 
     private fun fillList(result: List<PlaylistInfo>?) {
         playlistCatalogState.value = result
-        Log.d("Loaded Catalog","$result")
+        Log.d("Loaded Catalog", "$result")
     }
 
     fun getPlaylistCatalogState() = playlistCatalogState
