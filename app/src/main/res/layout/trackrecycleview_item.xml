@@ -5,13 +5,13 @@
     android:layout_height="@dimen/high_of_basic_stripe"
     android:backgroundTint="?attr/colorOnPrimary"
     android:orientation="horizontal"
-    android:padding="@dimen/padding_8">
+    >
 
     <ImageView
         android:id="@+id/albumImage"
         android:layout_width="@dimen/album_image"
         android:layout_height="@dimen/album_image"
-        android:layout_marginStart="@dimen/padding_12"
+        android:layout_marginStart="@dimen/padding_8"
         android:background="@android:color/transparent"
         android:scaleType="centerInside"
         tools:src="@drawable/album" />

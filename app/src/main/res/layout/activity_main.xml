@@ -11,20 +11,29 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/zero"
         app:defaultNavHost="true"
-
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/main_navigation_graph" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/grey1"
+        android:backgroundTint="@color/grey1"
+        app:layout_constraintBottom_toBottomOf="@id/bottomNavigation"
+        app:layout_constraintTop_toBottomOf="@id/mainFragment" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="?attr/colorOnSecondary"
-        app:itemTextColor="@color/bottom_nav_controller"
+        android:background="?attr/colorOnPrimary"
         app:itemIconTint="@color/bottom_nav_controller"
+        app:itemTextColor="@color/bottom_nav_controller"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mainFragment"
+        app:layout_constraintTop_toBottomOf="@id/divider"
         app:menu="@menu/bottom_navigation_menu"
         tools:layout_editor_absoluteX="75dp" />
 
