@@ -5,8 +5,10 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.playlistmaker.data.models.PlaylistEntity
 import com.example.playlistmaker.data.models.PlaylistTrackEntity
+import com.example.playlistmaker.data.models.PlaylistWithSong
 
 
 @Dao
@@ -38,4 +40,8 @@ interface PlaylistDao {
 
     @Query("SELECT * FROM playlist_tracks WHERE playlistPK =:playlistPK AND trackPK =:trackPK")
     fun isPlaylistIncludeTrack(playlistPK: Int, trackPK: Int): PlaylistTrackEntity?
+
+    @Transaction
+    @Query("SELECT* FROM playlist")
+    fun getPlaylistWithTracks(): List<PlaylistWithSong>
 }
