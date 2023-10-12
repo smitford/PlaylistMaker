@@ -18,7 +18,10 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
 
 
     private fun changeState(data: String?, action: Actions) {
-        createPlaylistState.value = getCurrentStatus()?.copy(state = AllStates.SAVED_DATA)
+        if (!data.isNullOrBlank()) {
+            createPlaylistState.value = getCurrentStatus()?.copy(state = AllStates.SAVED_DATA)
+        }
+
 
         when (action) {
             Actions.SAVE_IMG -> {
@@ -48,7 +51,7 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
     fun getCurrentData() = createPlaylistState
 
     fun saveImg(imgUri: String?) {
-            changeState(imgUri, Actions.SAVE_IMG)
+        changeState(imgUri, Actions.SAVE_IMG)
     }
 
     fun saveName(playlistName: String) {
@@ -56,7 +59,7 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
     }
 
     fun saveDescription(playlistDescription: String?) {
-            changeState(playlistDescription, Actions.SAVE_DESCRIPTION)
+        changeState(playlistDescription, Actions.SAVE_DESCRIPTION)
     }
 
     suspend fun savePlaylist() {

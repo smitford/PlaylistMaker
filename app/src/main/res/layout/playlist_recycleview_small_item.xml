@@ -6,7 +6,7 @@
     android:layout_height="@dimen/high_of_basic_stripe"
     android:backgroundTint="?attr/colorOnPrimary"
     android:orientation="horizontal"
-    android:padding="@dimen/padding_8">
+ >
 
     <ImageView
         android:id="@+id/playlistImg"

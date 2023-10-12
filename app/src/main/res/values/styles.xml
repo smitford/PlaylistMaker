@@ -103,6 +103,10 @@
         <item name="iconTint">?attr/colorOnSecondary</item>
     </style>
 
+    <style name="buttonRadius">
+        <item name="cornerRadius">@dimen/corner_of_button</item>
+    </style>
+
     <style name="ButtonMainAct" parent="ButtonBasic">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/zero</item>
@@ -149,7 +153,6 @@
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:inputType">text</item>
-        <item name="android:lines">1</item>
         <item name="android:paddingStart">@dimen/padding_16</item>
         <item name="android:textSize">@dimen/text_size_16</item>
         <item name="android:singleLine">true</item>

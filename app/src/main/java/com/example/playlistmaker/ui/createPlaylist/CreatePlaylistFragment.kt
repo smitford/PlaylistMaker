@@ -152,6 +152,7 @@ class CreatePlaylistFragment : Fragment() {
 
         binding.editTextDescription.setOnEditorActionListener { _, actionID, _ ->
             if (actionID == EditorInfo.IME_ACTION_DONE) {
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
                 binding.buttonCreate.requestFocus()
                 true
             } else false
@@ -172,13 +173,13 @@ class CreatePlaylistFragment : Fragment() {
             }
             activateEditTextStateChanger(
                 binding.textInputLayoutName,
-                binding.editTextName.text.isNullOrBlank()
+                binding.editTextName.text.isNullOrBlank()&&!hasFocus
             )
         }
-        binding.editTextDescription.setOnFocusChangeListener { _, _ ->
+        binding.editTextDescription.setOnFocusChangeListener { _, hasFocus ->
             activateEditTextStateChanger(
                 binding.textInputLayoutDescription,
-                binding.editTextDescription.text.isNullOrBlank()
+                binding.editTextDescription.text.isNullOrBlank()&&!hasFocus
             )
 
         }
