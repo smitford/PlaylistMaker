@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -44,6 +45,11 @@ class CreatePlaylistFragment : Fragment() {
     private val createPlaylistVM by viewModel<CreatePlaylistViewModel>()
     private lateinit var inputMethodManager: InputMethodManager
     private lateinit var dialog: MaterialAlertDialogBuilder
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,12 +114,7 @@ class CreatePlaylistFragment : Fragment() {
             when (currentState.state) {
                 AllStates.START -> {
                     binding.buttonCreate.isEnabled = false
-                    binding.buttonCreate.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey1
-                        )
-                    )
+
                 }
 
                 AllStates.SAVED_DATA -> {}
@@ -202,13 +203,6 @@ class CreatePlaylistFragment : Fragment() {
     private fun activateButtonSaveStateChanger(hasName: Boolean) {
         Log.d("Button", "Changed shape")
         binding.buttonCreate.isEnabled = !hasName
-        if (hasName) {
-            binding.buttonCreate.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_enadble)
-        } else {
-            binding.buttonCreate.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_able)
-        }
     }
 
     private fun activateEditTextStateChanger(view: TextInputLayout, isBlank: Boolean) {
@@ -282,6 +276,12 @@ class CreatePlaylistFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+    }
+
 
     companion object {
         const val PLAYLIST_IMAGE_DIRECTORY = "playlist_images"
