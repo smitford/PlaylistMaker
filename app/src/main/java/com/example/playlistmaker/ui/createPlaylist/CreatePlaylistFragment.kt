@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -42,6 +43,7 @@ class CreatePlaylistFragment : Fragment() {
     private val binding get() = _binding!!
     private val createPlaylistVM by viewModel<CreatePlaylistViewModel>()
     private lateinit var inputMethodManager: InputMethodManager
+    private lateinit var dialog: MaterialAlertDialogBuilder
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,6 +84,17 @@ class CreatePlaylistFragment : Fragment() {
                 }
             }
 
+        dialog =
+            MaterialAlertDialogBuilder(requireContext(), R.style.dialogStyle)
+                .setTitle(R.string.complete_playlist_creation)
+                .setMessage(R.string.completion_dialog)
+                .setNegativeButton(R.string.cancel) { _, _ ->
+
+                }
+                .setPositiveButton(R.string.complete) { _, _ ->
+                    findNavController().popBackStack()
+                }
+
         binding.playListImg.setOnClickListener {
             pickPlaylistImg.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -90,12 +103,7 @@ class CreatePlaylistFragment : Fragment() {
 
         createPlaylistVM.getCurrentData().observe(viewLifecycleOwner) { currentState ->
 
-            binding.backButtonNewPlaylist.setOnClickListener {
-                when (currentState.state) {
-                    AllStates.SAVED_DATA -> showDialog()
-                    else -> findNavController().popBackStack()
-                }
-            }
+            backBehavior(currentState.state)
 
             when (currentState.state) {
                 AllStates.START -> {
@@ -173,13 +181,13 @@ class CreatePlaylistFragment : Fragment() {
             }
             activateEditTextStateChanger(
                 binding.textInputLayoutName,
-                binding.editTextName.text.isNullOrBlank()&&!hasFocus
+                binding.editTextName.text.isNullOrBlank() && !hasFocus
             )
         }
         binding.editTextDescription.setOnFocusChangeListener { _, hasFocus ->
             activateEditTextStateChanger(
                 binding.textInputLayoutDescription,
-                binding.editTextDescription.text.isNullOrBlank()&&!hasFocus
+                binding.editTextDescription.text.isNullOrBlank() && !hasFocus
             )
 
         }
@@ -192,12 +200,15 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun activateButtonSaveStateChanger(hasName: Boolean) {
-        val color = if (!hasName)
-            ContextCompat.getColor(requireContext(), R.color.blue1)
-        else
-            ContextCompat.getColor(requireContext(), R.color.grey1)
+        Log.d("Button", "Changed shape")
         binding.buttonCreate.isEnabled = !hasName
-        binding.buttonCreate.setBackgroundColor(color)
+        if (hasName) {
+            binding.buttonCreate.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_enadble)
+        } else {
+            binding.buttonCreate.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_able)
+        }
     }
 
     private fun activateEditTextStateChanger(view: TextInputLayout, isBlank: Boolean) {
@@ -217,17 +228,24 @@ class CreatePlaylistFragment : Fragment() {
     }
 
 
-    private fun showDialog() {
-        MaterialAlertDialogBuilder(requireContext(), R.style.dialogStyle)
-            .setTitle(R.string.complete_playlist_creation)
-            .setMessage(R.string.completion_dialog)
-            .setNegativeButton(R.string.cancel) { _, _ ->
-
+    private fun backBehavior(state: AllStates) {
+        when (state) {
+            AllStates.SAVED_DATA -> {
+                binding.backButtonNewPlaylist.setOnClickListener { dialog.show() }
+                requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                    dialog.show()
+                }
             }
-            .setPositiveButton(R.string.complete) { _, _ ->
-                findNavController().popBackStack()
-            }.show()
+
+            else -> {
+                binding.backButtonNewPlaylist.setOnClickListener { findNavController().popBackStack() }
+                requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                    findNavController().popBackStack()
+                }
+            }
+        }
     }
+
 
     private fun saveImageToStorage() {
         val uri = createPlaylistVM.getCurrentData().value?.uri?.toUri()
