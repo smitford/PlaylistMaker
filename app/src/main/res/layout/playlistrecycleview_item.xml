@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_4"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/padding_4">
 
-    <ImageView
-        android:id="@+id/playListImg"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:background="@drawable/bg_rounded_img"
-        android:scaleType="centerCrop"
-        android:src="@drawable/placeholder" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="@dimen/zero"
+        android:layout_height="@dimen/zero"
+        app:layout_constraintHeight_max="160dp"
+        app:layout_constraintWidth_max="160dp"
+        app:cardCornerRadius="@dimen/round_8"
+        app:cardElevation="@dimen/zero"
+        app:layout_constraintBottom_toTopOf="@+id/playlistName"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/playListImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_rounded_img"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder" />
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/playlistName"
@@ -22,15 +38,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_4"
         android:textSize="@dimen/text_size_12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardView"
         tools:text="@string/create" />
 
     <TextView
         android:id="@+id/trackCount"
         style="@style/TextSongs"
-        android:layout_width="160dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playlistName"
         tools:text="@string/create" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

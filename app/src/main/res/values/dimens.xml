@@ -16,6 +16,7 @@
     <dimen name="button_height_44">44dp</dimen>
     <dimen name="round_16">16dp</dimen>
     <dimen name="button_size_16">16dp</dimen>
+    <dimen name="round_8">8dp</dimen>
 
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="text_size_14">14sp</dimen>

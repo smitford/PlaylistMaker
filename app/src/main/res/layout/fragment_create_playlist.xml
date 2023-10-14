@@ -34,23 +34,32 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.50" />
 
-    <ImageView
-        android:id="@+id/playListImg"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="@dimen/zero"
         android:layout_height="@dimen/zero"
         android:layout_marginStart="@dimen/padding_24"
         android:layout_marginTop="82dp"
         android:layout_marginEnd="@dimen/padding_24"
-        android:background="@drawable/playlist_add"
-        app:layout_constraintDimensionRatio="1:1"
-        android:clickable="true"
-        android:focusable="true"
-        android:scaleType="center"
-        android:src="@drawable/add_photo"
+        app:cardCornerRadius="@dimen/round_8"
+        app:cardElevation="@dimen/zero"
         app:layout_constraintBottom_toBottomOf="@+id/horizontalLine"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/playListImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/add_img_shape"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="center"
+            android:src="@drawable/add_photo" />
+    </androidx.cardview.widget.CardView>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutName"
@@ -105,8 +114,8 @@
         android:layout_marginEnd="@dimen/padding_16"
         android:layout_marginBottom="@dimen/padding_32"
         android:background="@drawable/create_button"
-        android:enabled="false"
         android:clickable="true"
+        android:enabled="false"
         android:gravity="center"
         android:padding="@dimen/padding_12"
         app:layout_constraintBottom_toBottomOf="parent"

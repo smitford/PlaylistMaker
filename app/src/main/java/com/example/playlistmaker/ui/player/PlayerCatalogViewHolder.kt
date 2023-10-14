@@ -8,7 +8,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistRecycleviewSmallItemBinding
 import com.example.playlistmaker.domain.models.PlaylistInfo
-import com.example.playlistmaker.ui.search.ViewHolderOfSongs
 
 class PlayerCatalogViewHolder(private val binding: PlaylistRecycleviewSmallItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -21,7 +20,7 @@ class PlayerCatalogViewHolder(private val binding: PlaylistRecycleviewSmallItemB
             .load(playlistInfo.imgUri)
             .placeholder(R.drawable.placeholder)
             .apply(RequestOptions())
-            .centerInside()
+            .centerCrop()
             .transform(RoundedCorners(roundCorner()))
             .into(binding.playlistImg)
 
@@ -31,6 +30,6 @@ class PlayerCatalogViewHolder(private val binding: PlaylistRecycleviewSmallItemB
         .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
 
     companion object {
-        private const val ROUNDING_OF_CORNERS_PX = 2
+        private const val ROUNDING_OF_CORNERS_PX = 8
     }
 }

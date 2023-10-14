@@ -54,7 +54,7 @@ class PlayerFragment : Fragment() {
         val roundedCorners = (ROUNDING_OF_CORNERS_PX * (requireContext().resources
             .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT))
 
-        val addTrackToPlaylistCallBack = { track: Track, playlistPK: Int, playlistPosition :Int ->
+        val addTrackToPlaylistCallBack = {track: Track, playlistPK: Int, playlistPosition :Int ->
             playerViewModel.addTrackToPlaylist(playlistId = playlistPK, track = track)
 
             viewLifecycleOwner.lifecycleScope.launch {
@@ -92,6 +92,7 @@ class PlayerFragment : Fragment() {
         binding.textSongAlbum.text = track.collectionName
         binding.textSongYear.text = track.releaseDate
         binding.textSongGenre.text = track.primaryGenreName
+        binding.textSongCountry.text = track.country
 
         playerViewModel.checkForFavorite(trackId = track.trackId)
 
