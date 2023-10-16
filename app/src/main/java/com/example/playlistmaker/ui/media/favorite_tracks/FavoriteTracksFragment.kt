@@ -89,7 +89,6 @@ class FavoriteTracksFragment : Fragment() {
         _binding = null
     }
 
-
     companion object {
         fun newInstance() = FavoriteTracksFragment()
         const val DEBOUNCE_DELAY_MILS = 500L

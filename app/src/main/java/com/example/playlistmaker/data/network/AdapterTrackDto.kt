@@ -20,7 +20,7 @@ object AdapterTrackDto {
                 trackId = it.trackId,
                 collectionName = it.collectionName,
                 releaseDate = if (it.releaseDate== null){"-"} else it.releaseDate.take(4),
-                primaryGenreName = it.primaryGenreName,
+                primaryGenreName = it.primaryGenreName ?: "-",
                 previewUrl = it.previewUrl ?: "-",
                 country = it.country
             )

@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.use_cases.DataBaseInteractor
+import com.example.playlistmaker.domain.use_cases.DataBaseTrackInteractor
 import kotlinx.coroutines.launch
 
-class FavoriteTracksViewModel(val dataBase: DataBaseInteractor) : ViewModel() {
+class FavoriteTracksViewModel(val dataBase: DataBaseTrackInteractor) : ViewModel() {
 
     private var favoriteTracksList = MutableLiveData<FavoriteTracksState>()
 

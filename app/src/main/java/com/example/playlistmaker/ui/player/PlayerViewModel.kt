@@ -1,28 +1,36 @@
 package com.example.playlistmaker.ui.player
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.PlaylistInfo
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.use_cases.DataBaseInteractor
+import com.example.playlistmaker.domain.use_cases.DataBasePlaylistInteractor
+import com.example.playlistmaker.domain.use_cases.DataBaseTrackInteractor
 import com.example.playlistmaker.domain.use_cases.PlayerInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    val dataBase: DataBaseInteractor
+    val dataBaseTrack: DataBaseTrackInteractor,
+    val dataBasePlaylist: DataBasePlaylistInteractor
 ) :
     ViewModel() {
     private var playerFragmentState =
         MutableLiveData<PlayerFragmentState>()
     private var playerJob: Job? = null
     private var isFavorite = false
+    private var addTrackToPlaylistStatus: MutableLiveData<Boolean?> = MutableLiveData(null)
+    private var playlistCatalogState: MutableLiveData<List<PlaylistInfo>?> = MutableLiveData(null)
+
 
     init {
         playerFragmentState.value = PlayerFragmentState(
@@ -63,9 +71,9 @@ class PlayerViewModel(
             isFavorite = isFavorite
         )
 
-    fun checkForFavorite(trackID: Int) {
+    fun checkForFavorite(trackId: Int) {
         viewModelScope.launch {
-            dataBase.isTrackFavorite(trackID = trackID).collect { isFav ->
+            dataBaseTrack.isTrackFavorite(trackId = trackId).collect { isFav ->
                 changeStatus(isFav)
             }
         }
@@ -91,15 +99,43 @@ class PlayerViewModel(
 
     private fun addTrackToFav(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataBase.saveFavoriteTrack(track = track)
+            dataBaseTrack.saveFavoriteTrack(track = track)
         }
         isFavorite = true
         playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)
     }
 
+    fun addTrackToPlaylist(track: Track, playlistId: Int) {
+        Log.d("Saved in playlist", "$playlistId")
+        addTrackToPlaylistStatus.value = null
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { saveTrack(track = track) }
+            dataBasePlaylist.addTrackToPlaylist(trackPK = track.trackId, playlistPK = playlistId)
+                .collect { result ->
+                    addToPlaylistStatus(result = result)
+                }
+        }
+
+    }
+
+    private suspend fun saveTrack(track: Track) {
+        dataBaseTrack.saveTrack(track = track)
+
+    }
+
+
+    fun getPlayerName(playlistPK: Int) = playlistCatalogState.value?.get(playlistPK)?.name
+
+    private fun addToPlaylistStatus(result: Boolean) {
+        Log.d("If there duplicates", "$result")
+        addTrackToPlaylistStatus.value = result
+    }
+
+    fun getAddStatus() = addTrackToPlaylistStatus
+
     private fun removeTrackFromFav(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataBase.deleteTrack(trackID = track.trackId)
+            dataBaseTrack.deleteTrackFromFav(trackId = track.trackId)
         }
         isFavorite = false
         playerFragmentState.value = getCurrentStatus().copy(isFavorite = isFavorite)
@@ -139,6 +175,21 @@ class PlayerViewModel(
             STATE_PREPARED, STATE_PAUSED -> startMediaPlayer()
         }
     }
+
+    fun loadPlaylistCatalog() {
+        viewModelScope.launch {
+            dataBasePlaylist.getPlaylistsInfo().collect { result ->
+                fillList(result = result)
+            }
+        }
+    }
+
+    private fun fillList(result: List<PlaylistInfo>?) {
+        playlistCatalogState.value = result
+        Log.d("Loaded Catalog", "$result")
+    }
+
+    fun getPlaylistCatalogState() = playlistCatalogState
 
     companion object {
         private const val STATE_DEFAULT = 0

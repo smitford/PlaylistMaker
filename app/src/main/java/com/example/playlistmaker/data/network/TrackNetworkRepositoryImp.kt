@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-
-
 class TrackNetworkRepositoryImp(private val networkClient: NetworkClient) : TrackNetworkRepository {
 
     override fun searchTracks(term: String): Flow<DataConsumer<List<Track>>> = flow {

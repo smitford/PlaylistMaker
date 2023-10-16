@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,25 +8,26 @@
     android:orientation="vertical"
     android:padding="@dimen/padding_4">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/panel_header"
-        android:layout_gravity="start"
-        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/header"
+        style="@style/Text_1"
+        android:layout_marginStart="@dimen/padding_16"
+        android:layout_marginTop="@dimen/padding_14"
+        android:text="@string/search"
+        android:textColor="?attr/colorOnSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            style="@style/Text_1"
-            android:text="@string/search"
-            android:textColor="?attr/colorOnSecondary" />
-    </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/editTextFrame"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_search"
         android:layout_marginStart="@dimen/padding_16"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/padding_24"
         android:layout_marginEnd="@dimen/padding_16"
-        android:background="@drawable/rounding_of_edittext">
+        android:background="@drawable/rounding_of_edittext"
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
         <EditText
             android:id="@+id/search_bar"
@@ -53,94 +54,102 @@
             tools:visibility="visible" />
     </FrameLayout>
 
-    <View
+    <TextView
+        android:id="@+id/text_view_search_history"
+        style="@style/AllText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/search_history"
+        android:textSize="19sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView_songs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextFrame"
+        tools:visibility="visible"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_songs"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/padding_24" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_20"
+        android:layout_marginBottom="@dimen/padding_24"
+        app:flow_verticalBias="0"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/button_clear_search_history"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_search_history"
+        app:layout_goneMarginBottom="@dimen/zero"
+        app:layout_goneMarginTop="@dimen/padding_20"
+        tools:itemCount="3"
+        tools:listitem="@layout/trackrecycleview_item" />
+
+    <LinearLayout
+        android:id="@+id/linearlayout_download_fail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextFrame"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/imageview_download_fail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:src="@drawable/no_internet_connection" />
+
+        <TextView
+            android:id="@+id/textview_download_fail"
+            style="@style/AllText"
+            android:layout_marginStart="@dimen/padding_24"
+            android:layout_marginEnd="@dimen/padding_24"
+            android:gravity="center"
+            android:textSize="19sp"
+            tools:text="@string/internet_lost_connection" />
+
+        <Button
+            android:id="@+id/button_download_fail"
+            style="@style/FAB"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/padding_24"
+            android:text="@string/update"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_clear_search_history"
+        style="@style/FAB"
+        android:layout_gravity="center"
+        android:text="@string/clear_history"
+        android:visibility="gone"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_songs"
+        tools:visibility="visible" />
+
 
     <ProgressBar
         android:id="@+id/search_progressBar"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="248dp"
         android:indeterminateTint="@color/blue1"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/text_view_search_history"
-        style="@style/AllText"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/high_of_basic_stripe"
-        android:gravity="center"
-        android:text="@string/search_history"
-        android:textSize="19sp"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_songs"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="top"
-            app:layout_constraintBottom_toTopOf="@id/clear_search_history_ll"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/trackrecycleview_item" />
-
-        <LinearLayout
-            android:id="@+id/linearlayout_download_fail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="110dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <ImageView
-                android:id="@+id/imageview_download_fail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                tools:src="@drawable/no_internet_connection" />
-
-            <TextView
-                android:id="@+id/textview_download_fail"
-                style="@style/AllText"
-                android:layout_marginStart="@dimen/padding_24"
-                android:layout_marginEnd="@dimen/padding_24"
-                android:gravity="center"
-                android:textSize="19sp"
-                tools:text="@string/internet_lost_connection" />
-
-            <Button
-                android:id="@+id/button_download_fail"
-                style="@style/FAB"
-                android:layout_gravity="center"
-                android:text="@string/update"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </LinearLayout>
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/clear_search_history_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="@dimen/padding_24">
-
-        <Button
-            android:id="@+id/button_clear_search_history"
-            style="@style/FAB"
-            android:layout_gravity="center"
-            android:text="@string/clear_history"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </FrameLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

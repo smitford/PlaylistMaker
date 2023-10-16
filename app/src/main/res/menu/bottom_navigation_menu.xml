@@ -11,6 +11,6 @@
         android:title="@string/media" />
     <item
         android:id="@+id/settingsFragment"
-        android:icon="@drawable/vector"
+        android:icon="@drawable/settings"
         android:title="@string/settings" />
 </menu>

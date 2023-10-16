@@ -11,7 +11,7 @@
         <item name="colorOnSecondary">@color/black1</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorSecondary</item>
-       <!-- Customize your theme here. -->
+        <!-- Customize your theme here. -->
         <item name="iconTint">@color/grey1</item>
         <item name="android:textColor">@color/black</item>
         <item name="thumbTint">@color/grey1</item>

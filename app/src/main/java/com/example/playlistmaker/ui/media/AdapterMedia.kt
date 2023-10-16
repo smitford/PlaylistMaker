@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import clickDebounce
 import com.example.playlistmaker.databinding.TrackrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.search.ViewHolderOfSongs
+
 
 class AdapterMedia(val onTrackClicked: (Track) -> Unit) :
     RecyclerView.Adapter<ViewHolderMedia>() {

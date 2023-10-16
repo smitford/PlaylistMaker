@@ -13,6 +13,12 @@
         <item name="android:textSize">@dimen/text_size_14</item>
     </style>
 
+    <style name="ToastText" parent="AllText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
     <style name="SongInformationTag">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/zero</item>
@@ -49,6 +55,7 @@
 
     <style name="TextSettings" parent="AllText">
         <item name="android:layout_width">@dimen/zero</item>
+        <item name="android:layout_marginStart">@dimen/padding_16</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="fontFamily">@font/ys_display_regular</item>
@@ -58,7 +65,7 @@
         <item name="android:layout_width">@dimen/icon_size</item>
         <item name="android:layout_height">@dimen/icon_size</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:layout_marginEnd">@dimen/wright_padding_icons</item>
+        <item name="android:layout_marginEnd">@dimen/padding_20</item>
         <item name="android:tint">@color/white</item>
         <item name="android:scaleType">centerInside</item>
     </style>
@@ -80,9 +87,21 @@
     <style name="ButtonBack" parent="ButtonBasic">
         <item name="android:layout_height">@dimen/button_size</item>
         <item name="android:layout_width">@dimen/button_size</item>
-        <item name="android:backgroundTintMode">src_over</item>
+
         <item name="icon">@drawable/arrow_back</item>
         <item name="iconTint">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="ButtonCreate">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="background">@drawable/rounded_button_enadble</item>
+        <item name="android:background">@drawable/rounded_button_enadble</item>
+        <item name="android:fontFamily">"@font/ys_display_medium"</item>
+        <item name="android:text">@string/create</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
     </style>
 
     <style name="ButtonMainAct" parent="ButtonBasic">
@@ -117,13 +136,24 @@
         <item name="android:background">@drawable/rounding_of_edittext</item>
         <item name="android:textColorHint">?attr/colorSecondaryVariant</item>
         <item name="drawableTint">?attr/colorSecondaryVariant</item>
-        <item name="android:textColor">?attr/colorSecondaryVariant</item>
+        <item name="android:textColor">@color/black1</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:drawablePadding">9dp</item>
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:inputType">text</item>
         <item name="android:lines">1</item>
         <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="EditTextPlaylist">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">text</item>
+        <item name="android:lines">1</item>
+        <item name="android:paddingStart">@dimen/padding_16</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:singleLine">true</item>
     </style>
 
 </resources>
