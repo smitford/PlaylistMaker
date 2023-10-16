@@ -17,6 +17,8 @@
     <dimen name="round_16">16dp</dimen>
     <dimen name="button_size_16">16dp</dimen>
     <dimen name="round_8">8dp</dimen>
+    <dimen name="button_size_18">18dp</dimen>
+    <dimen name="button_size_4">4dp</dimen>
 
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
@@ -25,6 +27,8 @@
     <dimen name="size_text_13">13sp</dimen>
     <dimen name="text_size_12">12sp</dimen>
     <dimen name="text_size_19">19sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
 
     <dimen name="padding_20">20dp</dimen>
     <dimen name="start_button_pending">17dp</dimen>
@@ -34,10 +38,13 @@
     <dimen name="padding_14">14dp</dimen>
     <dimen name="padding_12">12dp</dimen>
     <dimen name="padding_28">28dp</dimen>
-    <dimen name="padding_30">12dp</dimen>
+    <dimen name="padding_30">30dp</dimen>
     <dimen name="padding_10">10dp</dimen>
     <dimen name="padding_46">46dp</dimen>
     <dimen name="padding_32">32dp</dimen>
     <dimen name="padding_6">6dp</dimen>
     <dimen name="padding_8">8dp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+    <dimen name="padding_19">19dp</dimen>
+    <dimen name="padding_26">26dp</dimen>
 </resources>

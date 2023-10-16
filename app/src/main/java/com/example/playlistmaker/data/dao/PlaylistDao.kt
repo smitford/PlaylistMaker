@@ -45,6 +45,6 @@ interface PlaylistDao {
     fun isTrackPresenceInPlaylists(trackPK: Int): Int
 
     @Transaction
-    @Query("SELECT* FROM playlist")
-    fun getPlaylistWithTracks(): List<PlaylistWithSong>
+    @Query("SELECT* FROM playlist WHERE playlistPK=:playlistId")
+    fun getPlaylistWithTracks(playlistId: Int): List<PlaylistWithSong>
 }

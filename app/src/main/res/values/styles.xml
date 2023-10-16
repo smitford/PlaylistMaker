@@ -72,6 +72,26 @@
         <item name="fontFamily">@font/ys_display_regular</item>
     </style>
 
+    <!--    Playlist Text Styles     -->
+
+    <style name="textHeaderHigh">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textColor">@color/black1</item>
+    </style>
+
+    <style name="textPlaylistInformation">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_18</item>
+        <item name="android:textColor">@color/black1</item>
+    </style>
+
+    <!--    Image Styles    -->
+
     <style name="ImagesSettings">
         <item name="android:layout_width">@dimen/icon_size</item>
         <item name="android:layout_height">@dimen/icon_size</item>
