@@ -16,7 +16,7 @@ class PlayerCatalogViewHolder(private val binding: PlaylistRecycleviewSmallItemB
         binding.playlistName.text = playlistInfo.name
         binding.trackCount.text = playlistInfo.tracksNumber.toString() + " треков"
 
-        Glide.with(binding.playlistImg)
+        Glide.with(binding. playlistImg)
             .load(playlistInfo.imgUri)
             .placeholder(R.drawable.placeholder)
             .apply(RequestOptions())

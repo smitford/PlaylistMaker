@@ -20,6 +20,7 @@
     <dimen name="button_size_18">18dp</dimen>
     <dimen name="button_size_4">4dp</dimen>
 
+
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
@@ -47,4 +48,6 @@
     <dimen name="padding_5">5dp</dimen>
     <dimen name="padding_19">19dp</dimen>
     <dimen name="padding_26">26dp</dimen>
+    <dimen name="padding_36">36dp</dimen>
+    <dimen name="padding_42">42dp</dimen>
 </resources>

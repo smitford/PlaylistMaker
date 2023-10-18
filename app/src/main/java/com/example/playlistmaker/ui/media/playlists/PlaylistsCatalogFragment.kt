@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsCatalogBinding
 import com.example.playlistmaker.domain.models.PlaylistInfo
+import com.example.playlistmaker.ui.media.MediaFragmentDirections
+import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsCatalogFragment : Fragment() {
@@ -33,11 +36,20 @@ class PlaylistsCatalogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val adapterCallBack: (Int) -> Unit = debounce(
+            delayMillis = DEBOUNCE_DELAY_MILS,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { playlistId ->
+            val arg = MediaFragmentDirections.actionMediaFragmentToPlaylistFragment(playlistId)
+            findNavController().navigate(arg)
+        }
+
         playlistCatalogViewModel.loadPlaylistCatalog()
 
         catalogRecyclerView = binding.recyclerViewCatalog
         catalogRecyclerView.layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
-        catalogAdapter = CatalogAdapter()
+        catalogAdapter = CatalogAdapter(adapterCallBack)
         catalogRecyclerView.adapter = catalogAdapter
 
         binding.buttonNewPlayList.setOnClickListener {
@@ -46,9 +58,8 @@ class PlaylistsCatalogFragment : Fragment() {
 
         playlistCatalogViewModel.getState().observe(viewLifecycleOwner) { state ->
             when (state) {
-                is PlaylistCatalogState.Empty -> {
+                is PlaylistCatalogState.Empty ->
                     changeVisualState(CatalogStateVisual.EMPTY)
-                }
 
                 is PlaylistCatalogState.LoadedCatalog -> {
                     refreshCatalog(state.playlists)
@@ -89,6 +100,7 @@ class PlaylistsCatalogFragment : Fragment() {
     companion object {
         fun newInstance() = PlaylistsCatalogFragment()
         const val SPAN_COUNT = 2
+        const val DEBOUNCE_DELAY_MILS = 500L
     }
 }
 

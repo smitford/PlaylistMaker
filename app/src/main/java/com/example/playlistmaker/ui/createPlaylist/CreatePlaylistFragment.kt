@@ -39,10 +39,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.Calendar
 
-class CreatePlaylistFragment : Fragment() {
+open class CreatePlaylistFragment : Fragment() {
     private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding get() = _binding!!
-    private val createPlaylistVM by viewModel<CreatePlaylistViewModel>()
+    protected val binding get() = _binding!!
+    open val viewModel by viewModel<CreatePlaylistViewModel>()
     private lateinit var inputMethodManager: InputMethodManager
     private lateinit var dialog: MaterialAlertDialogBuilder
 
@@ -64,7 +64,7 @@ class CreatePlaylistFragment : Fragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        val state = createPlaylistVM.getCurrentData().value
+        val state = viewModel.getCurrentData().value
         if (state?.state == AllStates.SAVED_DATA) {
             binding.playListImg.setImageURI(state.uri?.toUri())
             binding.editTextName.setText(state.playlistName)
@@ -84,7 +84,7 @@ class CreatePlaylistFragment : Fragment() {
                 if (uri != null) {
                     binding.playListImg.scaleType = ImageView.ScaleType.CENTER_CROP
                     binding.playListImg.setImageURI(uri)
-                    createPlaylistVM.saveImg(uri.toString())
+                    viewModel.saveImg(uri.toString())
                 } else {
                     Log.d("ImgPicker", "Not chose")
                 }
@@ -107,18 +107,15 @@ class CreatePlaylistFragment : Fragment() {
             )
         }
 
-        createPlaylistVM.getCurrentData().observe(viewLifecycleOwner) { currentState ->
+        viewModel.getCurrentData().observe(viewLifecycleOwner) { currentState ->
 
             backBehavior(currentState.state)
 
             when (currentState.state) {
                 AllStates.START -> {
                     binding.buttonCreate.isEnabled = false
-
                 }
-
                 AllStates.SAVED_DATA -> {}
-
                 AllStates.SAVED_PLAYLIST -> {
                     findNavController().popBackStack()
                 }
@@ -132,7 +129,7 @@ class CreatePlaylistFragment : Fragment() {
                 descriptionJob?.cancel()
                 descriptionJob = viewLifecycleOwner.lifecycleScope.launch {
                     delay(DEBOUNCE_DELAY_MSC)
-                    createPlaylistVM.saveDescription(p0.toString())
+                    viewModel.saveDescription(p0.toString())
                 }
                 activateEditTextStateChanger(binding.textInputLayoutDescription, p0.isNullOrEmpty())
             }
@@ -146,7 +143,7 @@ class CreatePlaylistFragment : Fragment() {
                 descriptionJob?.cancel()
                 descriptionJob = viewLifecycleOwner.lifecycleScope.launch {
                     delay(DEBOUNCE_DELAY_MSC)
-                    createPlaylistVM.saveName(p0.toString())
+                    viewModel.saveName(p0.toString())
                 }
                 activateEditTextStateChanger(binding.textInputLayoutName, p0.isNullOrEmpty())
                 activateButtonSaveStateChanger(p0.isNullOrBlank())
@@ -178,7 +175,7 @@ class CreatePlaylistFragment : Fragment() {
         binding.editTextName.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 Log.d("ChangeListenerName", "Saved")
-                createPlaylistVM.saveName(binding.editTextName.text.toString())
+                viewModel.saveName(binding.editTextName.text.toString())
             }
             activateEditTextStateChanger(
                 binding.textInputLayoutName,
@@ -194,7 +191,7 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         binding.buttonCreate.setOnClickListener {
-            lifecycleScope.launch { createPlaylistVM.savePlaylist() }
+            lifecycleScope.launch { viewModel.savePlaylist() }
             saveImageToStorage()
             initSnack()
         }
@@ -222,7 +219,7 @@ class CreatePlaylistFragment : Fragment() {
     }
 
 
-    private fun backBehavior(state: AllStates) {
+    open fun backBehavior(state: AllStates) {
         when (state) {
             AllStates.SAVED_DATA -> {
                 binding.backButtonNewPlaylist.setOnClickListener { dialog.show() }
@@ -240,9 +237,8 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-
-    private fun saveImageToStorage() {
-        val uri = createPlaylistVM.getCurrentData().value?.uri?.toUri()
+    open fun saveImageToStorage() {
+        val uri = viewModel.getCurrentData().value?.uri?.toUri()
         if (uri == null) {
             return
         } else {
@@ -255,7 +251,7 @@ class CreatePlaylistFragment : Fragment() {
             }
             val file = File(
                 filePath,
-                createPlaylistVM.getCurrentData().value?.playlistName + Calendar.getInstance().timeInMillis
+                viewModel.getCurrentData().value?.playlistName + Calendar.getInstance().timeInMillis
             )
             val inputStream = requireContext().contentResolver.openInputStream(uri)
             val outputStream = FileOutputStream(file)
@@ -264,8 +260,8 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun initSnack() {
-        val snackText = "Плейлист ${createPlaylistVM.getCurrentData().value?.playlistName} создан"
+    open fun initSnack() {
+        val snackText = "Плейлист ${viewModel.getCurrentData().value?.playlistName} создан"
         val createdSnack = make(binding.buttonCreate, snackText, Snackbar.LENGTH_SHORT)
         createdSnack
             .setTextMaxLines(1)

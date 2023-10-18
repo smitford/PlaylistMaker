@@ -12,10 +12,7 @@ object AdapterTrackDto {
             Track(
                 trackName = it.trackName,
                 artistName = it.artistName,
-                trackTimeMillis = if (it.trackTimeMillis ==null){"-"} else SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(it.trackTimeMillis?.toLong()),
+                trackTimeMillis = it.trackTimeMillis ?:"-",
                 artworkUrl100 = it.artworkUrl100,
                 trackId = it.trackId,
                 collectionName = it.collectionName,
@@ -26,7 +23,6 @@ object AdapterTrackDto {
             )
 
         }
-
         return result
     }
 }

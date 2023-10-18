@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.PlaylistrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.PlaylistInfo
 
-class CatalogAdapter() : RecyclerView.Adapter<CatalogViewHolder>() {
+class CatalogAdapter(val callBack: (Int)->Unit) : RecyclerView.Adapter<CatalogViewHolder>() {
 
     var catalog = mutableListOf<PlaylistInfo>()
 
@@ -25,5 +25,8 @@ class CatalogAdapter() : RecyclerView.Adapter<CatalogViewHolder>() {
 
     override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
         holder.bind(catalog[position])
+        holder.itemView.setOnClickListener {
+            callBack(catalog[position].id)
+        }
     }
 }

@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation_graph"
     app:startDestination="@id/mediaFragment">
+
     <fragment
         android:id="@+id/mediaFragment"
         android:name="com.example.playlistmaker.ui.media.MediaFragment"
         android:label="fragment_media"
-        tools:layout="@layout/fragment_media" >
+        tools:layout="@layout/fragment_media">
         <action
             android:id="@+id/action_mediaFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
@@ -41,7 +42,8 @@
         android:id="@+id/termOfUseFragment"
         android:name="com.example.playlistmaker.ui.settings.TermOfUseFragment"
         android:label="TermOfUseFragment"
-        tools:layout="@layout/fragment_terms_of_use"/>
+        tools:layout="@layout/fragment_terms_of_use" />
+
     <fragment
         android:id="@+id/playerFragment"
         android:name="com.example.playlistmaker.ui.player.PlayerFragment"
@@ -54,14 +56,35 @@
             android:id="@+id/action_playerFragment_to_createPlaylistFragment"
             app:destination="@id/createPlaylistFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/createPlaylistFragment"
         android:name="com.example.playlistmaker.ui.createPlaylist.CreatePlaylistFragment"
         android:label="CreatePlaylistFragment"
-        tools:layout="@layout/fragment_create_playlist"/>
+        tools:layout="@layout/fragment_create_playlist" />
+
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.example.playlistmaker.ui.playlist.PlaylistFragment"
         android:label="PlaylistFragment"
-        tools:layout="@layout/fragment_playlist"/>
+        tools:layout="@layout/fragment_playlist">
+        <argument
+            android:name="playlistId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_playlistFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistFragment_to_editPlaylistFragment"
+            app:destination="@id/editPlaylistFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.example.playlistmaker.ui.editPlaylist.EditPlaylistFragment"
+        android:label="EditPlaylistFragment">
+        <argument
+            android:name="playlistId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

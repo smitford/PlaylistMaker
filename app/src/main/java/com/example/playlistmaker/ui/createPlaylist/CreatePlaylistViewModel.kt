@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
-class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistInteractor) :
+open class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistInteractor) :
     ViewModel() {
     private var createPlaylistState = MutableLiveData<CreatePlaylistState>()
 
@@ -46,7 +46,7 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
         }
     }
 
-    private fun getCurrentStatus() = createPlaylistState.value
+    open fun getCurrentStatus() = createPlaylistState.value
 
     fun getCurrentData() = createPlaylistState
 
@@ -62,7 +62,7 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
         changeState(playlistDescription, Actions.SAVE_DESCRIPTION)
     }
 
-    suspend fun savePlaylist() {
+    open suspend fun savePlaylist() {
         val data = getCurrentStatus()
         val saveData = viewModelScope.async(Dispatchers.IO) {
             if (data != null) {
