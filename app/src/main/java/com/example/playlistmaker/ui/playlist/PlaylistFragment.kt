@@ -94,6 +94,7 @@ class PlaylistFragment : Fragment() {
         bottomSheetBehaviorMenu.state = BottomSheetBehavior.STATE_HIDDEN
 
         lifecycleScope.launch(Dispatchers.Main) {
+            delay(PECK_DELAY_MSC)
             bottomSheetBehavior.peekHeight = peekHeightCalculation(binding.imgShear)
         }
         playlistViewModel.getPlaylist(playlistId = playlistId)
@@ -277,6 +278,7 @@ class PlaylistFragment : Fragment() {
     companion object {
         const val ROUNDING_OF_CORNERS_PX = 8
         const val DELETE_DELAY_MSC = 250L
+        const val PECK_DELAY_MSC = 20L
     }
 
 
