@@ -42,7 +42,19 @@ class EditPlaylistViewModel(
     override suspend fun savePlaylist() {
         val data = getCurrentData().value
 
+        if (data?.playlistName.isNullOrBlank())
+            data?.playlistName = playlistinfo.name
+
+        if (data?.uri.isNullOrBlank())
+            data?.uri = playlistinfo.imgUri
+
+        if (data?.description.isNullOrBlank())
+            data?.description = playlistinfo.description
+
         val saveData = viewModelScope.async(Dispatchers.IO) {
+
+            Log.d("newData", "$data")
+
             if (data != null)
                 dataBasePlaylistInteractor.updatePlaylistInfo(
                     PlaylistInfo(
@@ -57,7 +69,7 @@ class EditPlaylistViewModel(
 
         val changeStatus = viewModelScope.async(Dispatchers.Main) {
             delay(SAVE_DELAY_MLS)
-            getCurrentStatus()?.copy(state = AllStates.SAVED_PLAYLIST)
+            changeState(data = null, action = Actions.SAVE_ALL)
         }
         saveData.await()
         changeStatus.await()

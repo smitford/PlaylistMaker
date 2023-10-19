@@ -17,7 +17,7 @@ open class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlayl
     }
 
 
-    private fun changeState(data: String?, action: Actions) {
+    protected fun changeState(data: String?, action: Actions) {
         if (!data.isNullOrBlank()) {
             createPlaylistState.value = getCurrentStatus()?.copy(state = AllStates.SAVED_DATA)
         }

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
@@ -53,6 +54,7 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
     override fun initSnack() = Unit
 
     override fun backBehavior(state: AllStates) {
+        state
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack()
         }
@@ -60,15 +62,19 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
     }
 
     override fun saveImageToStorage() {
-        val uri = viewModel.getCurrentData().value?.uri?.toUri()
-        val uriStart = viewModel.getEditPlaylistState().value?.imgUri?.toUri()
+        val uri = viewModel.getCurrentData().value?.uri
+        val uriStart = viewModel.getEditPlaylistState().value?.imgUri
+
+        Log.d("URI new","$uri")
+        Log.d("URI old","$uriStart")
+
         if (uri == null) {
             return
         } else {
             if (uri == uriStart) {
                 return
             } else {
-                //uriStart?.path?.let { File(it) }?.delete()
+                uriStart?.toUri()?.path?.let { File(it) }?.delete()
                 val filePath = File(
                     requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                     PLAYLIST_IMAGE_DIRECTORY
@@ -80,7 +86,7 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
                     filePath,
                     viewModel.getCurrentData().value?.playlistName + Calendar.getInstance().timeInMillis
                 )
-                val inputStream = requireContext().contentResolver.openInputStream(uri)
+                val inputStream = requireContext().contentResolver.openInputStream(uri.toUri())
                 val outputStream = FileOutputStream(file)
                 BitmapFactory.decodeStream(inputStream)
                     .compress(Bitmap.CompressFormat.JPEG, 20, outputStream)

@@ -191,8 +191,8 @@ open class CreatePlaylistFragment : Fragment() {
         }
 
         binding.buttonCreate.setOnClickListener {
-            lifecycleScope.launch { viewModel.savePlaylist() }
             saveImageToStorage()
+            lifecycleScope.launch { viewModel.savePlaylist() }
             initSnack()
         }
     }
