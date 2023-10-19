@@ -224,15 +224,15 @@ class PlaylistFragment : Fragment() {
                 2, 3, 4 -> playlist.playlistInfo.tracksNumber.toString() + " " + getString(R.string.track)
                 else -> playlist.playlistInfo.tracksNumber.toString() + " " + getString(R.string.tracks)
             }
-        binding.textViewPlaylistTracksNumber.text =
+        binding.textViewPlaylistLength.text =
             when (playingTime % 10) {
-                1 -> playingTime.toString() + " " + getString(R.string.one_track)
-                2, 3, 4 -> playingTime.toString() + " " + getString(R.string.track)
-                else -> playingTime.toString() + " " + getString(R.string.tracks)
+                1 -> playingTime.toString() + " " + getString(R.string.one_minute)
+                2, 3, 4 -> playingTime.toString() + " " + getString(R.string.minute)
+                else -> playingTime.toString() + " " + getString(R.string.minutes)
             }.toString()
 
 
-        binding.textViewPlaylistLength.text = trackNumber
+        binding.textViewPlaylistTracksNumber.text = trackNumber
         binding.recyclerViewSongs.visibility = View.VISIBLE
         binding.imageviewEmpty.visibility = View.GONE
         binding.textviewEmpty.visibility = View.GONE

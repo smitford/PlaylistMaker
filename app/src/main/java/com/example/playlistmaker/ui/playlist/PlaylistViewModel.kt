@@ -62,7 +62,9 @@ class PlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistInteract
         }
 
     fun deletePlaylist(playlistId: Int) =
-        viewModelScope.launch(Dispatchers.IO) { dataBasePlaylistInteractor.deletePlaylist(playlistPK = playlistId) }
+        viewModelScope.launch(Dispatchers.IO) {
+            dataBasePlaylistInteractor.deletePlaylist(playlistPK = playlistId)
+        }
 
     fun shearPlaylist(context: Context) {
         val shearIntent = Intent(Intent.ACTION_SEND)
