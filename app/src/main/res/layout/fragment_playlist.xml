@@ -25,17 +25,6 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/padding_16" />
 
-        <ImageView
-            android:id="@+id/imageViewBackButtonPlaylist"
-            android:layout_width="@dimen/button_size_16"
-            android:layout_height="@dimen/button_size_16"
-            android:layout_marginStart="@dimen/padding_20"
-            android:layout_marginTop="@dimen/padding_20"
-            android:clickable="true"
-            android:src="@drawable/arrow_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black1" />
 
         <ImageView
             android:id="@+id/imageViewPlaylistCover"
@@ -47,6 +36,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageViewBackButtonPlaylist"
+            android:layout_width="@dimen/button_size_16"
+            android:layout_height="@dimen/button_size_16"
+            android:layout_marginStart="@dimen/padding_20"
+            android:layout_marginTop="@dimen/padding_20"
+            android:clickable="true"
+            android:src="@drawable/arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/black1" />
 
         <TextView
             android:id="@+id/textViewPlaylistName"
