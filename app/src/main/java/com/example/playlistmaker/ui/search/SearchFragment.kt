@@ -3,6 +3,7 @@ package com.example.playlistmaker.ui.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +44,7 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -63,14 +65,16 @@ class SearchFragment : Fragment() {
         adapterSearchHistory = AdapterSearchHistory(onTrackClickDebounce, false)
         recyclerViewSongs.adapter = adapterSearch
 
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             textSearch = savedInstanceState.getString(textOfSearch)
+        }
+
 
         binding.buttonClearSearchHistory.setOnClickListener {
             searchViewModel.clearHistory()
         }
 
-        binding.buttonDownloadFail.setOnClickListener { search() }
+        binding.buttonDownloadFail.setOnClickListener { search(binding.searchBar.text.toString()) }
 
         binding.clearTextSearch.setOnClickListener {
             searchJob?.cancel()
@@ -124,19 +128,21 @@ class SearchFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.clearTextSearch.visibility = clearButtonVisibility(s)
-                if (binding.searchBar.hasFocus() && binding.searchBar.text.isNullOrBlank()) {
+                if (binding.searchBar.hasFocus() && (s?.isEmpty() == true || s?.isBlank() == true)) {
                     searchViewModel.refreshHistory()
-                } else {
+                }
+                if(start!=before){
                     searchJob?.cancel()
                     searchJob = viewLifecycleOwner.lifecycleScope.launch {
                         delay(SEARCH_DEBOUNCE_DELAY_MILS)
-                        search()
+                        search(s?.toString() ?: "")
+
                     }
                 }
+
             }
 
             override fun afterTextChanged(s: Editable?) {
-                textSearch = binding.searchBar.text.toString()
                 changeVisBottomNav(View.VISIBLE)
             }
 
@@ -163,8 +169,8 @@ class SearchFragment : Fragment() {
         bottomNavigation.visibility = focus
     }
 
-    private fun search() =
-        searchViewModel.searchTrack(binding.searchBar.text.toString())
+    private fun search(text: String) =
+        searchViewModel.searchTrack(text)
 
     private fun clearSearchField() {
         binding.searchBar.setText("")
@@ -228,6 +234,8 @@ class SearchFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        textSearch = binding.searchBar.text.toString()
+        Log.d("text", "$textSearch")
         if (textSearch != null)
             outState.putString(textOfSearch, textSearch)
     }

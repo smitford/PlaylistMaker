@@ -3,6 +3,7 @@ package com.example.playlistmaker.ui.playlist
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -67,12 +68,18 @@ class PlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistInteract
         }
 
     fun shearPlaylist(context: Context) {
-        val shearIntent = Intent(Intent.ACTION_SEND)
-        shearIntent.data = Uri.parse("mailto:")
-        shearIntent.putExtra(Intent.EXTRA_TEXT, messageTextCreator())
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, messageTextCreator())
+            type = "text/plain"
+            Uri.parse("")
+        }
+        val shearIntent = Intent.createChooser(sendIntent,null)
+
         try {
             context.startActivity(shearIntent)
         } catch (e: Exception) {
+            Toast.makeText(context, "Нет подходящих приложений", Toast.LENGTH_SHORT).show()
         }
     }
 

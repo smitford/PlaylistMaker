@@ -139,7 +139,7 @@ class PlaylistFragment : Fragment() {
                 PlaylistFragmentDirections.actionPlaylistFragmentToEditPlaylistFragment(playlistId)
             findNavController().navigate(arg)
         }
-        binding.textViewShare.setOnClickListener { playlistViewModel.shearPlaylist(requireContext()) }
+        binding.textViewShare.setOnClickListener { playlistViewModel.shearPlaylist(requireActivity()) }
     }
 
     override fun onDestroyView() {

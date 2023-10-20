@@ -23,6 +23,7 @@ class SearchViewModel(
 
     private var searchJob: Job? = null
 
+
     init {
         searchFragmentState.value = SearchFragmentState.Start
     }
@@ -33,7 +34,6 @@ class SearchViewModel(
     }
 
     fun stopSearch() {
-
         searchJob?.cancel()
     }
 

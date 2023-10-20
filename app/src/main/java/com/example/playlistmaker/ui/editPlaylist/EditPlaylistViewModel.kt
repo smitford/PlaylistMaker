@@ -1,10 +1,14 @@
 package com.example.playlistmaker.ui.editPlaylist
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.models.PlaylistInfo
 import com.example.playlistmaker.domain.use_cases.DataBasePlaylistInteractor
+import com.example.playlistmaker.domain.use_cases.DeleteImageUseCase
+import com.example.playlistmaker.domain.use_cases.SaveImageUseCase
+import com.example.playlistmaker.domain.use_cases.TrackSaveUseCase
 import com.example.playlistmaker.ui.createPlaylist.AllStates
 import com.example.playlistmaker.ui.createPlaylist.CreatePlaylistViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,9 +19,14 @@ import kotlinx.coroutines.launch
 
 class EditPlaylistViewModel(
     playlistId: Int,
-    dataBasePlaylistInteractor: DataBasePlaylistInteractor
+    dataBasePlaylistInteractor: DataBasePlaylistInteractor,
+    saveImgUseCase: SaveImageUseCase,
+    val deleteImgUseCase: DeleteImageUseCase
 ) :
-    CreatePlaylistViewModel(dataBasePlaylistInteractor = dataBasePlaylistInteractor) {
+    CreatePlaylistViewModel(
+        dataBasePlaylistInteractor = dataBasePlaylistInteractor,
+        saveUseCase = saveImgUseCase
+    ) {
     lateinit var playlistinfo: PlaylistInfo
     private val editPlaylistState = MutableLiveData<PlaylistInfo>()
 
@@ -38,6 +47,10 @@ class EditPlaylistViewModel(
     }
 
     fun getEditPlaylistState() = editPlaylistState
+
+    fun deleteImgFromStorage(uri: String) {
+        deleteImgUseCase.execute(uri = uri)
+    }
 
     override suspend fun savePlaylist() {
         val data = getCurrentData().value

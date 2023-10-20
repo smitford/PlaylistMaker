@@ -1,14 +1,26 @@
 package com.example.playlistmaker.ui.createPlaylist
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Environment
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.use_cases.DataBasePlaylistInteractor
+import com.example.playlistmaker.domain.use_cases.SaveImageUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import java.io.File
+import java.io.FileOutputStream
+import java.util.Calendar
 
-open class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistInteractor) :
+open class CreatePlaylistViewModel(
+    val dataBasePlaylistInteractor: DataBasePlaylistInteractor,
+    val saveUseCase: SaveImageUseCase
+) :
     ViewModel() {
     private var createPlaylistState = MutableLiveData<CreatePlaylistState>()
 
@@ -80,6 +92,11 @@ open class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlayl
         }
         saveData.await()
         changeStatus.await()
+    }
+
+    open fun saveImgToStorage(context: Context, uri: String) {
+        saveUseCase.execute(context = context, uri = uri, playlistName = getCurrentData().value?.playlistName
+            ?: "save")
     }
 
     companion object {

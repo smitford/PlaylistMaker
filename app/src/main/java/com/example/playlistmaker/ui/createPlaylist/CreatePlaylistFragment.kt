@@ -113,7 +113,6 @@ open class CreatePlaylistFragment : Fragment() {
 
             when (currentState.state) {
                 AllStates.START -> {
-                    binding.buttonCreate.isEnabled = false
                 }
                 AllStates.SAVED_DATA -> {}
                 AllStates.SAVED_PLAYLIST -> {
@@ -198,7 +197,7 @@ open class CreatePlaylistFragment : Fragment() {
     }
 
     private fun activateButtonSaveStateChanger(hasName: Boolean) {
-        Log.d("Button", "Changed shape")
+        Log.d("Button", "Changed shape ${viewModel.getCurrentData().value?.state}")
         binding.buttonCreate.isEnabled = !hasName
     }
 
@@ -238,25 +237,11 @@ open class CreatePlaylistFragment : Fragment() {
     }
 
     open fun saveImageToStorage() {
-        val uri = viewModel.getCurrentData().value?.uri?.toUri()
+        val uri = viewModel.getCurrentData().value?.uri
         if (uri == null) {
             return
         } else {
-            val filePath = File(
-                requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                PLAYLIST_IMAGE_DIRECTORY
-            )
-            if (!filePath.exists()) {
-                filePath.mkdirs()
-            }
-            val file = File(
-                filePath,
-                viewModel.getCurrentData().value?.playlistName + Calendar.getInstance().timeInMillis
-            )
-            val inputStream = requireContext().contentResolver.openInputStream(uri)
-            val outputStream = FileOutputStream(file)
-            BitmapFactory.decodeStream(inputStream)
-                .compress(Bitmap.CompressFormat.JPEG, 20, outputStream)
+            viewModel.saveImgToStorage(requireContext(),uri)
         }
     }
 

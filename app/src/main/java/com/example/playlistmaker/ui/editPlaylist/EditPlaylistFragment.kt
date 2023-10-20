@@ -36,14 +36,13 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
         viewModel.getEditPlaylistState().observe(viewLifecycleOwner) { playlistInfo ->
             binding.editTextName.setText(playlistInfo.name)
             binding.editTextDescription.setText(playlistInfo.description)
-
-
             playlistInfo.imgUri?.let { image ->
                 Glide.with(requireContext())
                     .load(image)
                     .into(binding.playListImg)
             }
         }
+
     }
 
     private fun viewChanger() {
@@ -54,7 +53,6 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
     override fun initSnack() = Unit
 
     override fun backBehavior(state: AllStates) {
-        state
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack()
         }
@@ -65,31 +63,15 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
         val uri = viewModel.getCurrentData().value?.uri
         val uriStart = viewModel.getEditPlaylistState().value?.imgUri
 
-        Log.d("URI new","$uri")
-        Log.d("URI old","$uriStart")
-
         if (uri == null) {
             return
         } else {
             if (uri == uriStart) {
                 return
             } else {
-                uriStart?.toUri()?.path?.let { File(it) }?.delete()
-                val filePath = File(
-                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                    PLAYLIST_IMAGE_DIRECTORY
-                )
-                if (!filePath.exists()) {
-                    filePath.mkdirs()
-                }
-                val file = File(
-                    filePath,
-                    viewModel.getCurrentData().value?.playlistName + Calendar.getInstance().timeInMillis
-                )
-                val inputStream = requireContext().contentResolver.openInputStream(uri.toUri())
-                val outputStream = FileOutputStream(file)
-                BitmapFactory.decodeStream(inputStream)
-                    .compress(Bitmap.CompressFormat.JPEG, 20, outputStream)
+                viewModel.saveImgToStorage(requireContext(), uri)
+                uriStart?.let { viewModel.deleteImgFromStorage(it) }
+
             }
         }
     }
