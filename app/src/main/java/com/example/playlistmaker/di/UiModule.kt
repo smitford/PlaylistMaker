@@ -1,9 +1,12 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.domain.use_cases.SaveImageUseCase
 import com.example.playlistmaker.ui.createPlaylist.CreatePlaylistViewModel
+import com.example.playlistmaker.ui.editPlaylist.EditPlaylistViewModel
 import com.example.playlistmaker.ui.media.favorite_tracks.FavoriteTracksViewModel
 import com.example.playlistmaker.ui.media.playlists.PlaylistsCatalogViewModel
 import com.example.playlistmaker.ui.player.PlayerViewModel
+import com.example.playlistmaker.ui.playlist.PlaylistViewModel
 import com.example.playlistmaker.ui.search.SearchViewModel
 import com.example.playlistmaker.ui.settings.SettingsFragmentViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -37,7 +40,18 @@ val uiModules = module {
     }
 
     viewModel<CreatePlaylistViewModel>() {
-        CreatePlaylistViewModel(dataBasePlaylistInteractor = get())
+        CreatePlaylistViewModel(dataBasePlaylistInteractor = get(), saveUseCase = get())
+    }
+    viewModel<PlaylistViewModel>() {
+        PlaylistViewModel(dataBasePlaylistInteractor = get())
+    }
+    viewModel<EditPlaylistViewModel>() {
+        EditPlaylistViewModel(
+            playlistId = get(),
+            dataBasePlaylistInteractor = get(),
+            saveImgUseCase = get(),
+            deleteImgUseCase = get()
+        )
     }
 }
 

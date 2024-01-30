@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.dao
 
 import com.example.playlistmaker.data.models.PlaylistEntity
 import com.example.playlistmaker.data.models.PlaylistInfoDao
+import com.example.playlistmaker.data.models.PlaylistWithSong
 import com.example.playlistmaker.data.models.TrackEntity
 import com.example.playlistmaker.domain.consumer.DaoConsumer
 import com.example.playlistmaker.domain.models.Playlist
@@ -54,16 +55,14 @@ object DaoAdapter {
         imgUri = imgUri
     )
 
-    fun playlistEntityToPlaylist(playlist: PlaylistEntity, playlistTracks: List<Track>) =
-        playlist.playlistPK?.let {
-            Playlist(
-                id = it,
-                name = playlist.name,
-                description = playlist.description,
-                imgUri = playlist.imgUri,
-                tracks = playlistTracks
-            )
-        }
+    fun playlistEntityToPlaylist(playlist: PlaylistWithSong) =
+        Playlist(
+            playlistInfo = playlistEntityToPlaylistInfo(
+                playlistEntity = playlist.playlist,
+                playlist.tracks.size
+            ),
+            tracks = trackEntityToTrack(playlist.tracks)
+        )
 
     fun playlistsEntityToPlaylistInfo(playlist: List<PlaylistInfoDao?>): DaoConsumer<List<PlaylistInfo>> {
         val result = DaoConsumer.Success(playlist.map { playlistComp ->
@@ -81,5 +80,23 @@ object DaoAdapter {
 
         return result
     }
+
+    fun playlistEntityToPlaylistInfo(playlistEntity: PlaylistEntity, trackNumber: Int) =
+        PlaylistInfo(
+            id = playlistEntity.playlistPK ?: 0,
+            name = playlistEntity.name,
+            description = playlistEntity.description,
+            imgUri = playlistEntity.imgUri,
+            tracksNumber = trackNumber
+        )
+
+    fun playlistInfoToPlaylistEntity(playlistInfo: PlaylistInfo) =
+        PlaylistEntity(
+            playlistPK = playlistInfo.id,
+            name = playlistInfo.name,
+            description = playlistInfo.description,
+            imgUri = playlistInfo.imgUri
+        )
+
 
 }

@@ -7,6 +7,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.databinding.TrackrecycleviewItemBinding
 import com.example.playlistmaker.domain.models.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class ViewHolderOfSongs(private val binding: TrackrecycleviewItemBinding) :
@@ -14,7 +16,10 @@ class ViewHolderOfSongs(private val binding: TrackrecycleviewItemBinding) :
 
     fun bind(track: Track) {
         binding.songName.text = track.trackName
-        binding.length.text = track.trackTimeMillis
+        binding.length.text = SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(track.trackTimeMillis.toLong())
         binding.artistName.text = track.artistName
 
         Glide.with(binding.albumImage)
@@ -25,11 +30,11 @@ class ViewHolderOfSongs(private val binding: TrackrecycleviewItemBinding) :
             .into(binding.albumImage)
     }
 
-    private fun roundCorner() : Int = ROUNDING_OF_CORNERS_PX * (itemView.resources
+    private fun roundCorner(): Int = ROUNDING_OF_CORNERS_PX * (itemView.resources
         .displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
 
-    companion object{
-       private const val ROUNDING_OF_CORNERS_PX = 2
+    companion object {
+        private const val ROUNDING_OF_CORNERS_PX = 2
     }
 }
 

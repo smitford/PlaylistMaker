@@ -23,7 +23,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class PlayerFragment : Fragment() {
@@ -88,7 +89,10 @@ class PlayerFragment : Fragment() {
 
         binding.playerTextSongName.text = track.trackName
         binding.playerTextSongArtist.text = track.artistName
-        binding.textSongLength.text = track.trackTimeMillis
+        binding.textSongLength.text = SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(track.trackTimeMillis.toLong())
         binding.textSongAlbum.text = track.collectionName
         binding.textSongYear.text = track.releaseDate
         binding.textSongGenre.text = track.primaryGenreName

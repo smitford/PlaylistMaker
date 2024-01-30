@@ -1,14 +1,26 @@
 package com.example.playlistmaker.ui.createPlaylist
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Environment
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.use_cases.DataBasePlaylistInteractor
+import com.example.playlistmaker.domain.use_cases.SaveImageUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import java.io.File
+import java.io.FileOutputStream
+import java.util.Calendar
 
-class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistInteractor) :
+open class CreatePlaylistViewModel(
+    val dataBasePlaylistInteractor: DataBasePlaylistInteractor,
+    val saveUseCase: SaveImageUseCase
+) :
     ViewModel() {
     private var createPlaylistState = MutableLiveData<CreatePlaylistState>()
 
@@ -17,7 +29,7 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
     }
 
 
-    private fun changeState(data: String?, action: Actions) {
+    protected fun changeState(data: String?, action: Actions) {
         if (!data.isNullOrBlank()) {
             createPlaylistState.value = getCurrentStatus()?.copy(state = AllStates.SAVED_DATA)
         }
@@ -46,7 +58,7 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
         }
     }
 
-    private fun getCurrentStatus() = createPlaylistState.value
+    open fun getCurrentStatus() = createPlaylistState.value
 
     fun getCurrentData() = createPlaylistState
 
@@ -62,7 +74,7 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
         changeState(playlistDescription, Actions.SAVE_DESCRIPTION)
     }
 
-    suspend fun savePlaylist() {
+    open suspend fun savePlaylist() {
         val data = getCurrentStatus()
         val saveData = viewModelScope.async(Dispatchers.IO) {
             if (data != null) {
@@ -80,6 +92,11 @@ class CreatePlaylistViewModel(val dataBasePlaylistInteractor: DataBasePlaylistIn
         }
         saveData.await()
         changeStatus.await()
+    }
+
+    open fun saveImgToStorage(context: Context, uri: String) {
+        saveUseCase.execute(context = context, uri = uri, playlistName = getCurrentData().value?.playlistName
+            ?: "save")
     }
 
     companion object {

@@ -10,8 +10,10 @@ import com.example.playlistmaker.data.network.TrackNetworkRepositoryImp
 import com.example.playlistmaker.data.player.PlayerRepositoryImp
 import com.example.playlistmaker.data.shares_pref.ThemeSharedPrefRepositoryImp
 import com.example.playlistmaker.data.shares_pref.TrackSharedPreRepositoryImp
+import com.example.playlistmaker.data.store.InternalDataChangerRepositoryImp
 import com.example.playlistmaker.domain.api.DataBasePlaylistRepository
 import com.example.playlistmaker.domain.api.DataBaseTrackRepository
+import com.example.playlistmaker.domain.api.InternalDataChangerRepository
 import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.api.ThemeSharedPrefRepository
 import com.example.playlistmaker.domain.api.TrackNetworkRepository
@@ -49,4 +51,8 @@ val dataModules = module {
     single<DataBasePlaylistRepository> {
         DataBasePlaylistRepositoryImp(appDatabase = get())
     }
+    single<InternalDataChangerRepository> {
+        InternalDataChangerRepositoryImp()
+    }
+
 }

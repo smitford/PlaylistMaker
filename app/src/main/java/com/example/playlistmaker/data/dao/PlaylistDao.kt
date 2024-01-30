@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.playlistmaker.data.models.PlaylistEntity
 import com.example.playlistmaker.data.models.PlaylistTrackEntity
 import com.example.playlistmaker.data.models.PlaylistWithSong
@@ -22,6 +23,9 @@ interface PlaylistDao {
 
     @Query("SELECT * FROM playlist")
     fun getPlaylistsInfo(): List<PlaylistEntity>
+
+    @Query("SELECT * FROM playlist WHERE playlistPK =:playlistPK")
+    fun getPlaylistInfo(playlistPK: Int): PlaylistEntity
 
     @Query("SELECT * FROM playlist_tracks WHERE playlistPK==:playlistPK")
     fun getPlaylist(playlistPK: Int): List<PlaylistTrackEntity>
@@ -47,4 +51,7 @@ interface PlaylistDao {
     @Transaction
     @Query("SELECT* FROM playlist")
     fun getPlaylistWithTracks(): List<PlaylistWithSong>
+
+    @Update
+    fun updatePlaylist(playlistEntity: PlaylistEntity)
 }

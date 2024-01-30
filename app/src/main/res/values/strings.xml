@@ -40,5 +40,23 @@
     <string name="cancel">Отменить</string>
     <string name="complete">Завершить</string>
     <string name="completion_dialog">Все несохраненные данные будут потеряны</string>
+    <string name="zero_playing_time">0 минут</string>
+    <string name="one_minute"> минута</string>
+    <string name="minute"> минуты</string>
+    <string name="minutes"> минут</string>
+    <string name="zero_track_in_playlist">0 треков</string>
+    <string name="one_track"> трек</string>
+    <string name="track"> трека</string>
+    <string name="tracks"> треков</string>
+    <string name="empty_playlist">В этом плейлисте нет треков</string>
+    <string name="delete_track">Хотите удалить трек?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="edit_playlist_information">Редактировать информацию</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_playlist">Редактировать плейлист</string>
+    <string name="save">Сохранить</string>
+    <string name="share_toast_empty_playlist">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="test">Очень длинная строкааааааааааааааааааааааааааааааааааааааааааааааaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</string>
 </resources>

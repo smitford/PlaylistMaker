@@ -12,6 +12,10 @@ class DataBasePlaylistInteractorImp(private val repository: DataBasePlaylistRepo
     override fun getPlaylist(playlistPK: Int) =
         repository.getPlaylist(playlistPK = playlistPK)
 
+    override fun getPlaylistInfo(playlistPK: Int): Flow<PlaylistInfo> =
+        repository.getPlaylistInfo(playlistPK = playlistPK)
+
+
     override fun getPlaylistsInfo(): Flow<List<PlaylistInfo>?> {
         return repository.getPlaylistsInfo().map { result ->
             when (result) {
@@ -46,5 +50,9 @@ class DataBasePlaylistInteractorImp(private val repository: DataBasePlaylistRepo
 
     override suspend fun deletePlaylist(playlistPK: Int) =
         repository.deletePlaylist(playlistPK = playlistPK)
+
+    override suspend fun updatePlaylistInfo(playlistInfo: PlaylistInfo) {
+        repository.updatePlaylistInfo(playlistInfo = playlistInfo)
+    }
 
 }

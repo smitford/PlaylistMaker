@@ -5,6 +5,7 @@ import com.example.playlistmaker.data.models.PlaylistInfoDao
 import com.example.playlistmaker.data.models.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.DataBasePlaylistRepository
 import com.example.playlistmaker.domain.consumer.DaoConsumer
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.PlaylistInfo
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.Dispatchers
@@ -15,13 +16,30 @@ import kotlinx.coroutines.flow.flowOn
 class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
     DataBasePlaylistRepository {
 
-    override fun getPlaylist(playlistId: Int): Flow<List<Track>> = flow {
-        val playlistTracks = appDatabase.playlistDAO().getPlaylist(playlistPK = playlistId)
-        val playlist = playlistTracks.map { playlistTrack ->
-            appDatabase.trackDAO().getTrack(playlistTrack.trackPK)
+    override fun getPlaylist(playlistId: Int): Flow<Playlist> = flow {
+        val playlistsWithTracks = appDatabase.playlistDAO().getPlaylistWithTracks()
+        playlistsWithTracks.map {
+            if (it.playlist.playlistPK == playlistId) emit(
+                DaoAdapter.playlistEntityToPlaylist(
+                    it
+                )
+            )
         }
-        emit(DaoAdapter.trackEntityToTrack(playlist))
+
     }.flowOn(Dispatchers.IO)
+
+    override fun getPlaylistInfo(playlistPK: Int): Flow<PlaylistInfo> =
+        flow {
+            val playlistEntity = appDatabase.playlistDAO().getPlaylistInfo(playlistPK = playlistPK)
+            val trackNumber =
+                appDatabase.playlistDAO().countTracksInPlaylist(playlistId = playlistPK)
+            emit(
+                DaoAdapter.playlistEntityToPlaylistInfo(
+                    playlistEntity = playlistEntity,
+                    trackNumber
+                )
+            )
+        }.flowOn(Dispatchers.IO)
 
     override fun getPlaylistsInfo(): Flow<DaoConsumer<List<PlaylistInfo>>> = flow {
         val playlists = appDatabase.playlistDAO().getPlaylistsInfo()
@@ -90,6 +108,11 @@ class DataBasePlaylistRepositoryImp(private val appDatabase: AppDatabase) :
     override suspend fun deletePlaylist(playlistId: Int) {
         appDatabase.playlistDAO().deletePlaylistsTracks(playlistPK = playlistId)
         appDatabase.playlistDAO().deletePlaylist(playlistPK = playlistId)
+    }
+
+    override suspend fun updatePlaylistInfo(playlistInfo: PlaylistInfo) {
+        appDatabase.playlistDAO()
+            .updatePlaylist(playlistEntity = DaoAdapter.playlistInfoToPlaylistEntity(playlistInfo = playlistInfo))
     }
 
     private fun delete(trackId: Int) {
