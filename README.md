@@ -57,5 +57,7 @@ In the Media screen located tracks that have been added previously.
 https://github.com/smitford/PlaylistMaker/assets/17237585/7a895e5c-6516-4f83-b5d5-fef03f1d5b62
 
 
+### Technology stack
 
+Kotlin, MVVM, Kotlin Coroutines, Koin, Navigation Component, Retrofit2 (for interaction with iTunes API), ViewModel, LiveData, RecyclerView, SharedPreferences, MediaPlayer, BottomNavigationView, Fragment, ViewPager2, TabLayout, ConstrainLayout, Git, Android SDK, Gson, Room, Glide.
 
