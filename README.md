@@ -3,7 +3,7 @@
 The application that helps you build playlists with the music base of Appl Music. The project is developed within a study at Yandex.Practicum.
 Also, the last build of the application you can download [here](https://github.com/smitford/PlaylistMaker/raw/dev/app-debug.apk)
 
-## Decice requerment
+## Device requerment
 Compatible from Android 8 (Android API 26)
 
 ## Application featurse
